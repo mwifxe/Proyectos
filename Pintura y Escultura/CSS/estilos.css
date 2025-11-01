@@ -1,0 +1,137 @@
+/* Estilo general */
+body {
+    font-family: 'Georgia', serif;
+    line-height: 1.8;
+    margin: 0;
+    padding: 0;
+    background-color: #DAB48F; /* Fondo beige suave */
+    color: #333;
+}
+
+/* Encabezado */
+header {
+    background-color: #8C5835; /* Marrón oscuro */
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    border-bottom: 5px solid #A29670; /* Detalle decorativo */
+}
+
+header h1 {
+    font-size: 2.5em;
+    margin: 0;
+}
+
+header p {
+    font-size: 1.2em;
+    margin: 10px 0 0;
+}
+
+/* Contenido principal */
+main {
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-left: 5px solid #4D4728; /* Verde oscuro */
+}
+
+section h2 {
+    font-size: 2em;
+    color: #4D4728; /* Verde oscuro */
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+section img {
+    display: block;
+    margin: 0 auto 15px;
+    border-radius: 10px;
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #A29670; /* Verde oliva */
+}
+
+section p {
+    text-align: justify;
+    font-size: 1.1em;
+    color: #555;
+}
+
+/* Navegación */
+nav {
+    background-color: #736C49; /* Verde musgo */
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+nav p {
+    margin: 0 0 10px;
+    font-size: 1.2em;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 10px;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* Pie de página */
+footer {
+    background-color: #8C5835; /* Marrón oscuro */
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    margin-top: 20px;
+    font-size: 0.9em;
+    border-top: 5px solid #A29670; /* Detalle decorativo */
+}
+
+footer a {
+    color: #DAB48F; /* Beige suave */
+    text-decoration: none;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2em;
+    }
+
+    section h2 {
+        font-size: 1.8em;
+    }
+
+    nav p {
+        font-size: 1em;
+    }
+}

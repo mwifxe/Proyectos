@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusFlow Systems - Revolucionando la Gestión Inteligente</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            margin-right: 20px;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .logo-icon svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+
+        .company-name {
+            font-size: 3.5em;
+            font-weight: 700;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            font-size: 1.3em;
+            color: #666;
+            font-weight: 300;
+            margin-bottom: 30px;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.95);
+            margin: 30px 0;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .section:hover {
+            transform: translateY(-5px);
+        }
+
+        .section h2 {
+            color: #4facfe;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .section h3 {
+            color: #555;
+            font-size: 1.5em;
+            margin: 25px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 25px rgba(240, 147, 251, 0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+        }
+
+        .card h4 {
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .tier-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s;
+            opacity: 0;
+        }
+
+        .tier-card:hover::before {
+            animation: shine 0.5s ease-in-out;
+            opacity: 1;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .tier-card:hover {
+            transform: translateY(-15px) scale(1.02);
+        }
+
+        .tier-card h4 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .tier-price {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin: 20px 0;
+            color: #ffd700;
+        }
+
+        .feature-list {
+            list-style: none;
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .feature-list li {
+            padding: 8px 0;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            color: #4facfe;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .contact-item {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .mission-vision {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .mission-vision .card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .tech-item {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1em;
+            box-shadow: 0 5px 15px rgba(79, 172, 254, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .tech-item:hover {
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .company-name {
+                font-size: 2.5em;
+            }
+            
+            .mission-vision {
+                grid-template-columns: 1fr;
+            }
+            
+            .header, .section {
+                padding: 25px;
+            }
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+            color: white;
+            padding: 20px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+            margin: 20px auto;
+            display: block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(240, 147, 251, 0.6);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header con Logo -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M12 2L2 7v10c0 5.5 3.8 7.7 9 9 .7-.2 1.3-.4 1.9-.7-.1-.5-.1-1-.1-1.5 0-3.3 2.7-6 6-6s6 2.7 6 6c0 .5 0 1-.1 1.5.6.3 1.2.5 1.9.7 5.2-1.3 9-3.5 9-9V7l-10-5z"/>
+                        <circle cx="18" cy="18" r="4"/>
+                        <path d="M8 14l2 2 4-4"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="company-name">NexusFlow</h1>
+                    <p class="tagline">Sistemas Inteligentes de Gestión</p>
+                </div>
+            </div>
+            <p style="font-size: 1.2em; color: #666; max-width: 800px; margin: 0 auto;">
+                Revolucionamos la gestión empresarial mediante la integración inteligente de IA, IoT y sistemas personalizados que potencian el capital humano y optimizan procesos críticos.
+            </p>
+            <button class="cta-button">Solicitar Demostración</button>
+        </div>
+
+        <!-- Información de la Empresa -->
+        <div class="section">
+            <h2>🏢 Información Corporativa</h2>
+            <div class="mission-vision">
+                <div class="card">
+                    <h4>🎯 Misión</h4>
+                    <p>Transformar la gestión empresarial mediante soluciones tecnológicas inteligentes que amplifican las capacidades humanas, mejoran la eficiencia operativa y garantizan la seguridad de datos críticos.</p>
+                </div>
+                <div class="card">
+                    <h4>🔮 Visión</h4>
+                    <p>Ser la empresa líder en soluciones de gestión inteligente en América Latina, reconocida por nuestra innovación en IA local, IoT integrado y compromiso con la potenciación del talento humano.</p>
+                </div>
+            </div>
+            
+            <h3>📋 Valores Corporativos</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>🤝 Colaboración Humana</h4>
+                    <p>La tecnología debe potenciar, nunca reemplazar las capacidades humanas</p>
+                </div>
+                <div class="card">
+                    <h4>🔒 Privacidad Total</h4>
+                    <p>Procesamiento local de datos para máxima seguridad y confidencialidad</p>
+                </div>
+                <div class="card">
+                    <h4>⚡ Innovación Continua</h4>
+                    <p>Desarrollo constante de tecnologías emergentes aplicadas</p>
+                </div>
+                <div class="card">
+                    <h4>🎯 Excelencia Operativa</h4>
+                    <p>Soluciones que optimizan procesos y reducen errores críticos</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Servicios por Sectores -->
+        <div class="section">
+            <h2>🏥 Sectores de Especialización</h2>
+            <div class="grid">
+                <div class="card">
+                    <h4>🏥 Sector Salud</h4>
+                    <p><strong>Sistemas para:</strong> Hospitales, clínicas, centros médicos<br>
+                    <strong>Funciones:</strong> Gestión de pacientes, historial clínico inteligente, monitoreo vital automatizado, asistencia por voz para personal médico</p>
+                </div>
+                <div class="card">
+                    <h4>🏢 Empresas Corporativas</h4>
+                    <p><strong>Sistemas para:</strong> Oficinas, corporativos, centros de servicio<br>
+                    <strong>Funciones:</strong> Gestión de recursos humanos, control de acceso inteligente, automatización de procesos administrativos</p>
+                </div>
+                <div class="card">
+                    <h4>📦 Almacenes y Logística</h4>
+                    <p><strong>Sistemas para:</strong> Centros de distribución, almacenes, bodegas<br>
+                    <strong>Funciones:</strong> Inventario inteligente, rastreo automático, optimización de rutas, control de calidad</p>
+                </div>
+                <div class="card">
+                    <h4>🏭 Sector Industrial</h4>
+                    <p><strong>Sistemas para:</strong> Plantas manufactureras, fábricas, centros de producción<br>
+                    <strong>Funciones:</strong> Monitoreo de maquinaria, control de calidad automatizado, gestión de mantenimiento predictivo</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Planes de Servicio -->
+        <div class="section">
+            <h2>💼 Planes de Servicio</h2>
+            <div class="grid">
+                <div class="tier-card">
+                    <h4>TIER 3 - Esencial</h4>
+                    <div class="tier-price">$1,800/mes</div>
+                    <p style="margin-bottom: 20px;"><strong>Sistema de Gestión Base</strong></p>
+                    <ul class="feature-list">
+                        <li>Sistema de gestión personalizado por sector</li>
+                        <li>Módulos base incluidos</li>
+                        <li>Interfaz web responsive</li>
+                        <li>Reportes y analíticas básicas</li>
+                        <li>Soporte técnico 8x5</li>
+                        <li>Actualizaciones de software</li>
+                        <li>Capacitación inicial del personal</li>
+                    </ul>
+                    <p><strong>Instalación única:</strong> $3,500</p>
+                </div>
+                
+                <div class="tier-card">
+                    <h4>TIER 2 - Inteligente</h4>
+                    <div class="tier-price">$3,200/mes</div>
+                    <p style="margin-bottom: 20px;"><strong>Sistema + IA por Voz</strong></p>
+                    <ul class="feature-list">
+                        <li>Todo lo incluido en Tier 3</li>
+                        <li>Asistente de IA local por voz</li>
+                        <li>Procesamiento de lenguaje natural</li>
+                        <li>Autenticación biométrica</li>
+                        <li>Altavoces y micrófonos incluidos</li>
+                        <li>Analíticas avanzadas con IA</li>
+                        <li>Soporte técnico 24x7</li>
+                    </ul>
+                    <p><strong>Instalación única:</strong> $8,500</p>
+                </div>
+                
+                <div class="tier-card">
+                    <h4>TIER 1 - Total IoT</h4>
+                    <div class="tier-price">$5,800/mes</div>
+                    <p style="margin-bottom: 20px;"><strong>Ecosistema Completo</strong></p>
+                    <ul class="feature-list">
+                        <li>Todo lo incluido en Tier 2</li>
+                        <li>Red completa de sensores IoT</li>
+                        <li>Cámaras inteligentes con IA</li>
+                        <li>Cerraduras electrónicas integradas</li>
+                        <li>Monitoreo ambiental automático</li>
+                        <li>Alertas predictivas en tiempo real</li>
+                        <li>Dashboard ejecutivo avanzado</li>
+                        <li>Consultoría estratégica incluida</li>
+                    </ul>
+                    <p><strong>Instalación única:</strong> $15,000 - $25,000</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stack Tecnológico -->
+        <div class="section">
+            <h2>⚙️ Stack Tecnológico</h2>
+            <div class="tech-stack">
+                <span class="tech-item">Python / FastAPI</span>
+                <span class="tech-item">React / Next.js</span>
+                <span class="tech-item">PostgreSQL</span>
+                <span class="tech-item">TensorFlow / PyTorch</span>
+                <span class="tech-item">OpenAI Whisper</span>
+                <span class="tech-item">Docker / Kubernetes</span>
+                <span class="tech-item">MQTT / WebSocket</span>
+                <span class="tech-item">Redis</span>
+                <span class="tech-item">Raspberry Pi</span>
+                <span class="tech-item">AWS / Azure</span>
+            </div>
+            
+            <h3>🛡️ Certificaciones y Cumplimiento</h3>
+            <div class="grid">
+                <div class="card">
+                    <h4>🏥 Sector Salud</h4>
+                    <p>HIPAA, HL7 FHIR, FDA 21 CFR Part 11, ISO 13485</p>
+                </div>
+                <div class="card">
+                    <h4>🔒 Seguridad</h4>
+                    <p>ISO 27001, SOC 2 Type II, GDPR, CCPA</p>
+                </div>
+                <div class="card">
+                    <h4>🏭 Industrial</h4>
+                    <p>IEC 62443, ISO 9001, NIST Framework</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Información de Contacto -->
+        <div class="section">
+            <h2>📞 Contacto Empresarial</h2>
+            <div class="contact-grid">
+                <div class="contact-item">
+                    <h4>🏢 Oficina Principal</h4>
+                    <p>Santa Tecla, La Libertad<br>El Salvador</p>
+                </div>
+                <div class="contact-item">
+                    <h4>📧 Email Comercial</h4>
+                    <p>ventas@nexusflow.com<br>info@nexusflow.com</p>
+                </div>
+                <div class="contact-item">
+                    <h4>📱 Teléfonos</h4>
+                    <p>+503 2XXX-XXXX<br>+503 7XXX-XXXX</p>
+                </div>
+                <div class="contact-item">
+                    <h4>🌐 Presencia Digital</h4>
+                    <p>www.nexusflow.com<br>LinkedIn: /company/nexusflow</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Equipo y Estructura -->
+        <div class="section">
+            <h2>👥 Estructura Organizacional</h2>
+            <div class="grid">
+                <div class="card">
+                    <h4>🎯 CEO / Founder</h4>
+                    <p>Estrategia empresarial, relaciones con inversionistas, visión de producto</p>
+                </div>
+                <div class="card">
+                    <h4>💻 CTO</h4>
+                    <p>Arquitectura técnica, desarrollo de IA, supervisión del stack tecnológico</p>
+                </div>
+                <div class="card">
+                    <h4>🏥 Director Médico</h4>
+                    <p>Consultoría en sector salud, cumplimiento regulatorio, validación clínica</p>
+                </div>
+                <div class="card">
+                    <h4>💼 Director Comercial</h4>
+                    <p>Desarrollo de mercado, partnerships estratégicos, gestión de cuentas clave</p>
+                </div>
+            </div>
+            
+            <h3>📊 Equipo Técnico Especializado</h3>
+            <p style="text-align: center; margin: 20px 0; font-size: 1.1em;">
+                <strong>Desarrolladores Full-Stack:</strong> 6 ingenieros especializados<br>
+                <strong>Ingenieros de IA/ML:</strong> 3 especialistas en machine learning<br>
+                <strong>Especialistas IoT:</strong> 2 ingenieros en hardware y sensores<br>
+                <strong>Especialistas en Seguridad:</strong> 2 expertos en ciberseguridad<br>
+                <strong>Equipo de Soporte:</strong> 4 técnicos especializados por sector
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="section" style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h2 style="color: white;">🚀 Inicia tu Transformación Digital</h2>
+            <p style="font-size: 1.3em; margin: 20px 0;">
+                Únete a las empresas que ya confían en NexusFlow para revolucionar su gestión operativa
+            </p>
+            <button class="cta-button" style="background: linear-gradient(45deg, #4facfe, #00f2fe);">
+                Agenda tu Consultoría Gratuita
+            </button>
+            <p style="margin-top: 30px; opacity: 0.8;">
+                © 2025 NexusFlow Systems. Todos los derechos reservados.<br>
+                Registro Mercantil: [Pendiente] | RUC: [Pendiente] | NIT: [Pendiente]
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Animación suave de scroll
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', () => {
+                alert('¡Gracias por tu interés! Un especialista se contactará contigo en 24 horas.');
+            });
+        });
+
+        // Efecto parallax suave
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const rate = scrolled * -0.3;
+            document.body.style.backgroundPosition = `center ${rate}px`;
+        });
+
+        // Animaciones de entrada
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+
+        document.querySelectorAll('.section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'all 0.6s ease';
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html>

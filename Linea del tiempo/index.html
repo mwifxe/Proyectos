@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Línea del Tiempo de Pensión</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #8B4513 0%, #D2B48C 25%, #F5F5DC 50%, #DEB887 75%, #A0522D 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(139, 69, 19, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(222, 184, 135, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 40% 60%, rgba(245, 245, 220, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 60% 20%, rgba(160, 82, 45, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: rgba(139, 69, 19, 0.4);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.4; }
+            50% { transform: translateY(-30px) rotate(180deg); opacity: 0.8; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(245, 245, 220, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 60px 40px;
+            box-shadow: 
+                0 30px 60px rgba(139, 69, 19, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6),
+                0 0 0 1px rgba(139, 69, 19, 0.1);
+            border: 2px solid rgba(139, 69, 19, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(139, 69, 19, 0.6), transparent);
+            border-radius: 2px;
+        }
+
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4em;
+            font-weight: 800;
+            background: linear-gradient(45deg, #8B4513, #A0522D, #D2B48C);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(139, 69, 19, 0.2);
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            color: #654321;
+            font-size: 1.4em;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 40px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(180deg, 
+                rgba(139, 69, 19, 0.4) 0%, 
+                rgba(160, 82, 45, 0.8) 25%,
+                rgba(222, 184, 135, 0.6) 50%,
+                rgba(160, 82, 45, 0.8) 75%,
+                rgba(139, 69, 19, 0.4) 100%);
+            border-radius: 4px;
+            box-shadow: 
+                0 0 20px rgba(139, 69, 19, 0.3),
+                inset 0 0 10px rgba(245, 245, 220, 0.2);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 100px 0;
+            opacity: 0;
+            animation: slideInFade 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.6s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.9s; }
+        .timeline-item:nth-child(4) { animation-delay: 1.2s; }
+        .timeline-item:nth-child(5) { animation-delay: 1.5s; }
+
+        .timeline-content {
+            position: relative;
+            width: 45%;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            box-shadow: 
+                0 30px 60px rgba(139, 69, 19, 0.15),
+                inset 0 1px 0 rgba(245, 245, 220, 0.8),
+                0 0 0 1px rgba(139, 69, 19, 0.1);
+            border: 2px solid rgba(222, 184, 135, 0.3);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+        }
+
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, #8B4513, #A0522D, #D2B48C, #DEB887);
+            border-radius: 25px 25px 0 0;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 
+                0 45px 90px rgba(139, 69, 19, 0.25),
+                inset 0 1px 0 rgba(245, 245, 220, 0.9),
+                0 0 0 2px rgba(139, 69, 19, 0.2);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            left: 0;
+            margin-right: auto;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            right: 0;
+            margin-left: auto;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(45deg, #8B4513, #A0522D);
+            border: 5px solid rgba(245, 245, 220, 0.95);
+            border-radius: 50%;
+            z-index: 10;
+            transition: all 0.4s ease;
+            box-shadow: 
+                0 0 0 10px rgba(245, 245, 220, 0.3),
+                0 0 25px rgba(139, 69, 19, 0.4);
+        }
+
+        .timeline-item:hover .timeline-marker {
+            transform: translateX(-50%) scale(1.4);
+            box-shadow: 
+                0 0 0 15px rgba(245, 245, 220, 0.4),
+                0 0 35px rgba(139, 69, 19, 0.6);
+        }
+
+        .age-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, #8B4513, #A0522D);
+            color: #F5F5DC;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(139, 69, 19, 0.3);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .timeline-content h3 {
+            font-family: 'Playfair Display', serif;
+            color: #654321;
+            font-size: 2em;
+            font-weight: 700;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid rgba(139, 69, 19, 0.2);
+            position: relative;
+        }
+
+        .timeline-content h3::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, #8B4513, #A0522D);
+            border-radius: 2px;
+        }
+
+        .timeline-content p {
+            color: #3C2415;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+            font-weight: 400;
+        }
+
+        .timeline-content strong {
+            color: #8B4513;
+            font-weight: 600;
+        }
+
+        .timeline-content em {
+            display: block;
+            margin-top: 25px;
+            padding: 20px 25px;
+            background: linear-gradient(45deg, rgba(139, 69, 19, 0.08), rgba(222, 184, 135, 0.15));
+            border-radius: 20px;
+            border-left: 5px solid #8B4513;
+            font-style: italic;
+            color: #654321;
+            font-weight: 500;
+            font-size: 1.1em;
+            line-height: 1.7;
+        }
+
+        .highlight {
+            background: linear-gradient(45deg, #8B4513, #A0522D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+        }
+
+        .icon {
+            font-size: 3.5em;
+            margin-bottom: 25px;
+            text-shadow: 0 6px 12px rgba(139, 69, 19, 0.2);
+            filter: drop-shadow(0 0 15px rgba(139, 69, 19, 0.3));
+        }
+
+        .arrow {
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            top: 50%;
+            transform: translateY(-50%);
+            filter: drop-shadow(0 6px 12px rgba(139, 69, 19, 0.15));
+        }
+
+        .timeline-item:nth-child(odd) .arrow {
+            right: -25px;
+            border-width: 25px 0 25px 25px;
+            border-color: transparent transparent transparent rgba(255, 255, 255, 0.98);
+        }
+
+        .timeline-item:nth-child(even) .arrow {
+            left: -25px;
+            border-width: 25px 25px 25px 0;
+            border-color: transparent rgba(255, 255, 255, 0.98) transparent transparent;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 100px;
+            padding: 50px;
+            background: rgba(139, 69, 19, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 2px solid rgba(139, 69, 19, 0.2);
+            box-shadow: 
+                0 25px 50px rgba(139, 69, 19, 0.15),
+                inset 0 1px 0 rgba(245, 245, 220, 0.3);
+        }
+
+        .footer h3 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 25px;
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #654321;
+            text-shadow: 0 3px 6px rgba(139, 69, 19, 0.2);
+        }
+
+        .footer p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            color: #3C2415;
+            font-weight: 400;
+            max-width: 900px;
+            margin: 0 auto;
+            font-style: italic;
+        }
+
+        .quote-highlight {
+            background: linear-gradient(45deg, #8B4513, #A0522D);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        .pension-benefit {
+            background: linear-gradient(45deg, rgba(139, 69, 19, 0.1), rgba(222, 184, 135, 0.2));
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #8B4513;
+        }
+
+        .pension-benefit h4 {
+            color: #8B4513;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        @keyframes slideInFade {
+            from {
+                opacity: 0;
+                transform: translateY(80px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        .timeline-marker {
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            .header h1 {
+                font-size: 2.8em;
+            }
+
+            .timeline::before {
+                left: 30px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 80px);
+                margin-left: 60px;
+                padding: 30px;
+            }
+
+            .timeline-marker {
+                left: 30px;
+                width: 30px;
+                height: 30px;
+            }
+
+            .timeline-item:nth-child(even) .timeline-content {
+                margin-left: 60px;
+            }
+
+            .arrow {
+                display: none;
+            }
+
+            .icon {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>💰 Mi Línea del Tiempo de Pensión</h1>
+            <p>Construyendo mi libertad financiera con inteligencia y visión a largo plazo</p>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="arrow"></div>
+                    <div class="icon">🎯</div>
+                    <div class="age-badge">17 años</div>
+                    <h3>Sembrando mi Futuro Financiero</h3>
+                    <p><strong>Mi mentalidad ganadora desde ahora:</strong></p>
+                    <p>• Luchando por mi beca en el <span class="highlight">programa Oportunidad FGK</span> porque entiendo que la educación es la mejor inversión</p>
+                    <p>• Investigando carreras con alta demanda laboral para asegurar ingresos sólidos</p>
+                    <p>• Desarrollando proyectos que me posicionan como candidata irresistible para empleadores</p>
+                    <p>• Creando mi <span class="highlight">plan maestro de 7 años</span> hacia la independencia financiera</p>
+                    
+                    <div class="pension-benefit">
+                        <h4>🎯 Cómo mi pensión transforma mi bienestar desde HOY:</h4>
+                        <p>• <strong>Tranquilidad mental:</strong> Saber que tengo un plan sólido me da confianza para tomar riesgos calculados</p>
+                        <p>• <strong>Motivación clara:</strong> Cada esfuerzo académico es una inversión directa en mi futuro</p>
+                        <p>• <strong>Poder de decisión:</strong> No estudio por presión, sino porque sé exactamente hacia dónde voy</p>
+                    </div>
+                    
+                    <em>"A los 17 años ya tengo algo que muchos adultos nunca logran: claridad total sobre mi futuro. Mi pensión no es solo dinero, es mi boleto hacia una vida sin límites."</em>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="arrow"></div>
+                    <div class="icon">🚀</div>
+                    <div class="age-badge">18-24 años</div>
+                    <h3>Construyendo mi Base Financiera</h3>
+                    <p><strong>Mi estrategia de crecimiento acelerado:</strong></p>
+                    <p>• <span class="highlight">2026:</span> Inicio mi carrera técnica con beca completa</p>
+                    <p>• Freelanceando desde el primer día para generar ingresos tempranos</p>
+                    <p>• <span class="highlight">2027:</span> Aseguro mi lugar en Key Institute con beca del 100%</p>
+                    <p>• <span class="highlight">2028:</span> Título técnico + inicio de ingeniería</p>
+                    
+                    <div class="pension-benefit">
+                        <h4>💪 Cómo mi pensión potencia mi bienestar actual:</h4>
+                        <p>• <strong>Libertad de elección:</strong> Puedo elegir proyectos por pasión, no por desesperación</p>
+                        <p>• <strong>Riesgos inteligentes:</strong> Tengo la seguridad de invertir en oportunidades de alto crecimiento</p>
+                        <p>• <strong>Independencia emocional:</strong> No dependo de nadie para mi estabilidad</p>
+                        <p>• <strong>Hábitos millonarios:</strong> Desarrollo la disciplina que me acompañará toda la vida</p>
+                    </div>
+                    
+                    <p><strong>El poder del interés compuesto trabajando para MÍ:</strong></p>
+                    <p>• Cada peso que ahorro a los 20 vale 10 veces más que a los 40</p>
+                    <p>• Creo el hábito sagrado: <span class="highlight">"Primero me pago a mí misma"</span></p>
+                    <p>• Mientras otros gastan, yo construyo mi imperio financiero</p>
+                    
+                    <em>"Aquí es donde me separo del montón. No es glamoroso ahorrar a los 20, pero es la diferencia entre tener poder de decisión a los 50 o estar atrapada en la supervivencia."</em>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="arrow"></div>
+                    <div class="icon">💼</div>
+                    <div class="age-badge">25-55 años</div>
+                    <h3>Mi Era de Multiplicación de Riqueza</h3>
+                    <p><strong>Mis años de máxima productividad:</strong></p>
+                    <p>• <span class="highlight">2032:</span> Graduación con honores + red de contactos valiosa</p>
+                    <p>• <span class="highlight">2033:</span> Posicionamiento estratégico en empresa líder</p>
+                    <p>• Especialización en múltiples tecnologías de alta demanda</p>
+                    <p>• Salario que se convierte en capital para inversiones</p>
+                    
+                    <div class="pension-benefit">
+                        <h4>🌟 Cómo mi pensión eleva mi bienestar diario:</h4>
+                        <p>• <strong>Seguridad absoluta:</strong> Duermo tranquila sabiendo que mi futuro está asegurado</p>
+                        <p>• <strong>Poder de negociación:</strong> Puedo rechazar ofertas que no me convengan</p>
+                        <p>• <strong>Inversión en mí misma:</strong> Cursos, certificaciones, viajes - todo sin culpa</p>
+                        <p>• <strong>Generosidad sin límites:</strong> Ayudo a mi familia desde una posición de fuerza</p>
+                        <p>• <strong>Salud premium:</strong> Acceso a la mejor medicina preventiva</p>
+                    </div>
+                    
+                    <p><strong>Mi estrategia de riqueza multinivel:</strong></p>
+                    <p>• <span class="highlight">Aportes máximos</span> al sistema de pensiones - esto es sagrado</p>
+                    <p>• Diversificación inteligente: índices, tech, crypto, bienes raíces</p>
+                    <p>• Múltiples fuentes de ingresos activos y pasivos</p>
+                    <p>• Vivir con el 60%, invertir el 40% - mi fórmula de oro</p>
+                    
+                    <em>"No soy empleada, soy una inversionista que usa su trabajo para generar capital. Mi verdadero negocio es construir libertad financiera."</em>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="arrow"></div>
+                    <div class="icon">🏖️</div>
+                    <div class="age-badge">55 años</div>
+                    <h3>¡Independencia Financiera Lograda!</h3>
+                    <p><strong>El momento que cambió mi vida para siempre:</strong></p>
+                    <p>• <span class="highlight">Libertad total:</span> Mis inversiones cubren todos mis gastos</p>
+                    <p>• <span class="highlight">Tiempo soberano:</span> Cada minuto es mío para decidir</p>
+                    <p>• <span class="highlight">Opciones infinitas:</span> Trabajo por pasión, no por necesidad</p>
+                    
+                    <div class="pension-benefit">
+                        <h4>✨ Cómo mi pensión revoluciona mi bienestar:</h4>
+                        <p>• <strong>Salud sin límites:</strong> Los mejores médicos, tratamientos, y cuidados preventivos</p>
+                        <p>• <strong>Relaciones auténticas:</strong> Tiempo real para las personas que amo</p>
+                        <p>• <strong>Aventuras épicas:</strong> Viajes, experiencias, y sueños sin restricciones</p>
+                        <p>• <strong>Crecimiento constante:</strong> Aprender, crear, y explorar sin presiones</p>
+                        <p>• <strong>Impacto positivo:</strong> Mentoría y proyectos que cambian vidas</p>
+                        <p>• <strong>Dignidad absoluta:</strong> Nunca dependo de nadie para nada</p>
+                    </div>
+                    
+                    <p>• <span class="highlight">Legado en construcción:</span> Inspirando a la próxima generación</p>
+                    <p>• <span class="highlight">Pasiones liberadas:</span> Arte, música, literatura - todo el tiempo del mundo</p>
+                    
+                    <em>"A los 55 años no me jubilé del trabajo, me gradué hacia la vida plena. Ahora vivo exactamente como siempre soñé, y esto es solo el resultado de decisiones inteligentes tomadas décadas atrás."</em>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-marker"></div>
+                <div class="timeline-content">
+                    <div class="arrow"></div>
+                    <div class="icon">🌅</div>
+                    <div class="age-badge">60+ años</div>
+                    <h3>Mi Legado de Vida Plena</h3>
+                    <p><strong>Viviendo mi obra maestra:</strong></p>
+                    <p>• <span class="highlight">Mi santuario:</span> La casa de mis sueños, diseñada a mi medida</p>
+                    <p>• <span class="highlight">Serenidad total:</span> Rodeada de lo que más amo</p>
+                    <p>• <span class="highlight">Abundancia sin estrés:</strong> Más recursos de los que necesito</p>
+                    
+                    <div class="pension-benefit">
+                        <h4>🏆 Mi pensión como fuente de bienestar supremo:</h4>
+                        <p>• <strong>Dignidad inquebrantable:</strong> Siempre tengo opciones, nunca estoy limitada</p>
+                        <p>• <strong>Salud de lujo:</strong> Acceso inmediato a cualquier tratamiento o cuidado</p>
+                        <p>• <strong>Generosidad ilimitada:</strong> Ayudo a quien quiero, cuando quiero</p>
+                        <p>• <strong>Paz profunda:</strong> Cero preocupaciones financieras, solo gratitud</p>
+                        <p>• <strong>Inspiración viva:</strong> Soy el ejemplo de que los sueños se hacen realidad</p>
+                        <p>• <strong>Sabiduría compartida:</strong> Tiempo para guiar a otros hacia su libertad</p>
+                    </div>
+                    
+                    <p>• <span class="highlight">La abuela cool:</span> Inspirando a las nuevas generaciones</p>
+                    <p>• <span class="highlight">Historia de éxito:</strong> Mi vida como prueba de que la disciplina temprana paga</p>
+                    
+                    <em>"Cuando me preguntan cuál fue mi secreto, les digo: no hay secretos, solo decisiones conscientes. A los 17 años decidí que no sería víctima de las circunstancias. Decidí construir mi destino. Y aquí estoy, décadas después, viviendo exactamente la vida que diseñé."</em>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>💰 Mi Filosofía de la Pensión Inteligente</h3>
+            <p>
+                "Mi pensión no es solo dinero guardado para cuando sea vieja. <span class="quote-highlight">Es mi herramienta de libertad que trabaja para mí desde HOY.</span> 
+                Cada peso que invierto en mi futuro es un peso que me da poder de decisión en el presente. 
+                No estoy posponiendo mi felicidad para después, estoy <span class="quote-highlight">construyendo una vida sin límites</span> donde cada etapa es mejor que la anterior. 
+                Mi pensión no es un sacrificio, <span class="quote-highlight">es la llave maestra que abre todas las puertas de mi bienestar.</span>
+                A los 17 años ya entendí que la verdadera riqueza no se mide en lo que gastas, sino en las opciones que tienes.
+                <span class="quote-highlight">Mi pensión es mi superpoder financiero.</span>"
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Crear partículas flotantes
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            const particleCount = 60;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            
+            }}
