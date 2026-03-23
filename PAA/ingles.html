@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Inglés ESLAT | PAA Academy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #06b6d4;
+      --primary-light: #22d3ee;
+      --bg-dark: #020617;
+      --card-bg: rgba(30, 41, 59, 0.75);
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
+      --accent: #3b82f6;
+      --danger: #fb7185;
+      --ok: #34d399;
+      --warn: #fbbf24;
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(circle at top right, #1e293b, #020617);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    .nav-bar {
+      background: rgba(15, 23, 42, 0.95);
+      padding: 16px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-left { display:flex; gap:14px; align-items:center; }
+    .back-btn {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 700;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: rgba(6,182,212,0.08);
+      border: 1px solid rgba(6,182,212,0.18);
+    }
+    .back-btn:hover { background: rgba(6,182,212,0.14); }
+
+    .nav-title {
+      color: var(--primary);
+      font-weight: 900;
+      letter-spacing: .6px;
+      text-align: right;
+    }
+
+    .nav-tools { display:flex; gap:10px; align-items:center; }
+    .chip {
+      font-size: .85rem;
+      color: var(--text-dim);
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(148,163,184,0.08);
+      border: 1px solid rgba(148,163,184,0.12);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      user-select:none;
+    }
+    .chip strong { color: var(--text-main); }
+    .icon-btn {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      background: rgba(6,182,212,0.10);
+      border: 1px solid rgba(6,182,212,0.20);
+      color: var(--primary);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+    }
+    .icon-btn:hover { background: rgba(6,182,212,0.16); }
+
+    /* LAYOUT */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      min-height: calc(100vh - 68px);
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: rgba(15, 23, 42, 0.6);
+      padding: 18px 18px 24px;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .sidebar-header {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.85);
+      padding: 10px 0 14px;
+      backdrop-filter: blur(10px);
+      z-index: 10;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      margin-bottom: 12px;
+    }
+
+    .search-wrap {
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(2,6,23,0.35);
+      border: 1px solid rgba(148,163,184,0.14);
+    }
+    .search-wrap i { color: var(--text-dim); }
+    .search {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-main);
+      font-size: .95rem;
+    }
+
+    .category-group { margin: 18px 0 26px; }
+
+    .category-title {
+      color: var(--primary);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 900;
+      margin: 8px 0 10px;
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .topic-link {
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: var(--text-dim);
+      cursor: pointer;
+      margin-bottom: 8px;
+      border: 1px solid rgba(148,163,184,0.10);
+      background: rgba(2,6,23,0.12);
+      transition: transform .08s ease, background .12s ease, color .12s ease, border-color .12s ease;
+    }
+    .topic-link:hover {
+      background: rgba(6,182,212,0.12);
+      color: white;
+      border-color: rgba(6,182,212,0.22);
+      transform: translateY(-1px);
+    }
+    .topic-link.active {
+      background: linear-gradient(135deg, rgba(6,182,212,.95), rgba(34,211,238,.7));
+      color: #001018;
+      font-weight: 900;
+      border-color: rgba(34,211,238,0.35);
+    }
+    .topic-meta {
+      display:flex;
+      gap:10px;
+      margin-top: 6px;
+      font-size: .8rem;
+      color: rgba(15,23,42,.75);
+      opacity: .9;
+    }
+    .topic-link.active .topic-meta { color: rgba(2,6,23,.75); }
+
+    /* CONTENT */
+    .content-area {
+      padding: 32px 28px 60px;
+      overflow-y: auto;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(6,182,212,0.16), rgba(59,130,246,0.10));
+      border: 1px solid rgba(6,182,212,0.18);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 26px;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:-90px; top:-90px;
+      width: 240px; height: 240px;
+      background: radial-gradient(circle, rgba(34,211,238,.35), transparent 60%);
+      filter: blur(0px);
+      transform: rotate(20deg);
+    }
+    .hero h1 {
+      font-size: 2.2rem;
+      color: var(--primary);
+      margin-bottom: 10px;
+      letter-spacing: .2px;
+    }
+    .hero p { color: var(--text-main); max-width: 64ch; line-height: 1.6; }
+    .hero .mini {
+      margin-top: 14px;
+      color: var(--text-dim);
+      display:flex;
+      gap:14px;
+      flex-wrap: wrap;
+    }
+    .hero .mini span{
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(148,163,184,0.08);
+      border: 1px solid rgba(148,163,184,0.12);
+    }
+
+    .topic-header {
+      display:flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items:flex-end;
+      margin: 10px 0 18px;
+    }
+    .topic-header h1 {
+      font-size: 2.3rem;
+      color: var(--primary);
+      margin: 0;
+    }
+    .topic-actions { display:flex; gap:10px; flex-wrap:wrap; }
+    .btn {
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.14);
+      background: rgba(2,6,23,0.20);
+      color: var(--text-main);
+      cursor:pointer;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      font-weight: 700;
+    }
+    .btn:hover { border-color: rgba(6,182,212,0.25); background: rgba(6,182,212,0.10); }
+    .btn.primary {
+      background: rgba(6,182,212,0.18);
+      border-color: rgba(6,182,212,0.25);
+      color: var(--text-main);
+    }
+
+    .section-block {
+      background: var(--card-bg);
+      border-radius: 22px;
+      padding: 26px;
+      margin-bottom: 22px;
+      border: 1px solid rgba(148,163,184,0.10);
+      box-shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+    .section-block h2 { color: var(--primary-light); margin-bottom: 12px; }
+    .section-block h3 { margin: 16px 0 10px; color: #cbd5e1; }
+    .section-block p { color: var(--text-main); line-height: 1.7; }
+    .section-block ul { margin-left: 20px; margin-top: 10px; line-height: 1.7; color: #e2e8f0; }
+    .section-block li { margin: 6px 0; }
+
+    .grid-2 {
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .grid-3 {
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .example-box {
+      background: rgba(0,0,0,0.25);
+      border-left: 4px solid var(--accent);
+      padding: 18px;
+      margin: 16px 0;
+      border-radius: 0 14px 14px 0;
+      line-height: 1.65;
+    }
+
+    .callout {
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,0.14);
+      background: rgba(2,6,23,0.22);
+      color: var(--text-main);
+      line-height: 1.65;
+    }
+    .callout strong { color: var(--primary-light); }
+
+    /* Banner image */
+    .banner {
+      border-radius: 18px;
+      overflow:hidden;
+      border: 1px solid rgba(148,163,184,0.12);
+      background: rgba(2,6,23,0.22);
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+    }
+    .banner img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display:block;
+      filter: saturate(1.1) contrast(1.05);
+    }
+    .banner .cap {
+      padding: 12px 16px;
+      color: var(--text-dim);
+      font-size: .92rem;
+    }
+
+    /* Flashcards */
+    .flashcards-bar {
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .flashcards {
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .flashcard {
+      perspective: 1000px;
+      height: 160px;
+    }
+    .flashcard-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform .5s cubic-bezier(.2,.8,.2,1);
+      cursor:pointer;
+    }
+    .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+
+    .flashcard-face {
+      position:absolute;
+      inset:0;
+      backface-visibility: hidden;
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid rgba(148,163,184,0.12);
+      background: rgba(2,6,23,0.18);
+      box-shadow: 0 10px 24px rgba(0,0,0,.22);
+      display:flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .flashcard-face .tag {
+      display:flex; gap:10px; align-items:center;
+      color: var(--text-dim);
+      font-size: .85rem;
+    }
+    .flashcard-face .big { font-weight: 900; font-size: 1.05rem; color: var(--text-main); line-height: 1.35; }
+    .flashcard-face .hint { color: var(--text-dim); font-size: .9rem; }
+    .flashcard-back {
+      transform: rotateY(180deg);
+      background: rgba(6,182,212,0.10);
+      border-color: rgba(6,182,212,0.22);
+    }
+
+    /* Quiz */
+    .quiz {
+      display:flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .q {
+      padding: 16px;
+      border-radius: 18px;
+      border: 1px solid rgba(148,163,184,0.12);
+      background: rgba(2,6,23,0.20);
+    }
+    .q .q-title { font-weight: 900; color: #e2e8f0; margin-bottom: 10px; }
+    .options { display:grid; gap: 8px; }
+    .opt {
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(148,163,184,0.12);
+      background: rgba(2,6,23,0.18);
+      cursor:pointer;
+      transition: transform .08s ease, border-color .12s ease, background .12s ease;
+    }
+    .opt:hover { transform: translateY(-1px); border-color: rgba(6,182,212,0.22); background: rgba(6,182,212,0.08); }
+    .opt .pill {
+      min-width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      display:grid;
+      place-items:center;
+      font-weight: 900;
+      background: rgba(148,163,184,0.10);
+      border: 1px solid rgba(148,163,184,0.12);
+      color: var(--text-main);
+    }
+    .opt.correct {
+      border-color: rgba(52,211,153,0.35);
+      background: rgba(52,211,153,0.10);
+    }
+    .opt.wrong {
+      border-color: rgba(251,113,133,0.35);
+      background: rgba(251,113,133,0.10);
+    }
+    .feedback {
+      margin-top: 10px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* Progress */
+    .progress-wrap {
+      margin-top: 10px;
+      display:flex;
+      gap: 12px;
+      align-items:center;
+      flex-wrap: wrap;
+    }
+    .bar {
+      flex: 1;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(148,163,184,0.10);
+      border: 1px solid rgba(148,163,184,0.12);
+      overflow:hidden;
+      min-width: 180px;
+    }
+    .bar > div {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(6,182,212,.95), rgba(34,211,238,.75));
+    }
+    .tiny { color: var(--text-dim); font-size: .9rem; }
+
+    /* Mobile */
+    .mobile-drawer {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,23,0.66);
+      backdrop-filter: blur(6px);
+      z-index: 100;
+      display:none;
+    }
+    .drawer-panel {
+      width: 90%;
+      max-width: 360px;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.95);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      padding: 16px;
+      overflow-y: auto;
+    }
+    .drawer-top {
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      margin-bottom: 12px;
+    }
+    .drawer-top strong { color: var(--primary); }
+    .drawer-close { background: transparent; border:none; color: var(--text-main); font-size: 1.2rem; cursor:pointer; }
+
+    @media (max-width: 980px){
+      .grid-3 { grid-template-columns: 1fr 1fr; }
+      .flashcards { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .main-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .content-area { padding: 22px 16px 60px; }
+      .topic-header { align-items:flex-start; flex-direction: column; }
+      .banner img { height: 190px; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .flashcards { grid-template-columns: 1fr; }
+      .nav-title { display:none; }
+    }
+  </style>
+</head>
+
+<body>
+
+<nav class="nav-bar">
+  <div class="nav-left">
+    <a href="index.html" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Volver
+    </a>
+    <button class="icon-btn" id="openDrawer" title="Menú">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </div>
+
+  <div class="nav-title">INGLÉS ESLAT · PAA</div>
+
+  <div class="nav-tools">
+    <div class="chip" title="Progreso del tema">
+      <i class="fa-solid fa-bolt"></i>
+      <span><strong id="progressPct">0%</strong> listo</span>
+    </div>
+    <div class="chip" title="Flashcards volteadas">
+      <i class="fa-regular fa-clone"></i>
+      <span><strong id="flipsCount">0</strong> flips</span>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Drawer -->
+<div class="mobile-drawer" id="drawer">
+  <div class="drawer-panel">
+    <div class="drawer-top">
+      <strong><i class="fa-solid fa-layer-group"></i> Contenido</strong>
+      <button class="drawer-close" id="closeDrawer" aria-label="Cerrar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="sidebar" style="display:block; border-right:none; padding:0;" id="sidebarMobile"></div>
+  </div>
+</div>
+
+<div class="main-layout">
+  <!-- SIDEBAR (desktop) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="search-wrap">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input class="search" id="search" placeholder="Buscar tema (ej: verb tenses, reading, vocabulary)..." />
+      </div>
+      <div class="progress-wrap">
+        <div class="bar"><div id="progressBar"></div></div>
+        <div class="tiny" id="progressText">Elegí un tema para empezar.</div>
+      </div>
+    </div>
+    <div id="sidebar"></div>
+  </aside>
+
+  <!-- CONTENIDO -->
+  <main class="content-area">
+    <section class="hero" id="welcome">
+      <h1>English ESLAT</h1>
+      <p>
+        El ESLAT mide tu <strong>uso del inglés y comprensión de lectura</strong>.
+        No es solo gramática — es aplicar el idioma en contexto real, como lo harías en la universidad.
+        50 preguntas, 50 minutos. Preparate con estrategia.
+      </p>
+      <div class="mini">
+        <span><i class="fa-solid fa-book-open"></i> Grammar in Context</span>
+        <span><i class="fa-solid fa-language"></i> Vocabulary</span>
+        <span><i class="fa-solid fa-glasses"></i> Reading Comp</span>
+        <span><i class="fa-solid fa-pen"></i> Writing Skills</span>
+      </div>
+    </section>
+
+    <section id="topic" style="display:none;">
+      <header class="topic-header">
+        <h1 id="topic-title"></h1>
+        <div class="topic-actions">
+          <button class="btn primary" id="btnMarkDone"><i class="fa-solid fa-check"></i> Marcar "dominado"</button>
+          <button class="btn" id="btnResetTopic"><i class="fa-solid fa-rotate-left"></i> Reiniciar tema</button>
+        </div>
+      </header>
+
+      <div class="banner" id="topicBanner" style="display:none;">
+        <img id="topicImg" alt="Imagen del tema" />
+        <div class="cap" id="topicImgCap"></div>
+      </div>
+
+      <div id="topic-content"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+/* =======================
+   UTILIDADES
+======================= */
+const storeKey = "paa_eslat_progress_v1";
+const state = JSON.parse(localStorage.getItem(storeKey) || "{}");
+
+function saveState(){
+  localStorage.setItem(storeKey, JSON.stringify(state));
+}
+
+function clamp(n,min,max){ return Math.max(min, Math.min(max,n)); }
+
+function esc(str){
+  return String(str).replace(/[&<>"']/g, m => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  }[m]));
+}
+
+let flips = 0;
+function setFlips(n){
+  flips = n;
+  document.getElementById("flipsCount").textContent = String(flips);
+}
+
+/* =======================
+   BASE DE DATOS LECTURA
+   (Continuación completa)
+======================= */
+
+const eslatData = {
+  overview: {
+    label: "Overview & Strategy",
+    icon: "fa-info-circle",
+    topics: {
+      que_es_eslat: {
+        name: "What is ESLAT?",
+        minutes: 8,
+        level: "Essential",
+        banner: {
+          img: "https://images.unsplash.com/photo-1546410531-bb4caa6b424d?auto=format&fit=crop&w=1600&q=70",
+          cap: "ESLAT evalúa tu nivel de inglés para ubicarte correctamente en la universidad."
+        },
+        content: `
+          <div class="section-block">
+            <h2>English as a Second Language Achievement Test</h2>
+            <p>El <strong>ESLAT</strong> mide tu dominio del inglés como segundo idioma.
+            Su objetivo: ubicarte en el nivel correcto (Novice, Basic, Intermediate, Advanced) para tus cursos universitarios.</p>
+            <h3>Estructura del examen</h3>
+            <div class="grid-3" style="margin-top:12px;">
+              <div class="callout"><strong>Parte 1</strong><br>Language Use & Vocabulary<br><span style="color:var(--text-dim);display:block;margin-top:6px;">Gramática en contexto, no aislada.</span></div>
+              <div class="callout"><strong>Parte 2</strong><br>Reading Comprehension<br><span style="color:var(--text-dim);display:block;margin-top:6px;">Textos de 50–500 palabras + preguntas.</span></div>
+              <div class="callout"><strong>Parte 3</strong><br>Indirect Writing<br><span style="color:var(--text-dim);display:block;margin-top:6px;">Corregir, combinar, mejorar oraciones/párrafos.</span></div>
+            </div>
+            <div class="example-box"><strong>Formato:</strong><br>• 50 preguntas de opción múltiple<br>• 50 minutos de tiempo máximo<br>• Todo en inglés</div>
+            <h3>¿Qué NO evalúa?</h3>
+            <ul><li>Listening o speaking (es escrito).</li><li>Gramática "de memoria"</li><li>Tu opinión personal sobre los textos.</li></ul>
+            <div class="callout"><strong>Clave:</strong> El ESLAT evalúa si podés <em>usar</em> el inglés correctamente, no si sabés las reglas de memoria.</div>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Info", front:"¿Cuántas preguntas tiene el ESLAT?", back:"50 preguntas de opción múltiple en 50 minutos." },
+          { tag:"Info", front:"¿Qué tres partes tiene?", back:"Language Use & Vocabulary, Reading Comprehension, Indirect Writing." },
+          { tag:"Tip", front:"¿Qué significa 'grammar in context'?", back:"Que no te preguntan 'qué es un verbo', sino 'cuál forma verbal es correcta aquí'." },
+        ],
+        quiz: [{
+            q:"El ESLAT se enfoca en…",
+            options:["Memorizar reglas gramaticales","Usar el inglés en contexto real","Solo vocabulario avanzado","Listening y speaking"],
+            answer:1,
+            why:"El examen evalúa aplicación práctica del inglés, no memorización de reglas."
+        }]
+      },
+      estrategia_general: {
+        name: "General Test Strategy",
+        minutes: 10,
+        level: "Essential",
+        banner: {
+          img: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1600&q=70",
+          cap: "50 minutos para 50 preguntas = 1 minuto por pregunta. Organizate."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Time Management & Strategy</h2>
+            <p>Con solo 1 minuto promedio por pregunta, necesitás una estrategia clara.</p>
+            <h3>Estrategia de dos pasadas</h3>
+            <div class="grid-2" style="margin-top:10px;">
+              <div class="callout"><strong>Primera pasada (35 min)</strong><br>• Contestá las fáciles sin dudar<br>• Marcá las difíciles<br>• NO te claves más de 90 segundos<br>• Objetivo: avanzar rápido</div>
+              <div class="callout"><strong>Segunda pasada (10 min)</strong><br>• Volvé a las marcadas<br>• Eliminá opciones absurdas<br>• Elegí la mejor restante<br>• Últimos 5 min: revisión final</div>
+            </div>
+            <div class="example-box"><strong>Regla de oro:</strong><br>Si después de 90 segundos no lo tenés claro, marcá tu mejor guess y seguí. Mejor contestar 45 de 50 bien, que 35 bien porque perdiste tiempo en 5 difíciles.</div>
+            <h3>Tips por sección</h3>
+            <ul>
+              <li><strong>Vocabulary:</strong> Si no conocés la palabra, usá contexto (tono, palabras alrededor).</li>
+              <li><strong>Grammar:</strong> Leé la oración completa. "Suena bien" es válido si estudiaste.</li>
+              <li><strong>Reading:</strong> Subrayá keywords mientras leés. No memorices, comprende.</li>
+              <li><strong>Writing:</strong> La opción más concisa y clara suele ser correcta.</li>
+            </ul>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Timing", front:"¿Cuánto tiempo por pregunta?", back:"~1 minuto promedio. No te claves más de 90 seg en ninguna." },
+          { tag:"Estrategia", front:"¿Qué hacer si no sabés?", back:"Eliminá absurdas, guess inteligente, marcá y seguí." },
+          { tag:"Tip", front:"Checking 'suena bien'", back:"Si estudiaste, tu oído para el inglés es una herramienta válida." },
+        ],
+        quiz: [{
+            q:"Si una pregunta te toma 2 minutos y aún no estás seguro, ¿qué hacés?",
+            options:["La dejás en blanco","Seguís hasta estar 100% seguro","Guess inteligente, marcás y seguís","Adivinás completamente al azar"],
+            answer:2,
+            why:"El tiempo es limitado. Guess inteligente + marca permite avanzar sin perder tiempo crítico."
+        }]
+      }
+    }
+  },
+  language_use: {
+    label: "Language Use & Vocabulary",
+    icon: "fa-language",
+    topics: {
+      verb_tenses: {
+        name: "Verb Tenses in Context",
+        minutes: 15,
+        level: "Key",
+        banner: {
+          img: "https://images.unsplash.com/photo-1471107340929-a87cd0f5b5f3?auto=format&fit=crop&w=1600&q=70",
+          cap: "Los tiempos verbales comunican CUÁNDO y CÓMO ocurre algo."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Verb Tenses: Time Markers Matter</h2>
+            <p>En ESLAT, los verbos no están aislados. El contexto (time markers, otras oraciones) te dice qué tiempo usar.</p>
+            <h3>Principales tiempos y sus señales</h3>
+            <div class="callout"><strong>Simple Present</strong><br>• Hechos generales, rutinas, verdades universales<br>• Time markers: always, usually, every day, often<br>• <em>Example: "Water boils at 100°C."</em></div>
+            <div class="callout"><strong>Present Continuous</strong><br>• Acciones en progreso AHORA o temporales<br>• Time markers: now, right now, at the moment, currently<br>• <em>Example: "She is studying for the exam right now."</em></div>
+            <div class="callout"><strong>Simple Past</strong><br>• Acciones terminadas en el pasado<br>• Time markers: yesterday, last week, in 2020, ago<br>• <em>Example: "They visited Paris last summer."</em></div>
+            <div class="callout"><strong>Present Perfect</strong><br>• Acciones pasadas con conexión al presente<br>• Time markers: already, yet, just, ever, never, recently<br>• <em>Example: "I have already finished my homework."</em></div>
+            <div class="example-box"><strong>Trampa común:</strong><br>"Yesterday, I <em>have seen</em> him."  ❌<br>"Yesterday" es past definido → Simple Past: "I <em>saw</em> him."  ✓</div>
+            <h3>Future Forms</h3>
+            <ul>
+              <li><strong>Will:</strong> decisiones espontáneas, predicciones ("I'll help you.")</li>
+              <li><strong>Going to:</strong> planes o intenciones ("I'm going to study tonight.")</li>
+              <li><strong>Present Continuous for future:</strong> planes definidos ("We're meeting at 5pm.")</li>
+            </ul>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Present", front:"Simple Present: cuándo?", back:"Rutinas, hechos generales, verdades. Markers: always, usually, every day." },
+          { tag:"Past", front:"Simple Past vs Present Perfect", back:"Past = terminado sin conexión a ahora. Perfect = pasado con efecto presente." },
+          { tag:"Trampa", front:"'Yesterday' + present perfect?", back:"❌ Yesterday es tiempo definido → usa Simple Past." },
+        ],
+        quiz: [{
+            q:"'She ___ to the gym every Monday.' ¿Qué tiempo?",
+            options:["go","goes","is going","has gone"],
+            answer:1,
+            why:"'Every Monday' indica rutina → Simple Present. 'She' (3rd person) = 'goes'."
+        }]
+      },
+      prepositions: {
+        name: "Prepositions & Phrases",
+        minutes: 12,
+        level: "Key",
+        banner: {
+          img: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1600&q=70",
+          cap: "Las preposiciones conectan palabras y muestran relaciones (tiempo, lugar, dirección)."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Prepositions: Small Words, Big Impact</h2>
+            <p>Las preposiciones son palabritas que muestran relación entre elementos. En ESLAT, te evalúan si sabés cuál va en cada contexto.</p>
+            <h3>Prepositions of TIME</h3>
+            <div class="callout">• <strong>at:</strong> hora específica (at 5pm, at noon, at night)<br>• <strong>on:</strong> días y fechas (on Monday, on June 15th)<br>• <strong>in:</strong> meses, años, partes del día (in January, in 2024, in the morning)</div>
+            <h3>Prepositions of PLACE</h3>
+            <div class="callout">• <strong>at:</strong> punto específico (at the door, at the bus stop)<br>• <strong>on:</strong> superficie (on the table, on the wall)<br>• <strong>in:</strong> espacio cerrado (in the room, in the box, in the city)</div>
+            <div class="example-box"><strong>Ejemplos:</strong><br>"I'll meet you <strong>at</strong> the airport <strong>at</strong> 6pm <strong>on</strong> Friday."<br>"She lives <strong>in</strong> New York, <strong>on</strong> Fifth Avenue, <strong>at</strong> number 42."</div>
+            <h3>Common Prepositional Phrases</h3>
+            <ul>
+              <li><strong>by:</strong> método/agente ("by car", "by mistake")</li>
+              <li><strong>for:</strong> propósito/duración ("for two hours", "for studying")</li>
+              <li><strong>with:</strong> compañía/instrumento ("with friends", "with a knife")</li>
+              <li><strong>from...to:</strong> rango ("from Monday to Friday")</li>
+            </ul>
+            <div class="callout"><strong>Tip:</strong> Muchas preposiciones no tienen traducción directa del español. Memorizá las más comunes.</div>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Time", front:"at / on / in para tiempo", back:"at=hora, on=día/fecha, in=mes/año/mañana-tarde-noche." },
+          { tag:"Place", front:"at / on / in para lugar", back:"at=punto, on=superficie, in=espacio cerrado." },
+          { tag:"Trampa", front:"'in the night' vs 'at night'", back:"✓ 'at night' (expresión fija). 'in the night' suena raro." },
+        ],
+        quiz: [{
+            q:"'The meeting is ___ Monday ___ 3pm.' ¿Qué preposiciones?",
+            options:["in / at","on / at","at / on","in / on"],
+            answer:1,
+            why:"'on' para día (Monday), 'at' para hora (3pm)."
+        }]
+      },
+      pronouns: {
+        name: "Pronouns & Agreement",
+        minutes: 10,
+        level: "Base",
+        banner: {
+          img: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1600&q=70",
+          cap: "Los pronombres reemplazan nombres. Usá el correcto según función."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Pronouns: Who Does What</h2>
+            <p>Los pronombres evitan repetir nombres. Pero deben concordar en número, género (a veces) y función gramatical.</p>
+            <h3>Tipos de pronombres</h3>
+            <div class="grid-2" style="margin-top:10px;">
+              <div class="callout"><strong>Subject Pronouns</strong><br>I, you, he, she, it, we, they<br><span style="color:var(--text-dim);margin-top:6px;display:block;">Hacen la acción: "She runs."</span></div>
+              <div class="callout"><strong>Object Pronouns</strong><br>me, you, him, her, it, us, them<br><span style="color:var(--text-dim);margin-top:6px;display:block;">Reciben la acción: "I saw him."</span></div>
+            </div>
+            <div class="grid-2" style="margin-top:10px;">
+              <div class="callout"><strong>Possessive Adjectives</strong><br>my, your, his, her, its, our, their<br><span style="color:var(--text-dim);margin-top:6px;display:block;">Van antes de nombre: "my book"</span></div>
+              <div class="callout"><strong>Possessive Pronouns</strong><br>mine, yours, his, hers, ours, theirs<br><span style="color:var(--text-dim);margin-top:6px;display:block;">Reemplazan nombre: "This is mine."</span></div>
+            </div>
+            <div class="example-box"><strong>Trampa común:</strong><br>"Me and John went to the store."  ❌<br>Correcto: "<strong>John and I</strong> went to the store."  ✓<br>(Subject pronoun, no object.)</div>
+            <h3>Reflexive Pronouns</h3>
+            <p>myself, yourself, himself, herself, itself, ourselves, themselves</p>
+            <ul><li>Cuando sujeto = objeto: "She cut <strong>herself</strong>."</li><li>Para énfasis: "I did it <strong>myself</strong>."</li></ul>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Subject", front:"Subject pronouns", back:"I, you, he, she, it, we, they — hacen la acción." },
+          { tag:"Object", front:"Object pronouns", back:"me, you, him, her, it, us, them — reciben la acción." },
+          { tag:"Trampa", front:"'Me and X' como sujeto", back:"❌ Usa 'X and I' (subject form)." },
+        ],
+        quiz: [{
+            q:"'The teacher gave ___ a book.' ¿Qué pronombre?",
+            options:["I","me","my","mine"],
+            answer:1,
+            why:"'me' es object pronoun (recibe la acción: 'gave to me')."
+        }]
+      },
+      vocabulary_context: {
+        name: "Vocabulary in Context",
+        minutes: 12,
+        level: "Key",
+        banner: {
+          img: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1600&q=70",
+          cap: "Context clues te salvan cuando no conocés la palabra."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Vocabulary: Use Context Clues</h2>
+            <p>En ESLAT, las preguntas de vocabulario no son de diccionario. Te dan una palabra en contexto y debés elegir el sinónimo correcto <strong>para esa situación</strong>.</p>
+            <h3>Types of Context Clues</h3>
+            <div class="callout"><strong>1. Definition/Explanation</strong><br>El texto define la palabra directamente.<br><em>"The climate is arid, meaning it receives very little rain."</em><br>→ arid = dry</div>
+            <div class="callout"><strong>2. Synonym/Restatement</strong><br>Otra palabra cercana significa lo mismo.<br><em>"The task was arduous and difficult."</em><br>→ arduous = hard, challenging</div>
+            <div class="callout"><strong>3. Antonym/Contrast</strong><br>Se contrasta con lo opuesto.<br><em>"Unlike his gregarious brother, Tom was shy and reserved."</em><br>→ gregarious = sociable, outgoing</div>
+            <div class="callout"><strong>4. Example</strong><br>Se dan ejemplos que aclaran.<br><em>"Nocturnal animals, such as owls and bats, are active at night."</em><br>→ nocturnal = active at night</div>
+            <div class="example-box"><strong>Strategy:</strong><br>Si no conocés la palabra, buscá pistas en:
+• La misma oración
+• La oración anterior/siguiente
+• El tono general del texto (positive, negative, neutral)</div>
+            <h3>Common Academic Vocabulary</h3>
+            <ul>
+              <li><strong>analyze:</strong> examine in detail</li>
+              <li><strong>significant:</strong> important, notable</li>
+              <li><strong>illustrate:</strong> show, demonstrate</li>
+              <li><strong>derive:</strong> obtain from a source</li>
+              <li><strong>imply:</strong> suggest without saying directly</li>
+            </ul>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Clue", front:"Definition clue", back:"El texto define la palabra directamente: 'X, which means Y'." },
+          { tag:"Clue", front:"Contrast clue", back:"Se usa 'unlike', 'but', 'however' para mostrar lo opuesto." },
+          { tag:"Tip", front:"Si no conocés la palabra...", back:"Buscá sinónimos, ejemplos, contrastes en el contexto. No adivines en vacío." },
+        ],
+        quiz: [{
+            q:"'The author's assertions, or claims, were controversial.' ¿Qué significa 'assertions'?",
+            options:["questions","claims","doubts","stories"],
+            answer:1,
+            why:"'or claims' es restatement/synonym clue. Assertions = claims."
+        }]
+      }
+    }
+  },
+  reading: {
+    label: "Reading Comprehension",
+    icon: "fa-glasses",
+    topics: {
+      main_idea: {
+        name: "Identifying Main Idea",
+        minutes: 12,
+        level: "Key",
+        banner: {
+          img: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&w=1600&q=70",
+          cap: "Main idea = el punto central que el autor quiere comunicar."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Main Idea: The Central Point</h2>
+            <p>La <strong>main idea</strong> es el mensaje principal del texto. No es solo el tema (topic), es lo que el autor DICE sobre ese tema.</p>
+            <h3>Topic vs Main Idea</h3>
+            <div class="grid-2" style="margin-top:10px;">
+              <div class="callout"><strong>Topic</strong><br>De qué habla el texto (2-4 palabras).<br><em>Example: "Climate change"</em></div>
+              <div class="callout"><strong>Main Idea</strong><br>Qué dice sobre el topic (oración completa).<br><em>Example: "Climate change is accelerating due to human activity."</em></div>
+            </div>
+            <div class="example-box"><strong>Cómo encontrarla:</strong><br>1. Lee intro y conclusión (suele estar ahí).<br>2. Preguntate: "¿Qué quiere probar/explicar el autor?"<br>3. La main idea debe abarcar TODO el texto, no solo una parte.</div>
+            <h3>Trampas comunes</h3>
+            <ul>
+              <li><strong>Too specific:</strong> Una idea secundaria que suena bien pero no abarca todo.</li>
+              <li><strong>Too broad:</strong> Tan general que podría aplicar a cualquier texto.</li>
+              <li><strong>Not in the text:</strong> Suena lógico pero el texto no lo dice.</li>
+            </ul>
+            <div class="callout"><strong>Tip:</strong> La main idea correcta debe poder resumir el texto en 1-2 oraciones sin perder el punto central.</div>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Def", front:"Main Idea", back:"El mensaje central que el autor comunica sobre el topic. Debe abarcar todo el texto." },
+          { tag:"Trampa", front:"Too specific", back:"Una idea secundaria que no abarca todo el texto. Suena bien pero es parcial." },
+          { tag:"Tip", front:"¿Dónde buscar la main idea?", back:"Intro y conclusión. Preguntate: '¿Qué quiere probar el autor?'" },
+        ],
+        quiz: [{
+            q:"Si un texto habla de los beneficios y riesgos de la IA, ¿cuál es la main idea más probable?",
+            options:["Artificial intelligence","AI is dangerous","AI offers both benefits and risks that society must consider","Technology is advancing"],
+            answer:2,
+            why:"Oración completa que abarca ambos aspectos (benefits y risks). No es solo topic ni opinión unilateral."
+        }]
+      },
+      inference: {
+        name: "Making Inferences",
+        minutes: 12,
+        level: "Key",
+        banner: {
+          img: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=1600&q=70",
+          cap: "Inferir = leer entre líneas con lógica. No es adivinar."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Inference: Reading Between the Lines</h2>
+            <p>Una <strong>inference</strong> es una conclusión lógica basada en lo que el texto dice o sugiere, aunque no lo diga explícitamente.</p>
+            <div class="example-box"><strong>Example:</strong><br>Text: "Maria closed the window and put on her jacket."<br>Inference: It's cold outside.<br><span style="color:var(--text-dim);display:block;margin-top:6px;">El texto no dice "it's cold", pero las acciones lo sugieren.</span></div>
+            <h3>Valid vs Invalid Inferences</h3>
+            <div class="grid-2" style="margin-top:10px;">
+              <div class="callout"><strong>Valid Inference ✓</strong><br>• Basada en evidencia del texto<br>• Lógica y coherente<br>• No contradice nada<br>• Probable, no solo "posible"</div>
+              <div class="callout"><strong>Invalid Inference ✗</strong><br>• Requiere info externa<br>• Es un salto lógico muy grande<br>• Contradice el texto<br>• Es solo "posible" sin respaldo</div>
+            </div>
+            <h3>Preguntas típicas</h3>
+            <ul>
+              <li>"The author suggests that..."</li>
+              <li>"It can be inferred from the passage that..."</li>
+              <li>"The passage implies that..."</li>
+              <li>"Based on the text, we can conclude that..."</li>
+            </ul>
+            <div class="callout"><strong>Strategy:</strong> Preguntate: "¿Qué parte del texto me permite llegar a esta conclusión?" Si no podés señalar evidencia específica, probablemente no es la correcta.</div>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Def", front:"Inference", back:"Conclusión lógica basada en lo que el texto dice/sugiere, aunque no lo diga explícitamente." },
+          { tag:"Tip", front:"¿Cómo validar una inference?", back:"Preguntate: '¿Puedo señalar evidencia del texto que me lleve a esta conclusión?'" },
+          { tag:"Trampa", front:"'Posible' vs 'Respaldada'", back:"Puede ser posible en la vida real, pero si el texto no lo respalda, no es correcta." },
+        ],
+        quiz: [{
+            q:"Text: 'John checked his watch three times in five minutes.' Inference válida:",
+            options:["John has an expensive watch","John is anxious or waiting for something","John doesn't know the time","John is always punctual"],
+            answer:1,
+            why:"La repetición sugiere ansiedad/espera. No hay evidencia de las otras opciones."
+        }]
+      },
+      fact_opinion: {
+        name: "Fact vs Opinion",
+        minutes: 10,
+        level: "Base",
+        banner: {
+          img: "https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=1600&q=70",
+          cap: "Facts se pueden verificar. Opinions son juicios personales."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Distinguishing Fact from Opinion</h2>
+            <p><strong>Fact:</strong> Statement que se puede verificar o probar (true/false).<br><strong>Opinion:</strong> Juicio personal, creencia o sentimiento (subjective).</p>
+            <h3>Cómo identificarlos</h3>
+            <div class="grid-2" style="margin-top:10px;">
+              <div class="callout"><strong>Facts</strong><br>• Datos, números, fechas<br>• "The Earth orbits the Sun."<br>• "The study included 500 participants."<br>• Se pueden verificar con evidencia</div>
+              <div class="callout"><strong>Opinions</strong><br>• Palabras valorativas (best, worst, should, beautiful)<br>• "This is the best movie ever."<br>• "We should invest more in education."<br>• Subjetivo, depende de perspectiva</div>
+            </div>
+            <div class="example-box"><strong>Señales de Opinion:</strong><br>• I think, I believe, in my view, arguably<br>• Adjetivos valorativos: amazing, terrible, unfair, brilliant<br>• Comparativos absolutos: the best, the worst, the most important</div>
+            <h3>Trampas</h3>
+            <ul>
+              <li><strong>Facts con tono:</strong> "Surprisingly, the rate increased by 10%." → El dato (10%) es fact, pero "surprisingly" es opinion del autor.</li>
+              <li><strong>Expert opinions:</strong> "Dr. Smith believes..." → Sigue siendo opinion, aunque sea de experto.</li>
+            </ul>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Def", front:"Fact", back:"Statement verificable: datos, fechas, hechos comprobables." },
+          { tag:"Def", front:"Opinion", back:"Juicio personal: usa palabras valorativas (best, should, beautiful)." },
+          { tag:"Trampa", front:"Expert opinion", back:"'Dr. X believes...' es opinion, aunque sea de experto. No es fact verificable." },
+        ],
+        quiz: [{
+            q:"¿Cuál es FACT?",
+            options:["This is the most beautiful city.","The population increased by 15% in 2023.","We should protect the environment.","The movie was disappointing."],
+            answer:1,
+            why:"Es dato verificable. Las demás tienen palabras valorativas (most beautiful, should, disappointing)."
+        }]
+      },
+      authors_purpose: {
+        name: "Author's Purpose & Tone",
+        minutes: 12,
+        level: "Key",
+        banner: {
+          img: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1600&q=70",
+          cap: "Purpose = por qué escribió. Tone = cómo 'suena' el autor."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Purpose & Tone: Why and How</h2>
+            <p><strong>Purpose:</strong> El objetivo del autor (informar, persuadir, entretener, explicar).<br><strong>Tone:</strong> La actitud/emoción que transmite (formal, crítico, entusiasta, neutral).</p>
+            <h3>Common Purposes</h3>
+            <div class="callout">• <strong>Inform:</strong> Presentar hechos/información (artículos, reportes)<br>• <strong>Persuade:</strong> Convencer al lector (editoriales, anuncios)<br>• <strong>Entertain:</strong> Divertir (cuentos, humor)<br>• <strong>Explain:</strong> Aclarar cómo funciona algo (instructivos)</div>
+            <h3>Identifying Tone</h3>
+            <p>El tono se detecta en:</p>
+            <ul>
+              <li><strong>Word choice:</strong> "brilliant" vs "adequate" vs "disastrous"</li>
+              <li><strong>Sentence structure:</strong> cortas/directas vs largas/complejas</li>
+              <li><strong>Punctuation:</strong> exclamaciones, preguntas retóricas</li>
+            </ul>
+            <div class="grid-2" style="margin-top:12px;">
+              <div class="callout"><strong>Positive Tones</strong><br>optimistic, enthusiastic, admiring, hopeful, encouraging</div>
+              <div class="callout"><strong>Negative Tones</strong><br>critical, pessimistic, sarcastic, bitter, disapproving</div>
+            </div>
+            <div class="callout" style="margin-top:12px;"><strong>Neutral Tones</strong><br>objective, informative, formal, straightforward</div>
+            <div class="example-box"><strong>Example:</strong><br>"It's astonishing how policymakers continue to ignore scientific evidence."<br>→ Tone: critical/sarcastic<br>→ Purpose: persuade (criticar para cambiar opinion)</div>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Def", front:"Author's Purpose", back:"Por qué escribió: inform, persuade, entertain, explain." },
+          { tag:"Def", front:"Tone", back:"Actitud del autor: formal, crítico, entusiasta, sarcástico, neutral..." },
+          { tag:"Tip", front:"¿Cómo detectar tone?", back:"Word choice, sentence structure, punctuation. Busca adjetivos valorativos." },
+        ],
+        quiz: [{
+            q:"'This groundbreaking research offers hope for millions.' Tone?",
+            options:["critical","neutral","optimistic/enthusiastic","sarcastic"],
+            answer:2,
+            why:"'Groundbreaking' y 'hope' son palabras positivas. Tone es optimistic/enthusiastic."
+        }]
+      }
+    }
+  },
+  writing: {
+    label: "Indirect Writing",
+    icon: "fa-pen",
+    topics: {
+      sentence_correction: {
+        name: "Correcting Sentences",
+        minutes: 12,
+        level: "Key",
+        banner: {
+          img: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1600&q=70",
+          cap: "Identificar y corregir errores gramaticales, de puntuación y estructura."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Sentence Correction: Spot the Error</h2>
+            <p>En ESLAT, te dan una oración con error(es) y debés elegir la versión correcta. Los errores más comunes son:</p>
+            <h3>Errores típicos</h3>
+            <div class="callout"><strong>1. Subject-Verb Agreement</strong><br>❌ "The students is ready."<br>✓ "The students <strong>are</strong> ready."<br><span style="color:var(--text-dim);display:block;margin-top:6px;">Plural subject → plural verb</span></div>
+            <div class="callout"><strong>2. Verb Tense Consistency</strong><br>❌ "She went to the store and buys milk."<br>✓ "She went to the store and <strong>bought</strong> milk."<br><span style="color:var(--text-dim);display:block;margin-top:6px;">Mantén el mismo tiempo verbal</span></div>
+            <div class="callout"><strong>3. Pronoun-Antecedent Agreement</strong><br>❌ "Every student must bring their book."<br>✓ "Every student must bring <strong>his or her</strong> book." (formal)<br>✓ "Students must bring <strong>their</strong> books." (preferible)</div>
+            <div class="callout"><strong>4. Run-on Sentences</strong><br>❌ "I like pizza it's delicious."<br>✓ "I like pizza<strong>. It's</strong> delicious."<br>✓ "I like pizza<strong> because it's</strong> delicious."</div>
+            <div class="callout"><strong>5. Comma Splices</strong><br>❌ "It's cold, I need a jacket."<br>✓ "It's cold<strong>. I</strong> need a jacket."<br>✓ "It's cold<strong>, so I</strong> need a jacket."</div>
+            <h3>Strategy</h3>
+            <ul>
+              <li>Lee la oración completa, no solo la parte subrayada.</li>
+              <li>Identificá el sujeto y asegurate de que el verbo concuerde.</li>
+              <li>Buscá cambios de tiempo verbal inconsistentes.</li>
+              <li>Verificá que los pronombres sean claros y concordantes.</li>
+            </ul>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Error", front:"Subject-Verb Agreement", back:"El verbo debe concordar en número con el sujeto: 'he goes', 'they go'." },
+          { tag:"Error", front:"Run-on sentence", back:"Dos oraciones completas unidas sin puntuación o conector adecuado." },
+          { tag:"Error", front:"Comma splice", back:"Dos oraciones completas unidas solo con coma. Necesita punto, punto y coma o conector." },
+        ],
+        quiz: [{
+            q:"¿Cuál es correcta?",
+            options:["The team are winning the game.","The team is winning the game.","The team be winning the game.","The team winning the game."],
+            answer:1,
+            why:"'Team' es singular collective noun → 'is'. (En inglés americano, colectivos suelen ser singular.)"
+        }]
+      },
+      combining_sentences: {
+        name: "Combining Sentences",
+        minutes: 10,
+        level: "Base",
+        banner: {
+          img: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1600&q=70",
+          cap: "Convertir oraciones cortas en una más compleja y fluida."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Sentence Combining: Flow & Clarity</h2>
+            <p>Muchas veces, varias oraciones cortas se pueden combinar en una más clara y sofisticada. ESLAT evalúa si sabés hacerlo correctamente.</p>
+            <h3>Métodos de combinación</h3>
+            <div class="callout"><strong>1. Coordinación (FANBOYS)</strong><br>For, And, Nor, But, Or, Yet, So<br><em>"I studied. I passed."</em> → "I studied<strong>, so</strong> I passed."</div>
+            <div class="callout"><strong>2. Subordinación</strong><br>because, although, when, if, since, while<br><em>"It was raining. We stayed home."</em> → "<strong>Because</strong> it was raining, we stayed home."</div>
+            <div class="callout"><strong>3. Participial Phrases</strong><br><em>"She finished homework. She went to bed."</em> → "<strong>Having finished</strong> her homework, she went to bed."</div>
+            <div class="callout"><strong>4. Appositives</strong><br><em>"John is a doctor. He lives next door."</em> → "John<strong>, a doctor,</strong> lives next door."</div>
+            <div class="example-box"><strong>Trampa común:</strong><br>Combinar sin puntuación o conector adecuado = run-on.<br>❌ "I studied I passed."<br>✓ "I studied, so I passed."</div>
+            <h3>Criterios para elegir la mejor combinación</h3>
+            <ul>
+              <li>Mantiene el sentido original</li>
+              <li>Es gramaticalmente correcta</li>
+              <li>Es más concisa y clara</li>
+              <li>Suena natural (no forzada)</li>
+            </ul>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Método", front:"Coordinación (FANBOYS)", back:"For, And, Nor, But, Or, Yet, So — para ideas de igual importancia." },
+          { tag:"Método", front:"Subordinación", back:"because, although, when, if — una idea depende de la otra." },
+          { tag:"Trampa", front:"Combinar sin conector", back:"❌ Crea run-on. Siempre usá conector o puntuación adecuada." },
+        ],
+        quiz: [{
+            q:"Combinar: 'It's late. We should go.' Mejor opción:",
+            options:["It's late we should go.","It's late, we should go.","It's late, so we should go.","It's late we should go so."],
+            answer:2,
+            why:"'so' es el conector causal correcto con coma. Las otras tienen errores."
+        }]
+      },
+      paragraph_improvement: {
+        name: "Improving Paragraphs",
+        minutes: 15,
+        level: "Key",
+        banner: {
+          img: "https://images.unsplash.com/photo-1455390582262-044cdead277a?auto=format&fit=crop&w=1600&q=70",
+          cap: "Editar párrafos para mejorar coherencia, transiciones y organización."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Paragraph Improvement: Edit Like a Pro</h2>
+            <p>Te dan un párrafo (o dos) como "borrador" y debés mejorar: organización, transiciones, claridad, coherencia.</p>
+            <h3>Qué evalúa</h3>
+            <div class="callout"><strong>1. Oración tema (topic sentence)</strong><br>¿Cuál es la mejor oración para iniciar el párrafo?<br>→ Debe introducir la idea principal claramente.</div>
+            <div class="callout"><strong>2. Oración de cierre (concluding sentence)</strong><br>¿Cuál es la mejor para cerrar?<br>→ Debe resumir o concluir sin introducir ideas nuevas.</div>
+            <div class="callout"><strong>3. Secuencia lógica</strong><br>¿En qué orden deben ir las oraciones?<br>→ Cronológico, causa-efecto, general-específico...</div>
+            <div class="callout"><strong>4. Oraciones irrelevantes</strong><br>¿Qué oración NO pertenece?<br>→ Busca la que cambia de tema o no aporta al punto principal.</div>
+            <div class="callout"><strong>5. Transiciones</strong><br>¿Qué palabra/frase conecta mejor?<br>→ However, furthermore, in addition, for example, as a result...</div>
+            <div class="example-box"><strong>Tip:</strong><br>Lee el párrafo completo primero. Preguntate:
+• ¿Cuál es la idea principal?
+• ¿Las oraciones fluyen lógicamente?
+• ¿Algo suena fuera de lugar?</div>
+            <h3>Conectores de transición comunes</h3>
+            <ul>
+              <li><strong>Adición:</strong> furthermore, moreover, in addition, also</li>
+              <li><strong>Contraste:</strong> however, on the other hand, nevertheless</li>
+              <li><strong>Causa/Efecto:</strong> therefore, as a result, consequently</li>
+              <li><strong>Ejemplo:</strong> for example, for instance, specifically</li>
+              <li><strong>Tiempo:</strong> first, then, finally, meanwhile</li>
+            </ul>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Edit", front:"Topic sentence", back:"Oración que introduce la idea principal del párrafo. Suele ir al inicio." },
+          { tag:"Edit", front:"Irrelevant sentence", back:"Oración que cambia de tema o no aporta al punto principal. Se debe eliminar." },
+          { tag:"Transitions", front:"'However' indica...", back:"Contraste con la idea anterior." },
+        ],
+        quiz: [{
+            q:"¿Qué conector usarías para agregar una idea que apoya la anterior?",
+            options:["However","Furthermore","Therefore","Instead"],
+            answer:1,
+            why:"'Furthermore' = además, adición. 'However' es contraste, 'Therefore' es conclusión."
+        }]
+      }
+    }
+  },
+  practice: {
+    label: "Practice & Tips",
+    icon: "fa-dumbbell",
+    topics: {
+      common_mistakes: {
+        name: "Common Mistakes to Avoid",
+        minutes: 10,
+        level: "Essential",
+        banner: {
+          img: "https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&w=1600&q=70",
+          cap: "Conocer los errores típicos te ayuda a evitarlos."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Top 10 Common Mistakes</h2>
+            <p>Estos son los errores más frecuentes que los estudiantes cometen en ESLAT. Evitarlos puede subirte varios puntos.</p>
+            <h3>1. Subject-Verb Agreement</h3>
+            <div class="callout">❌ "The list of items <em>are</em> long."<br>✓ "The list of items <em>is</em> long."<br><span style="color:var(--text-dim);display:block;margin-top:6px;">El sujeto es "list" (singular), no "items".</span></div>
+            <h3>2. Confusing Similar Words</h3>
+            <div class="callout">• <strong>their/there/they're</strong><br>• <strong>your/you're</strong><br>• <strong>its/it's</strong><br>• <strong>affect/effect</strong> (affect = verb, effect = noun)</div>
+            <h3>3. Apostrophes</h3>
+            <div class="callout">❌ "The dog wagged it's tail."<br>✓ "The dog wagged <em>its</em> tail." (possessive, no apostrophe)<br>✓ "<em>It's</em> raining." (it is = contraction)</div>
+            <h3>4. Double Negatives</h3>
+            <div class="callout">❌ "I don't have <em>no</em> money."<br>✓ "I don't have <em>any</em> money."<br>✓ "I have <em>no</em> money."</div>
+            <h3>5. Misplaced Modifiers</h3>
+            <div class="callout">❌ "Running quickly, the finish line was crossed."<br>✓ "Running quickly, <em>she</em> crossed the finish line."<br><span style="color:var(--text-dim);display:block;margin-top:6px;">El modifier debe estar cerca de lo que modifica.</span></div>
+            <h3>Otros errores comunes</h3>
+            <ul>
+              <li><strong>6. Incomplete comparisons:</strong> "She is taller." (taller than who?)</li>
+              <li><strong>7. Who vs Whom:</strong> who = subject, whom = object.</li>
+              <li><strong>8. Less vs Fewer:</strong> less = uncountable, fewer = countable.</li>
+              <li><strong>9. Redundancy:</strong> "past history", "close proximity".</li>
+              <li><strong>10. Sentence fragments:</strong> "Because I was tired." (incomplete thought)</li>
+            </ul>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Error", front:"its vs it's", back:"its = possessive (su). it's = it is (contracción)." },
+          { tag:"Error", front:"Double negative", back:"'don't have no' = ❌. Usa 'don't have any' o 'have no'." },
+          { tag:"Error", front:"Affect vs Effect", back:"affect = verb (afectar). effect = noun (efecto)." },
+        ],
+        quiz: [{
+            q:"¿Cuál es correcta?",
+            options:["The cat licked it's paw.","The cat licked its paw.","The cat licked its' paw.","The cat licked it is paw."],
+            answer:1,
+            why:"'its' = possessive (sin apostrophe). 'it's' = it is."
+        }]
+      },
+      final_tips: {
+        name: "Final Test-Taking Tips",
+        minutes: 8,
+        level: "Essential",
+        banner: {
+          img: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=1600&q=70",
+          cap: "Últimos consejos para maximizar tu score."
+        },
+        content: `
+          <div class="section-block">
+            <h2>Last-Minute Wisdom</h2>
+            <p>Ya estudiaste. Ahora asegurate de rendir al máximo el día del examen.</p>
+            <h3>Antes del examen</h3>
+            <ul>
+              <li><strong>Dormí bien:</strong> Brain function cae sin sueño.</li>
+              <li><strong>Desayuná:</strong> Tu cerebro necesita energía.</li>
+              <li><strong>Llegá temprano:</strong> Sin stress de último minuto.</li>
+              <li><strong>Llevá reloj:</strong> Para controlar tiempo (si se permite).</li>
+            </ul>
+            <h3>Durante el examen</h3>
+            <div class="callout"><strong>1. Lee TODAS las opciones</strong><br>No elijas la primera que "suena bien". La última puede ser mejor.</div>
+            <div class="callout"><strong>2. Eliminá obviamente incorrectas</strong><br>Si podés descartar 2 opciones, tu probabilidad sube de 25% a 50%.</div>
+            <div class="callout"><strong>3. "Suena raro" es una señal</strong><br>Si algo suena incorrecto, probablemente lo es (si estudiaste).</div>
+            <div class="callout"><strong>4. No cambies respuestas sin razón</strong><br>Tu primera intuición suele ser correcta. Solo cambiá si encontrás un error claro.</div>
+            <div class="callout"><strong>5. No dejes blancos</strong><br>Si te quedás sin tiempo, guess inteligente en las que faltan.</div>
+            <h3>Prioridades según tu nivel</h3>
+            <ul>
+              <li><strong>Si tu inglés es básico:</strong> Enfocate en Language Use (es más predecible).</li>
+              <li><strong>Si tu inglés es intermedio:</strong> Balanceá tiempo. Reading puede darte más puntos.</li>
+              <li><strong>Si tu inglés es avanzado:</strong> Andá rápido en las fáciles, invertí tiempo en las tramposas.</li>
+            </ul>
+            <div class="example-box"><strong>Mindset:</strong><br>No necesitás perfección, necesitás enough points para el nivel que querés. Enfocate en maximizar aciertos, no en no fallar ninguna.</div>
+          </div>
+          {{FLASHCARDS}}
+          {{QUIZ}}
+        `,
+        flashcards: [
+          { tag:"Tip", front:"¿Lee todas las opciones?", back:"Sí. La última puede ser mejor que la primera que 'suena bien'." },
+          { tag:"Tip", front:"¿Cambiar respuestas?", back:"Solo si encontrás un error claro. Primera intuición suele ser correcta." },
+          { tag:"Tip", front:"Si te quedás sin tiempo...", back:"Guess inteligente en las que faltan. No dejes blancos." },
+        ],
+        quiz: [{
+            q:"Si podés eliminar 2 opciones incorrectas, tu probabilidad de acertar es:",
+            options:["25%","33%","50%","75%"],
+            answer:2,
+            why:"De 4 opciones quedan 2 → 50% de probabilidad. Siempre elimina antes de adivinar."
+        }]
+      }
+    }
+  }
+};
+
+function renderSidebar(){
+  let html = "";
+  for(let catKey in eslatData){
+    const cat = eslatData[catKey];
+    html += `
+      <div class="category-group">
+        <div class="category-title">
+          <i class="fa-solid ${cat.icon}"></i> ${cat.label}
+        </div>
+    `;
+    for(let tKey in cat.topics){
+      const t = cat.topics[tKey];
+      const done = state[catKey + "_" + tKey] ? true : false;
+      html += `
+        <div class="topic-link ${done?'done':''}" data-cat="${catKey}" data-topic="${tKey}">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span>${esc(t.name)}</span>
+            ${done ? '<i class="fa-solid fa-circle-check" style="color:var(--ok);"></i>' : ''}
+          </div>
+          <div class="topic-meta">
+            <span><i class="fa-regular fa-clock"></i> ${t.minutes} min</span>
+            <span><i class="fa-solid fa-signal"></i> ${esc(t.level)}</span>
+          </div>
+        </div>
+      `;
+    }
+    html += `</div>`;
+  }
+  document.getElementById("sidebar").innerHTML = html;
+  document.getElementById("sidebarMobile").innerHTML = html;
+  attachTopicClicks();
+  updateProgress();
+}
+
+function attachTopicClicks(){
+  document.querySelectorAll(".topic-link").forEach(el => {
+    el.addEventListener("click", () => {
+      const cat = el.getAttribute("data-cat");
+      const topic = el.getAttribute("data-topic");
+      loadTopic(cat, topic);
+    });
+  });
+}
+
+/* =======================
+   CARGAR TEMA
+======================= */
+let currentCat = null;
+let currentTopic = null;
+
+function loadTopic(catKey, topicKey){
+  currentCat = catKey;
+  currentTopic = topicKey;
+
+  const t = eslatData[catKey].topics[topicKey];
+
+  document.getElementById("welcome").style.display = "none";
+  document.getElementById("topic").style.display = "block";
+  document.getElementById("topic-title").textContent = t.name;
+
+  // Banner
+  if(t.banner){
+    document.getElementById("topicBanner").style.display = "block";
+    document.getElementById("topicImg").src = t.banner.img;
+    document.getElementById("topicImgCap").textContent = t.banner.cap;
+  } else {
+    document.getElementById("topicBanner").style.display = "none";
+  }
+
+  // Procesar contenido
+  let content = t.content;
+
+  // Flashcards
+  if(t.flashcards && t.flashcards.length > 0){
+    let fcHtml = `
+      <div class="section-block">
+        <div class="flashcards-bar">
+          <h2><i class="fa-regular fa-clone"></i> Flashcards</h2>
+          <button class="btn" id="shuffleCards"><i class="fa-solid fa-shuffle"></i> Shuffle</button>
+        </div>
+        <div class="flashcards" id="flashcardsContainer"></div>
+      </div>
+    `;
+    content = content.replace("{{FLASHCARDS}}", fcHtml);
+  } else {
+    content = content.replace("{{FLASHCARDS}}", "");
+  }
+
+  // Quiz
+  if(t.quiz && t.quiz.length > 0){
+    let qHtml = `
+      <div class="section-block">
+        <h2><i class="fa-solid fa-gamepad"></i> Mini Quiz</h2>
+        <div class="quiz" id="quizContainer"></div>
+      </div>
+    `;
+    content = content.replace("{{QUIZ}}", qHtml);
+  } else {
+    content = content.replace("{{QUIZ}}", "");
+  }
+
+  document.getElementById("topic-content").innerHTML = content;
+
+  // Renderizar flashcards
+  if(t.flashcards && t.flashcards.length > 0){
+    renderFlashcards(t.flashcards);
+    document.getElementById("shuffleCards").addEventListener("click", () => {
+      renderFlashcards(shuffle(t.flashcards));
+    });
+  }
+
+  // Renderizar quiz
+  if(t.quiz && t.quiz.length > 0){
+    renderQuiz(t.quiz);
+  }
+
+  // Marcar activo en sidebar
+  document.querySelectorAll(".topic-link").forEach(el => el.classList.remove("active"));
+  document.querySelectorAll(`.topic-link[data-cat="${catKey}"][data-topic="${topicKey}"]`).forEach(el => {
+    el.classList.add("active");
+  });
+
+  // Scroll to top
+  document.querySelector(".content-area").scrollTo(0,0);
+
+  // Botones
+  document.getElementById("btnMarkDone").onclick = () => markTopicDone(catKey, topicKey);
+  document.getElementById("btnResetTopic").onclick = () => resetTopic(catKey, topicKey);
+
+  setFlips(0);
+}
+
+/* =======================
+   FLASHCARDS
+======================= */
+function renderFlashcards(cards){
+  let html = "";
+  cards.forEach((c, i) => {
+    html += `
+      <div class="flashcard" data-index="${i}">
+        <div class="flashcard-inner">
+          <div class="flashcard-face flashcard-front">
+            <div class="tag"><i class="fa-solid fa-tag"></i> ${esc(c.tag)}</div>
+            <div class="big">${esc(c.front)}</div>
+            <div class="hint">Click to flip</div>
+          </div>
+          <div class="flashcard-face flashcard-back">
+            <div class="tag"><i class="fa-solid fa-lightbulb"></i> Answer</div>
+            <div class="big">${esc(c.back)}</div>
+            <div class="hint">Click to flip back</div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById("flashcardsContainer").innerHTML = html;
+
+  document.querySelectorAll(".flashcard").forEach(fc => {
+    fc.addEventListener("click", () => {
+      fc.classList.toggle("flipped");
+      if(fc.classList.contains("flipped")){
+        setFlips(flips + 1);
+      }
+    });
+  });
+}
+
+function shuffle(arr){
+  const a = [...arr];
+  for(let i = a.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* =======================
+   QUIZ
+======================= */
+function renderQuiz(questions){
+  let html = "";
+  questions.forEach((q, idx) => {
+    html += `
+      <div class="q" data-qidx="${idx}">
+        <div class="q-title">${idx + 1}. ${esc(q.q)}</div>
+        <div class="options">
+    `;
+    q.options.forEach((opt, oi) => {
+      html += `
+        <div class="opt" data-qidx="${idx}" data-opt="${oi}">
+          <div class="pill">${String.fromCharCode(65 + oi)}</div>
+          <div>${esc(opt)}</div>
+        </div>
+      `;
+    });
+    html += `</div><div class="feedback" id="feedback-${idx}" style="display:none;"></div></div>`;
+  });
+  document.getElementById("quizContainer").innerHTML = html;
+
+  document.querySelectorAll(".opt").forEach(opt => {
+    opt.addEventListener("click", () => {
+      const qidx = parseInt(opt.getAttribute("data-qidx"));
+      const chosen = parseInt(opt.getAttribute("data-opt"));
+      checkAnswer(qidx, chosen);
+    });
+  });
+}
+
+function checkAnswer(qidx, chosen){
+  const q = eslatData[currentCat].topics[currentTopic].quiz[qidx];
+  const correct = q.answer;
+  const allOpts = document.querySelectorAll(`.opt[data-qidx="${qidx}"]`);
+
+  allOpts.forEach(o => {
+    o.style.pointerEvents = "none";
+    const oi = parseInt(o.getAttribute("data-opt"));
+    if(oi === correct){
+      o.classList.add("correct");
+    } else if(oi === chosen){
+      o.classList.add("wrong");
+    }
+  });
+
+  const fb = document.getElementById(`feedback-${qidx}`);
+  if(chosen === correct){
+    fb.innerHTML = `<strong style="color:var(--ok);">✓ Correcto.</strong> ${esc(q.why)}`;
+  } else {
+    fb.innerHTML = `<strong style="color:var(--danger);">✗ Incorrecto.</strong> La correcta es <strong>${String.fromCharCode(65 + correct)}</strong>. ${esc(q.why)}`;
+  }
+  fb.style.display = "block";
+}
+
+/* =======================
+   PROGRESO
+======================= */
+function updateProgress(){
+  let total = 0;
+  let done = 0;
+  for(let catKey in eslatData){
+    for(let tKey in eslatData[catKey].topics){
+      total++;
+      if(state[catKey + "_" + tKey]) done++;
+    }
+  }
+  const pct = total > 0 ? Math.round((done / total) * 100) : 0;
+  document.getElementById("progressBar").style.width = pct + "%";
+  document.getElementById("progressPct").textContent = pct + "%";
+  document.getElementById("progressText").textContent = `${done} de ${total} topics mastered.`;
+}
+
+function markTopicDone(catKey, topicKey){
+  state[catKey + "_" + topicKey] = true;
+  saveState();
+  renderSidebar();
+  alert("✓ Tema marcado como mastered. Keep it up!");
+}
+
+function resetTopic(catKey, topicKey){
+  if(confirm("Reset this topic (quitar 'mastered')?")){
+    delete state[catKey + "_" + topicKey];
+    saveState();
+    renderSidebar();
+  }
+}
+
+/* =======================
+   BÚSQUEDA
+======================= */
+document.getElementById("search").addEventListener("input", e => {
+  const val = e.target.value.toLowerCase();
+  document.querySelectorAll(".topic-link").forEach(link => {
+    const name = link.textContent.toLowerCase();
+    if(name.includes(val)){
+      link.style.display = "block";
+    } else {
+      link.style.display = "none";
+    }
+  });
+});
+
+/* =======================
+   MOBILE DRAWER
+======================= */
+document.getElementById("openDrawer").addEventListener("click", () => {
+  document.getElementById("drawer").style.display = "flex";
+});
+document.getElementById("closeDrawer").addEventListener("click", () => {
+  document.getElementById("drawer").style.display = "none";
+});
+document.getElementById("drawer").addEventListener("click", e => {
+  if(e.target.id === "drawer"){
+    document.getElementById("drawer").style.display = "none";
+  }
+});
+
+/* =======================
+   INIT
+======================= */
+renderSidebar();
+</script>
+
+</body>
+</html>

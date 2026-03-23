@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PAA Digital Academy | Home</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #06b6d4;
+      --primary-glow: rgba(6, 182, 212, 0.4);
+      --bg-dark: #020617;
+      --card-bg: rgba(30, 41, 59, 0.5);
+      --text-main: #f8fafc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at top right, #1e293b, #020617);
+      min-height: 100vh;
+      color: var(--text-main);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-bar {
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      padding: 20px 40px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--primary);
+      text-transform: uppercase;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .welcome-header h1 {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+      background: linear-gradient(to right, #fff, var(--primary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .welcome-header p {
+      color: #94a3b8;
+      font-size: 1.2rem;
+      margin-bottom: 50px;
+    }
+
+    .sections-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+    }
+
+    .main-card {
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 40px 20px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .main-card:hover {
+      transform: translateY(-12px);
+      border-color: var(--primary);
+      box-shadow: 0 20px 40px -10px var(--primary-glow);
+      background: rgba(30, 41, 59, 0.8);
+    }
+
+    .icon-box {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      display: block;
+      filter: drop-shadow(0 0 10px var(--primary-glow));
+    }
+
+    .main-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .main-card p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 768px) {
+      .welcome-header h1 { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav-bar">
+    <div class="nav-title">PAA DIGITAL ACADEMY</div>
+  </nav>
+
+  <main class="container">
+    <header class="welcome-header">
+      <h1>Prepárate para la Universidad</h1>
+      <p>Plataforma de estudio basada en la guía oficial de CollegeBoard</p>
+    </header>
+
+    <div class="sections-grid">
+      <a href="matematicas.html" class="main-card">
+        <span class="icon-box">📐</span>
+        <h3>Matemáticas</h3>
+        <p>Aritmética, Álgebra, Geometría y Probabilidad.</p>
+      </a>
+
+      <a href="lectura.html" class="main-card">
+        <span class="icon-box">📖</span>
+        <h3>Lectura</h3>
+        <p>Análisis de textos, vocabulario y figuras retóricas.</p>
+      </a>
+
+      <a href="redaccion.html" class="main-card">
+        <span class="icon-box">✍️</span>
+        <h3>Redacción</h3>
+        <p>Elisión, adición, generalización e integración.</p>
+      </a>
+
+      <a href="ingles.html" class="main-card">
+        <span class="icon-box">🌐</span>
+        <h3>Inglés (ESLAT)</h3>
+        <p>Uso del lenguaje, comprensión y redacción indirecta.</p>
+      </a>
+    </div>
+  </main>
+
+</body>
+</html>

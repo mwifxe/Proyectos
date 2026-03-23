@@ -1,0 +1,2040 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lectura Avanzada | PAA Academy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #06b6d4;
+      --primary-light: #22d3ee;
+      --bg-dark: #020617;
+      --card-bg: rgba(30, 41, 59, 0.72);
+      --card-bg-2: rgba(15, 23, 42, 0.65);
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
+      --accent: #3b82f6;
+      --good: #34d399;
+      --warn: #fbbf24;
+      --bad: #fb7185;
+      --line: rgba(255,255,255,0.10);
+      --line2: rgba(6, 182, 212, 0.25);
+      --shadow: 0 18px 60px rgba(0,0,0,0.35);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: radial-gradient(circle at top right, #1e293b, #020617);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.65;
+    }
+
+    /* NAV */
+    .nav-bar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      padding: 15px 22px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--line);
+    }
+    .back-btn {
+      color: var(--primary);
+      text-decoration: none;
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 750;
+    }
+    .brand {
+      font-weight: 900;
+      letter-spacing: 0.6px;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand .pill {
+      background: rgba(6,182,212,0.12);
+      border: 1px solid rgba(6,182,212,0.25);
+      color: var(--primary-light);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 800;
+    }
+
+    /* LAYOUT */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      height: calc(100vh - 68px);
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      background: rgba(15, 23, 42, 0.55);
+      border-right: 1px solid rgba(255,255,255,0.05);
+      overflow-y: auto;
+      padding: 18px 14px;
+    }
+
+    .sidebar .search-wrap {
+      position: sticky;
+      top: 0;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(10px);
+      padding: 10px 8px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      z-index: 5;
+    }
+    .search {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(2,6,23,0.55);
+      border: 1px solid rgba(6,182,212,0.18);
+    }
+    .search i { color: rgba(34,211,238,0.9); }
+    .search input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text-main);
+      font-size: 0.95rem;
+    }
+    .search input::placeholder { color: rgba(148,163,184,0.9); }
+
+    .category-group { margin: 16px 8px 22px; }
+    .category-title {
+      color: var(--primary);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      margin-bottom: 10px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.95;
+      justify-content: space-between;
+      width: 100%;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 4px 6px;
+    }
+    .category-title .title-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .category-title .chev {
+      transition: transform 0.2s ease;
+      color: rgba(148,163,184,0.9);
+      font-size: 0.85rem;
+    }
+    .category-group.collapsed .category-title .chev {
+      transform: rotate(-90deg);
+    }
+    .category-group.collapsed .topic-link {
+      display: none;
+      background: linear-gradient(135deg, rgba(6,182,212,0.95), rgba(59,130,246,0.55));
+      color: white;
+      font-weight: 800;
+      border-color: rgba(255,255,255,0.10);
+      box-shadow: 0 14px 40px rgba(6,182,212,0.18);
+    }
+
+    /* CONTENT */
+    .content-area {
+      padding: 34px 34px 60px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(6,182,212,0.14), rgba(59,130,246,0.10));
+      border: 1px solid rgba(6,182,212,0.18);
+      border-radius: 22px;
+      padding: 26px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+    .hero h1 {
+      font-size: 2.35rem;
+      color: var(--primary);
+      font-weight: 950;
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      max-width: 980px;
+    }
+    .hero .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(2,6,23,0.45);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: rgba(226,232,240,0.95);
+      font-size: 0.88rem;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chip i { color: var(--primary-light); }
+
+    .topic-header {
+      margin: 22px 0 14px;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 16px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 14px;
+    }
+    .topic-header h2 {
+      font-size: 2.05rem;
+      color: var(--primary);
+      font-weight: 950;
+      letter-spacing: 0.2px;
+    }
+    .topic-header .mini {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      max-width: 520px;
+      text-align: right;
+    }
+
+    .section-block {
+      background: var(--card-bg);
+      border-radius: 22px;
+      padding: 26px;
+      margin: 18px 0 22px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.25);
+    }
+
+    .section-block h3 {
+      color: var(--primary-light);
+      margin-bottom: 12px;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 900;
+    }
+    .section-block h4 {
+      margin-top: 18px;
+      margin-bottom: 10px;
+      color: rgba(226,232,240,0.95);
+      font-weight: 900;
+      font-size: 1.08rem;
+    }
+
+    .muted { color: var(--text-dim); }
+    .hr { height: 1px; background: rgba(255,255,255,0.08); margin: 18px 0; border-radius: 999px; }
+
+    ul {
+      padding-left: 18px;
+      margin: 10px 0 10px;
+      color: rgba(226,232,240,0.92);
+    }
+    li { margin: 6px 0; }
+
+    .callout {
+      background: rgba(2,6,23,0.45);
+      border: 1px solid rgba(6,182,212,0.18);
+      border-radius: 18px;
+      padding: 16px;
+      margin: 14px 0;
+    }
+
+    .example-box {
+      background: rgba(0,0,0,0.25);
+      border-left: 4px solid var(--accent);
+      padding: 16px 16px 16px 14px;
+      margin: 14px 0;
+      border-radius: 0 14px 14px 0;
+    }
+
+    .tagline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(52,211,153,0.08);
+      border: 1px solid rgba(52,211,153,0.22);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 850;
+      color: rgba(226,232,240,0.95);
+    }
+    .tagline i { color: var(--good); }
+
+    .danger {
+      background: rgba(251,113,133,0.08);
+      border: 1px solid rgba(251,113,133,0.25);
+    }
+    .danger i { color: var(--bad); }
+    .warn {
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.25);
+    }
+    .warn i { color: var(--warn); }
+
+    /* PRACTICE */
+    .passage {
+      background: rgba(2,6,23,0.52);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 16px;
+      margin: 12px 0;
+    }
+    .passage .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+    .passage .meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.55);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .passage p { color: rgba(226,232,240,0.93); margin: 8px 0; }
+
+    .qbox {
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(6,182,212,0.16);
+      background: rgba(6,182,212,0.06);
+    }
+    .qbox .qtitle {
+      font-weight: 900;
+      margin-bottom: 10px;
+      color: rgba(226,232,240,0.96);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .qbox .qtitle i { color: var(--primary-light); }
+    .options {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .opt {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(2,6,23,0.45);
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .opt:hover { transform: translateX(6px); border-color: rgba(6,182,212,0.18); }
+    .opt .k {
+      font-weight: 950;
+      color: var(--primary);
+      min-width: 18px;
+    }
+    .opt .t { color: rgba(226,232,240,0.92); }
+    .reveal {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn {
+      border: none;
+      cursor: pointer;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-weight: 900;
+      color: rgba(255,255,255,0.95);
+      background: linear-gradient(135deg, rgba(6,182,212,0.95), rgba(59,130,246,0.60));
+      box-shadow: 0 10px 30px rgba(6,182,212,0.15);
+      transition: 0.15s;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .answer {
+      display: none;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(52,211,153,0.08);
+      border: 1px solid rgba(52,211,153,0.22);
+      color: rgba(226,232,240,0.95);
+    }
+    .answer .key {
+      color: var(--good);
+      font-weight: 950;
+    }
+
+    /* FLASHCARDS */
+    .flashcard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .flashcard {
+      perspective: 1000px;
+    }
+    .flashcard-inner {
+      position: relative;
+      width: 100%;
+      min-height: 150px;
+      transform-style: preserve-3d;
+      transition: transform 0.6s ease;
+      cursor: pointer;
+    }
+    .flashcard.flip .flashcard-inner { transform: rotateY(180deg); }
+
+    .card-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      padding: 16px;
+      backface-visibility: hidden;
+      border: 1px solid rgba(6,182,212,0.18);
+      background: rgba(2,6,23,0.55);
+      box-shadow: 0 16px 44px rgba(0,0,0,0.25);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+    }
+    .card-front .title {
+      color: var(--primary-light);
+      font-weight: 950;
+      font-size: 1.05rem;
+    }
+    .card-front .hint {
+      color: var(--text-dim);
+      font-size: 0.92rem;
+    }
+
+    .card-back {
+      transform: rotateY(180deg);
+      background: rgba(6,182,212,0.08);
+      border-color: rgba(6,182,212,0.25);
+    }
+    .card-back .body { color: rgba(226,232,240,0.95); }
+    .card-back .mini { color: rgba(148,163,184,0.95); font-size: 0.92rem; margin-top: 6px; }
+
+    /* TABLES + MINI CHARTS */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    th, td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      text-align: left;
+    }
+    th {
+      background: rgba(6,182,212,0.10);
+      color: rgba(226,232,240,0.96);
+      font-weight: 950;
+      font-size: 0.92rem;
+    }
+    td { color: rgba(226,232,240,0.92); }
+    tr:last-child td { border-bottom: none; }
+
+    .chart {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      align-items: end;
+      height: 160px;
+      margin-top: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(2,6,23,0.45);
+    }
+    .bar {
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(6,182,212,0.95), rgba(59,130,246,0.55));
+      position: relative;
+      min-height: 18px;
+      box-shadow: 0 12px 30px rgba(6,182,212,0.10);
+    }
+    .bar span {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: -22px;
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+    .bar b {
+      position: absolute;
+      top: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.82rem;
+      color: rgba(226,232,240,0.95);
+      opacity: 0.95;
+    }
+
+    /* IMAGES (SVG cards) */
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+    .img-card {
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(2,6,23,0.50);
+      padding: 14px;
+      overflow: hidden;
+    }
+    .img-card .cap {
+      margin-top: 10px;
+      color: var(--text-dim);
+      font-size: 0.92rem;
+    }
+    .svg-wrap {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(6,182,212,0.15);
+      background: radial-gradient(circle at top right, rgba(6,182,212,0.10), rgba(2,6,23,0.45));
+    }
+
+    /* MOBILE */
+    @media (max-width: 900px) {
+      .main-layout { grid-template-columns: 1fr; height: auto; }
+      .sidebar { display: none; }
+      .content-area { padding: 22px 16px 52px; }
+      .topic-header { flex-direction: column; align-items: flex-start; }
+      .topic-header .mini { text-align: left; }
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav-bar">
+    <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+    <div class="brand">
+      <i class="fas fa-book-open"></i>
+      <span>LECTURA EXPLORER</span>
+      <span class="pill">PAA Mode</span>
+    </div>
+  </nav>
+
+  <div class="main-layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="search-wrap">
+        <div class="search">
+          <i class="fas fa-magnifying-glass"></i>
+          <input id="searchInput" type="text" placeholder="Buscar tema: inferencias, ironía, idea principal..." />
+        </div>
+      </div>
+      <!-- JS injects categories -->
+    </aside>
+
+    <main class="content-area">
+      <div id="welcome">
+        <div class="hero">
+          <h1>Lectura PAA ✨</h1>
+          <p>
+            Esta sección entrena lo que la prueba exige: <b>comprender, analizar, inferir, comparar</b>,
+            dominar <b>vocabulario en contexto</b>, leer tablas/gráficas y reconocer recursos literarios.
+            Acá no venís a “leer bonito”; venís a <b>ganar puntos</b>.
+          </p>
+          <div class="chips">
+            <span class="chip"><i class="fas fa-bullseye"></i> Idea principal</span>
+            <span class="chip"><i class="fas fa-layer-group"></i> Explícitas vs Implícitas</span>
+            <span class="chip"><i class="fas fa-brain"></i> Inferencias (inducción/deducción)</span>
+            <span class="chip"><i class="fas fa-chart-column"></i> Tablas y gráficas</span>
+            <span class="chip"><i class="fas fa-feather"></i> Análisis literario</span>
+            <span class="chip"><i class="fas fa-mask"></i> Figuras retóricas</span>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <h3><i class="fas fa-compass"></i> Qué se espera del estudiante (en cristiano)</h3>
+          <ul>
+            <li><b>Leer y razonar</b> textos literarios y no literarios sin inventarte cosas.</li>
+            <li><b>Distinguir</b> lo que el texto dice (explícito) de lo que sugiere (implícito).</li>
+            <li><b>Vocabulario en contexto</b>: una palabra puede cambiar de meaning según dónde viva.</li>
+            <li><b>Interpretar datos</b>: tablas, gráficas, ilustraciones y su intención.</li>
+            <li><b>Comparar lecturas</b> cuando son dobles: opuestas, similares o complementarias.</li>
+          </ul>
+
+          <div class="callout warn">
+            <span class="tagline warn"><i class="fas fa-triangle-exclamation"></i> Regla de oro</span>
+            <p style="margin-top:10px;color:rgba(226,232,240,0.92)">
+              Respondé <b>según lo que el texto afirma o implica</b>, no según tu opinión, experiencia,
+              ni “pero yo vi un TikTok”.
+            </p>
+          </div>
+
+          <div class="callout">
+            <span class="tagline"><i class="fas fa-stopwatch"></i> Estrategia de tiempo (PAA real)</span>
+            <ul>
+              <li>Si una lectura está <b>pesada</b>, saltala y volvé después: es mejor asegurar puntos rápidos.</li>
+              <li>Probá dos métodos: (A) leer primero y luego preguntas, (B) ver preguntas para saber qué buscar.</li>
+              <li>Leé todas las opciones. La trampa clásica: una opción “verdadera” pero <b>no responde</b> lo que preguntan.</li>
+            </ul>
+          </div>
+
+          <div class="callout danger">
+            <span class="tagline danger"><i class="fas fa-skull"></i> Lo que más mata puntos</span>
+            <ul>
+              <li>Confundir <b>detalle</b> con <b>idea principal</b>.</li>
+              <li>Marcar una opción porque “suena profunda”, aunque el texto no la sostiene.</li>
+              <li>Ignorar conectores: <b>sin embargo</b>, <b>por lo tanto</b>, <b>en cambio</b>. Son flechas del pensamiento.</li>
+              <li>Hacer inferencias que no están ancladas a evidencia textual.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <h3><i class="fas fa-hand-point-left"></i> Usá el menú de la izquierda</h3>
+          <p class="muted">
+            Seleccioná un tema para abrir teoría + ejemplos + práctica + flashcards + “imágenes” de apoyo.
+            (En móvil la sidebar se oculta; si querés, luego te armo un menú hamburguesa).
+          </p>
+        </div>
+      </div>
+
+      <div id="topic" style="display:none;">
+        <div class="topic-header">
+          <h2 id="tTitle"></h2>
+          <div class="mini" id="tMini"></div>
+        </div>
+        <div id="tBody"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <script>
+    // ========= Helpers =========
+    function esc(str) {
+      return (str || "").replace(/[&<>"']/g, s => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[s]));
+    }
+
+    function makeFlashcards(cards) {
+      if (!cards || !cards.length) return `<p class="muted">Flashcards en preparación...</p>`;
+      return `
+        <div class="flashcard-grid">
+          ${cards.map((c, i) => `
+            <div class="flashcard" onclick="this.classList.toggle('flip')" role="button" aria-label="Flashcard ${i+1}">
+              <div class="flashcard-inner">
+                <div class="card-face card-front">
+                  <div class="title">${esc(c.front)}</div>
+                  <div class="hint">${esc(c.hint || "Click para voltear")}</div>
+                </div>
+                <div class="card-face card-back">
+                  <div class="body">${c.back}</div>
+                  ${c.mini ? `<div class="mini">${c.mini}</div>` : ``}
+                </div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function makePractice(practice) {
+      if (!practice || !practice.length) return `<p class="muted">Práctica en preparación...</p>`;
+      return practice.map((p, idx) => {
+        const id = `ans_${Date.now()}_${idx}`;
+        return `
+          <div class="passage">
+            <div class="meta">
+              ${(p.tags||[]).map(t => `<span><i class="fas fa-tag"></i> ${esc(t)}</span>`).join("")}
+              ${p.level ? `<span><i class="fas fa-signal"></i> ${esc(p.level)}</span>` : ``}
+              ${p.type ? `<span><i class="fas fa-file-lines"></i> ${esc(p.type)}</span>` : ``}
+            </div>
+            ${p.passage ? `<div class="callout"><b>Lectura:</b><div style="margin-top:8px">${p.passage}</div></div>` : ``}
+            ${(p.questions||[]).map((q, qIdx) => `
+              <div class="qbox">
+                <div class="qtitle"><i class="fas fa-circle-question"></i> ${esc(q.prompt)}</div>
+                <div class="options">
+                  ${q.options.map((opt, kIdx) => {
+                    const key = String.fromCharCode(65 + kIdx);
+                    return `
+                      <div class="opt" onclick="selectOpt(this, '${id}_${qIdx}', '${key}')">
+                        <div class="k">${key}</div>
+                        <div class="t">${opt}</div>
+                      </div>
+                    `;
+                  }).join("")}
+                </div>
+                <div class="reveal">
+                  <button class="btn" onclick="toggleAnswer('${id}_${qIdx}')"><i class="fas fa-eye"></i> Ver respuesta</button>
+                  <div class="muted" id="pick_${id}_${qIdx}">Tu selección: —</div>
+                </div>
+                <div class="answer" id="${id}_${qIdx}">
+                  <div><span class="key">Clave:</span> ${esc(q.answer)}</div>
+                  ${q.explain ? `<div style="margin-top:8px">${q.explain}</div>` : ``}
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        `;
+      }).join("");
+    }
+
+    function makeImages(images) {
+      if (!images || !images.length) return `<p class="muted">Imágenes de apoyo en preparación...</p>`;
+      return `
+        <div class="img-grid">
+          ${images.map(img => `
+            <div class="img-card">
+              <div class="svg-wrap">${img.svg}</div>
+              <div class="cap">${img.caption || ""}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function toggleAnswer(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.display = (el.style.display === "block") ? "none" : "block";
+    }
+
+    function selectOpt(cardEl, qid, key) {
+      const pick = document.getElementById(`pick_${qid}`);
+      if (pick) pick.textContent = `Tu selección: ${key}`;
+      // simple highlight
+      const box = cardEl.closest(".qbox");
+      if (box) {
+        box.querySelectorAll(".opt").forEach(o => o.style.borderColor = "rgba(255,255,255,0.06)");
+        cardEl.style.borderColor = "rgba(6,182,212,0.35)";
+      }
+    }
+
+    // ========= Data (Lectura PAA) =========
+    const lecturaData = {
+      fundamentos: {
+        label: "Panorama PAA",
+        icon: "fa-compass",
+        subtopics: {
+          como_funciona: {
+            name: "Cómo se presenta la sección",
+            mini: "Formato, tipos de lectura y cómo NO perder puntos por ansiedad.",
+            sections: [
+              {
+                title: "Formato de la prueba (lo que sí importa)",
+                icon: "fa-list-check",
+                html: `
+                  <p>Los ejercicios de Lectura en la PAA suelen ser:</p>
+                  <ul>
+                    <li><b>Selección múltiple</b> de <b>4 opciones</b>.</li>
+                    <li>Basados en <b>una o dos lecturas</b> (doble lectura = comparar).</li>
+                    <li>Temas variados: ciencias naturales, historia, humanidades, tecnología, etc.</li>
+                    <li>Algunas lecturas incluyen <b>tablas, gráficas o ilustraciones</b> que hay que interpretar.</li>
+                    <li>Si hay vocabulario técnico, suele venir con una <b>nota</b> (¡usala!).</li>
+                  </ul>
+                  <div class="callout">
+                    <b>Tu misión:</b> no solo entender “de qué habla”, sino <b>cómo construye</b> sus ideas:
+                    tesis → razones → evidencia → conclusión → matices (pero, sin embargo, aunque).
+                  </div>
+                `
+              },
+              {
+                title: "Lectura doble (comparar sin morir en el intento)",
+                icon: "fa-code-compare",
+                html: `
+                  <p>En lectura doble, las dos lecturas tratan el mismo tema o temas conectados, pero pueden ser:</p>
+                  <ul>
+                    <li><b>Opuestas</b> (discuten/contradicen).</li>
+                    <li><b>Complementarias</b> (una amplía a la otra).</li>
+                    <li><b>Similares</b> (mismas ideas con distinto enfoque).</li>
+                  </ul>
+                  <div class="example-box">
+                    <b>Truco para comparar:</b> hacé una tabla mental:
+                    <br><b>Lectura A:</b> tesis + evidencia + tono.
+                    <br><b>Lectura B:</b> tesis + evidencia + tono.
+                    <br><b>Relación:</b> ¿se contradicen? ¿se completan? ¿dicen lo mismo distinto?
+                  </div>
+                  <div class="callout warn">
+                    <span class="tagline warn"><i class="fas fa-triangle-exclamation"></i> Trampa común</span>
+                    <p style="margin-top:8px">
+                      Una opción puede ser verdadera para la vida, pero si <b>no está respaldada</b> por el texto, es falsa para la PAA.
+                    </p>
+                  </div>
+                `
+              },
+              {
+                title: "Estrategias rápidas (antes, durante y después)",
+                icon: "fa-bolt",
+                html: `
+                  <h4>Antes de leer</h4>
+                  <ul>
+                    <li>Mirada rápida: título/enunciado/primer párrafo para ubicar tema.</li>
+                    <li>Si el texto es denso, primero ojeá preguntas para saber qué buscar.</li>
+                  </ul>
+                  <h4>Durante</h4>
+                  <ul>
+                    <li>Subrayá <b>tesis</b> (idea que se defiende) y <b>conectores</b>.</li>
+                    <li>Marcá números, fechas, comparaciones, causa-efecto.</li>
+                    <li>Detectá el <b>tono</b>: neutral, crítico, irónico, optimista, alarmista.</li>
+                  </ul>
+                  <h4>Después</h4>
+                  <ul>
+                    <li>Para idea principal: buscá una opción que <b>incluya todo</b>, no un detalle.</li>
+                    <li>Para inferencia: elegí lo que <b>se deduce</b> sin inventar datos.</li>
+                  </ul>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Explícito vs implícito", hint: "¿Qué es qué?", back: "<b>Explícito</b>: lo dice directo. <b>Implícito</b>: lo sugiere, se deduce.", mini: "En PAA: implícito = inferencia con evidencia." },
+              { front: "Tesis", hint: "¿Qué defiende el autor?", back: "La <b>idea central argumentada</b>: postura + enfoque del texto.", mini: "No siempre está en una sola oración, a veces se arma por párrafos." },
+              { front: "Conectores", hint: "Flechas del razonamiento", back: "<b>Pero/sin embargo</b> = contraste. <b>Por lo tanto</b> = conclusión. <b>Porque</b> = causa/razón.", mini: "Ignorarlos es como manejar con los ojos cerrados." }
+            ],
+            practice: [
+              {
+                tags: ["Fundamentos", "Estrategia"],
+                level: "Calentamiento",
+                type: "Texto no literario",
+                passage: `
+                  <p><b>Enunciado:</b> Un texto sobre hábitos de lectura en estudiantes.</p>
+                  <p>
+                    “Aunque muchos estudiantes dicen leer con frecuencia, sus registros de tiempo revelan que la mayoría
+                    dedica menos de veinte minutos diarios a la lectura sostenida. En contraste, el tiempo en redes sociales
+                    supera con facilidad las dos horas. Esta diferencia sugiere que la percepción de ‘leer mucho’ se construye
+                    más por intención que por práctica real.”
+                  </p>
+                `,
+                questions: [
+                  {
+                    prompt: "¿Cuál es la idea principal del fragmento?",
+                    options: [
+                      "Los estudiantes usan redes sociales más de dos horas.",
+                      "Los estudiantes leen menos de veinte minutos.",
+                      "Existe una brecha entre la percepción de lectura y la práctica real.",
+                      "Las redes sociales son negativas para el aprendizaje."
+                    ],
+                    answer: "C",
+                    explain: "A y B son detalles. D es una opinión que el texto no afirma. C integra todo: percepción vs datos."
+                  }
+                ]
+              }
+            ],
+            images: [
+              {
+                caption: "Mapa mental: cómo se construye la idea principal (tesis + soporte).",
+                svg: `
+                  <svg viewBox="0 0 520 240" width="100%" height="180" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                      <linearGradient id="g1" x1="0" x2="1">
+                        <stop offset="0" stop-color="rgba(6,182,212,0.95)"/>
+                        <stop offset="1" stop-color="rgba(59,130,246,0.55)"/>
+                      </linearGradient>
+                    </defs>
+                    <rect x="12" y="12" width="496" height="216" rx="16" fill="rgba(2,6,23,0.45)" stroke="rgba(6,182,212,0.20)"/>
+                    <circle cx="260" cy="120" r="44" fill="url(#g1)" opacity="0.95"/>
+                    <text x="260" y="124" text-anchor="middle" font-size="16" fill="white" font-weight="800">IDEA</text>
+                    <text x="260" y="144" text-anchor="middle" font-size="12" fill="rgba(255,255,255,0.9)">principal</text>
+
+                    <rect x="40" y="40" width="150" height="50" rx="14" fill="rgba(6,182,212,0.10)" stroke="rgba(255,255,255,0.10)"/>
+                    <text x="115" y="70" text-anchor="middle" font-size="14" fill="rgba(226,232,240,0.95)" font-weight="800">Tesis</text>
+
+                    <rect x="330" y="40" width="150" height="50" rx="14" fill="rgba(6,182,212,0.10)" stroke="rgba(255,255,255,0.10)"/>
+                    <text x="405" y="70" text-anchor="middle" font-size="14" fill="rgba(226,232,240,0.95)" font-weight="800">Evidencia</text>
+
+                    <rect x="40" y="150" width="150" height="50" rx="14" fill="rgba(6,182,212,0.10)" stroke="rgba(255,255,255,0.10)"/>
+                    <text x="115" y="180" text-anchor="middle" font-size="14" fill="rgba(226,232,240,0.95)" font-weight="800">Conectores</text>
+
+                    <rect x="330" y="150" width="150" height="50" rx="14" fill="rgba(6,182,212,0.10)" stroke="rgba(255,255,255,0.10)"/>
+                    <text x="405" y="180" text-anchor="middle" font-size="14" fill="rgba(226,232,240,0.95)" font-weight="800">Conclusión</text>
+
+                    <path d="M155 65 C 200 80, 210 95, 220 110" stroke="rgba(34,211,238,0.65)" stroke-width="3" fill="none"/>
+                    <path d="M365 65 C 320 80, 310 95, 300 110" stroke="rgba(34,211,238,0.65)" stroke-width="3" fill="none"/>
+                    <path d="M155 175 C 200 160, 210 145, 220 130" stroke="rgba(34,211,238,0.65)" stroke-width="3" fill="none"/>
+                    <path d="M365 175 C 320 160, 310 145, 300 130" stroke="rgba(34,211,238,0.65)" stroke-width="3" fill="none"/>
+                  </svg>
+                `
+              }
+            ]
+          },
+
+          sugerencias: {
+            name: "Sugerencias para contestar (modo puntos)",
+            mini: "Checklist para no caer en trampas típicas.",
+            sections: [
+              {
+                title: "Checklist PAA (rápido pero letal)",
+                icon: "fa-check-double",
+                html: `
+                  <ul>
+                    <li><b>Leé con atención</b> y seguí el razonamiento del autor, no el tuyo.</li>
+                    <li>Identificá <b>actitud, tono y estilo</b>: neutro, crítico, irónico, persuasivo…</li>
+                    <li>Captá <b>idea principal</b>, luego detalles. No al revés.</li>
+                    <li>Si una lectura está difícil, <b>saltá</b> y volvé.</li>
+                    <li>Contestá con base en lo que el texto <b>afirma o implica</b>.</li>
+                    <li>Leé todas las opciones. Elegí la <b>mejor</b>, no una “medio correcta”.</li>
+                    <li>No elijas una opción solo porque es “verdadera” en general.</li>
+                  </ul>
+                  <div class="callout danger">
+                    <span class="tagline danger"><i class="fas fa-skull"></i> Alerta de trampa</span>
+                    <p style="margin-top:8px">
+                      “Cierta según el texto” ≠ “principal”. La PAA ama opciones correctas pero <b>secundarias</b>.
+                    </p>
+                  </div>
+                `
+              },
+              {
+                title: "Conectores y señales de estructura",
+                icon: "fa-route",
+                html: `
+                  <p>Los conectores son el GPS del argumento.</p>
+                  <table>
+                    <thead><tr><th>Conector</th><th>Función</th><th>Qué buscar</th></tr></thead>
+                    <tbody>
+                      <tr><td><b>Sin embargo</b>, <b>pero</b></td><td>Contraste</td><td>Cambio de idea / refutación</td></tr>
+                      <tr><td><b>Por lo tanto</b>, <b>así</b></td><td>Conclusión</td><td>Idea resultante</td></tr>
+                      <tr><td><b>Porque</b>, <b>debido a</b></td><td>Causa</td><td>Razón / justificación</td></tr>
+                      <tr><td><b>Por ejemplo</b></td><td>Evidencia</td><td>Detalles que apoyan tesis</td></tr>
+                      <tr><td><b>En cambio</b></td><td>Comparación</td><td>Diferencia entre dos elementos</td></tr>
+                    </tbody>
+                  </table>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Opción parcialmente correcta", hint: "Trampa", back: "La opción puede coincidir con un detalle, pero <b>no responde</b> el objetivo de la pregunta.", mini: "Si no conecta con la consigna, se va." },
+              { front: "Tono", hint: "Actitud del autor", back: "Se reconoce por adjetivos, verbos modales (debería), ironía, y selección de evidencia.", mini: "Tono ≠ tema. Tema es de qué habla, tono es cómo lo dice." },
+              { front: "Evidencia textual", hint: "Ancla tus inferencias", back: "Una inferencia válida necesita al menos una pista textual: dato, ejemplo, contraste o conclusión.", mini: "Si no podés señalar la línea mentalmente, es invención." }
+            ]
+          }
+        }
+      },
+
+      vocabulario: {
+        label: "Vocabulario en Contexto",
+        icon: "fa-language",
+        subtopics: {
+          pistas: {
+            name: "Pistas contextuales (sinonimia, definición, entorno)",
+            mini: "Cómo adivinar significados sin diccionario (y hacerlo bien).",
+            sections: [
+              {
+                title: "Qué mide esta categoría",
+                icon: "fa-magnifying-glass",
+                html: `
+                  <p>
+                    Mide tu capacidad de reconocer el significado de una palabra/frase según el contexto.
+                    En la PAA, muchas palabras son <b>polisémicas</b> (tienen varios sentidos).
+                  </p>
+                  <div class="callout">
+                    <b>Clave:</b> la lectura deja pistas. Tu trabajo es cazarlas.
+                  </div>
+                `
+              },
+              {
+                title: "Tipos de pistas contextuales (las que sí salen)",
+                icon: "fa-clues",
+                html: `
+                  <ul>
+                    <li><b>Sinonimia</b>: el texto usa una palabra cercana (“es decir”, “o sea”).</li>
+                    <li><b>Definición</b>: el texto explica directo entre comas o paréntesis.</li>
+                    <li><b>Ejemplo</b>: “por ejemplo…” te muestra la idea.</li>
+                    <li><b>Contraste</b>: “sin embargo” revela el sentido opuesto.</li>
+                    <li><b>Campo semántico</b>: palabras alrededor pertenecen a un mismo tema.</li>
+                    <li><b>Tono/registro</b>: formal, técnico, coloquial: limita significados posibles.</li>
+                  </ul>
+                  <div class="example-box">
+                    <b>Tip ninja:</b> si la palabra está cerca de una comparación o una oposición, ahí está su sentido real.
+                  </div>
+                `
+              },
+              {
+                title: "Método rápido (3 pasos)",
+                icon: "fa-shoe-prints",
+                html: `
+                  <ol style="padding-left:18px;margin-top:10px">
+                    <li><b>Reemplazá</b> la palabra por un comodín: “algo”, “persona”, “acción”.</li>
+                    <li><b>Leé la oración</b> con el comodín: ¿qué tiene que encajar lógicamente?</li>
+                    <li><b>Probá opciones</b>: la correcta mantiene coherencia de idea y tono.</li>
+                  </ol>
+                  <div class="callout warn">
+                    <span class="tagline warn"><i class="fas fa-triangle-exclamation"></i> Prohibido</span>
+                    <p style="margin-top:8px">Elegir el significado “más común” si el contexto empuja a otro.</p>
+                  </div>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Palabra polisémica", hint: "Tiene más de un sentido", back: "Una palabra con varios significados posibles según contexto.", mini: "PAA: te ponen el sentido menos obvio." },
+              { front: "Pista por contraste", hint: "‘Sin embargo’ te sopla", back: "Si el texto contrasta dos ideas, el sentido de la palabra suele alinearse con el lado que refuerza.", mini: "Ojo con ‘aunque’, ‘no obstante’, ‘en cambio’." },
+              { front: "Pista por definición", hint: "Comas/guiones", back: "A veces el autor define la palabra: entre comas, paréntesis o con ‘es decir’.", mini: "Si existe, esa pista manda." }
+            ],
+            practice: [
+              {
+                tags: ["Vocabulario", "Pistas contextuales"],
+                level: "Intermedio",
+                type: "Texto informativo",
+                passage: `
+                  <p><b>Enunciado:</b> Un texto sobre energía renovable.</p>
+                  <p>
+                    “La implementación fue <i>gradual</i>: primero se instalaron paneles en edificios públicos y,
+                    posteriormente, se extendió el programa a comunidades rurales.”
+                  </p>
+                `,
+                questions: [
+                  {
+                    prompt: "En este contexto, ‘gradual’ significa:",
+                    options: [
+                      "Que ocurrió de forma repentina.",
+                      "Que ocurrió por etapas, poco a poco.",
+                      "Que ocurrió sin planificación.",
+                      "Que ocurrió únicamente en zonas rurales."
+                    ],
+                    answer: "B",
+                    explain: "La pista es la secuencia: ‘primero… posteriormente…’. Eso indica etapas."
+                  }
+                ]
+              }
+            ],
+            images: [
+              {
+                caption: "Radar de pistas: dónde mirar cuando una palabra te quiere trolear.",
+                svg: `
+                  <svg viewBox="0 0 520 240" width="100%" height="180" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="12" y="12" width="496" height="216" rx="16" fill="rgba(2,6,23,0.45)" stroke="rgba(6,182,212,0.20)"/>
+                    <circle cx="260" cy="120" r="88" fill="rgba(6,182,212,0.07)" stroke="rgba(34,211,238,0.30)"/>
+                    <circle cx="260" cy="120" r="58" fill="rgba(59,130,246,0.06)" stroke="rgba(59,130,246,0.25)"/>
+                    <circle cx="260" cy="120" r="28" fill="rgba(6,182,212,0.10)" stroke="rgba(6,182,212,0.35)"/>
+                    <text x="260" y="124" text-anchor="middle" fill="white" font-weight="900">PALABRA</text>
+
+                    <text x="260" y="34" text-anchor="middle" fill="rgba(226,232,240,0.92)" font-weight="800">Definición</text>
+                    <text x="428" y="92" text-anchor="middle" fill="rgba(226,232,240,0.92)" font-weight="800">Ejemplo</text>
+                    <text x="428" y="168" text-anchor="middle" fill="rgba(226,232,240,0.92)" font-weight="800">Contraste</text>
+                    <text x="260" y="216" text-anchor="middle" fill="rgba(226,232,240,0.92)" font-weight="800">Sinonimia</text>
+                    <text x="92" y="168" text-anchor="middle" fill="rgba(226,232,240,0.92)" font-weight="800">Entorno</text>
+                    <text x="92" y="92" text-anchor="middle" fill="rgba(226,232,240,0.92)" font-weight="800">Tono</text>
+
+                    <line x1="260" y1="120" x2="260" y2="48" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                    <line x1="260" y1="120" x2="392" y2="90" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                    <line x1="260" y1="120" x2="396" y2="168" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                    <line x1="260" y1="120" x2="260" y2="196" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                    <line x1="260" y1="120" x2="130" y2="168" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                    <line x1="260" y1="120" x2="130" y2="92" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                  </svg>
+                `
+              }
+            ]
+          },
+
+          trampas: {
+            name: "Trampas frecuentes (la PAA es una ilusionista)",
+            mini: "Cómo detectar distractores en vocabulario.",
+            sections: [
+              {
+                title: "Tipos de distractores clásicos",
+                icon: "fa-masks-theater",
+                html: `
+                  <ul>
+                    <li><b>Sinónimo real… pero de otro sentido</b> (polisemia).</li>
+                    <li><b>Definición general</b> que ignora el contexto.</li>
+                    <li><b>Opción extrema</b> (siempre, nunca, totalmente) cuando el texto es matizado.</li>
+                    <li><b>Opción técnica</b> “sonora” aunque el texto es cotidiano (o al revés).</li>
+                  </ul>
+                  <div class="example-box">
+                    Si el texto dice “podría” y una opción dice “demuestra”, esa opción está inflando el nivel de certeza.
+                  </div>
+                `
+              },
+              {
+                title: "Regla de coherencia",
+                icon: "fa-link",
+                html: `
+                  <p>
+                    La opción correcta es la que, al reemplazar la palabra, mantiene:
+                    <b>coherencia lógica</b> + <b>tono</b> + <b>dirección argumentativa</b>.
+                  </p>
+                  <div class="callout">
+                    <b>Micro-test:</b> reemplazá la palabra con la opción. Si el párrafo suena “fuera de personaje”, no es.
+                  </div>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Opción extrema", hint: "Siempre/Nunca", back: "Distractor típico: absolutos. Si el texto está matizado, el absoluto muere.", mini: "PAA ama ‘la mejor’ opción, no la más dramática." },
+              { front: "Registro", hint: "Formal vs coloquial", back: "El registro del texto limita significados: una palabra ‘técnica’ rara vez encaja en un texto emocional, y viceversa.", mini: "Coherencia de estilo cuenta." }
+            ]
+          }
+        }
+      },
+
+      explicitas_implicitas: {
+        label: "Ideas Explícitas e Implícitas",
+        icon: "fa-layer-group",
+        subtopics: {
+          literal_detalles: {
+            name: "Sentido literal, datos, detalles y ejemplos",
+            mini: "Lo que el texto dice sin maquillaje.",
+            sections: [
+              {
+                title: "Qué te preguntan aquí",
+                icon: "fa-eye",
+                html: `
+                  <ul>
+                    <li><b>Sentido literal</b>: “¿Qué afirma el texto?”</li>
+                    <li><b>Detalles</b>: fechas, causas, números, nombres, acciones.</li>
+                    <li><b>Ejemplos</b>: casos que apoyan una idea.</li>
+                  </ul>
+                  <div class="callout">
+                    <b>Clave:</b> estas preguntas se responden <b>buscando</b> (scanning) el fragmento correcto.
+                    No requieren “interpretación creativa”.
+                  </div>
+                `
+              },
+              {
+                title: "Técnica: escaneo inteligente",
+                icon: "fa-crosshairs",
+                html: `
+                  <ol style="padding-left:18px;margin-top:10px">
+                    <li>Ubicá palabras clave de la pregunta (número, año, nombre, comparativo).</li>
+                    <li>Buscá conectores: “por ejemplo”, “debido a”, “como resultado”.</li>
+                    <li>Confirmá con el texto: <b>no adivinés</b> por memoria.</li>
+                  </ol>
+                  <div class="example-box">
+                    Si preguntan por “principal causa”, buscá “debido a”, “porque”, “causó”, “originó”.
+                  </div>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Dato", hint: "Hecho verificable", back: "Información específica: número, fecha, nombre, descripción directa.", mini: "No requiere inferencia." },
+              { front: "Ejemplo", hint: "Soporte", back: "Caso particular que ilustra una idea general.", mini: "Si te preguntan idea principal, no te quedés pegada al ejemplo." }
+            ],
+            practice: [
+              {
+                tags: ["Explícito", "Detalles"],
+                level: "Calentamiento",
+                type: "Texto expositivo",
+                passage: `
+                  <p><b>Enunciado:</b> Fragmento sobre migración urbana.</p>
+                  <p>
+                    “Entre 1990 y 2020, la población urbana del país aumentó un 35%. Este crecimiento se concentró
+                    en las áreas metropolitanas, donde el acceso a empleo y educación resultó más atractivo.”
+                  </p>
+                `,
+                questions: [
+                  {
+                    prompt: "Según el texto, ¿en qué período aumentó la población urbana?",
+                    options: ["1970-1990", "1990-2020", "2000-2010", "2010-2020"],
+                    answer: "B",
+                    explain: "Es literal: ‘Entre 1990 y 2020…’"
+                  },
+                  {
+                    prompt: "¿Dónde se concentró el crecimiento?",
+                    options: ["En zonas rurales", "En áreas costeras", "En áreas metropolitanas", "En pequeñas ciudades"],
+                    answer: "C",
+                    explain: "Literal: ‘se concentró en las áreas metropolitanas’."
+                  }
+                ]
+              }
+            ]
+          },
+
+          idea_principal_resumen_tema: {
+            name: "Propósito/tesis, resumen e idea principal",
+            mini: "La diferencia entre ‘de qué habla’ y ‘qué sostiene’ (sí, no es lo mismo).",
+            sections: [
+              {
+                title: "Tema vs idea principal vs tesis",
+                icon: "fa-diagram-project",
+                html: `
+                  <table>
+                    <thead><tr><th>Concepto</th><th>Qué es</th><th>Cómo se reconoce</th></tr></thead>
+                    <tbody>
+                      <tr>
+                        <td><b>Tema</b></td>
+                        <td>Asunto general</td>
+                        <td>Se responde con 1-3 palabras: “energía solar”, “migración”, “poesía romántica”.</td>
+                      </tr>
+                      <tr>
+                        <td><b>Idea principal</b></td>
+                        <td>Mensaje central del texto</td>
+                        <td>Incluye lo esencial y excluye detalles. Debe abarcar la mayoría del contenido.</td>
+                      </tr>
+                      <tr>
+                        <td><b>Tesis/Propósito</b></td>
+                        <td>Postura o intención</td>
+                        <td>¿Qué quiere lograr el autor? ¿Convencer? ¿Informar? ¿Criticar? ¿Proponer?</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div class="callout">
+                    <b>Regla PAA:</b> la idea principal suele ser la opción <b>más inclusiva</b> sin ser vaga.
+                    Ni “todo”, ni “un detalle”.
+                  </div>
+                `
+              },
+              {
+                title: "Cómo detectar propósito (intención del autor)",
+                icon: "fa-bullseye",
+                html: `
+                  <ul>
+                    <li><b>Informar</b>: tono neutral + datos + definiciones.</li>
+                    <li><b>Argumentar</b>: tesis + razones + refutación de objeciones.</li>
+                    <li><b>Persuadir</b>: llamado a acción, urgencia, lenguaje valorativo.</li>
+                    <li><b>Explicar</b>: causa-efecto, proceso, “cómo/por qué”.</li>
+                    <li><b>Criticar</b>: énfasis en fallas, contradicciones, consecuencias negativas.</li>
+                  </ul>
+                  <div class="example-box">
+                    Si el texto usa “debería”, “urge”, “es necesario”, probablemente busca persuadir o proponer.
+                  </div>
+                `
+              },
+              {
+                title: "Resumen correcto (sin traicionar al texto)",
+                icon: "fa-scroll",
+                html: `
+                  <p>Un resumen PAA:</p>
+                  <ul>
+                    <li>Incluye <b>ideas esenciales</b>, no ejemplos menores.</li>
+                    <li>Respeta el <b>enfoque</b> y el <b>tono</b> del autor.</li>
+                    <li>No agrega opiniones ni explicaciones externas.</li>
+                  </ul>
+                  <div class="callout warn">
+                    <span class="tagline warn"><i class="fas fa-triangle-exclamation"></i> Ojo</span>
+                    <p style="margin-top:8px">
+                      “Resumen” no es “copia con sinónimos”. Es condensar estructura: idea → soporte → cierre.
+                    </p>
+                  </div>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Tema", hint: "¿De qué trata?", back: "Asunto general (1-3 palabras).", mini: "Tema ≠ conclusión." },
+              { front: "Idea principal", hint: "¿Qué dice el texto en esencia?", back: "Mensaje central que integra la mayoría del contenido.", mini: "Evita detalles y evita vaguedad." },
+              { front: "Propósito", hint: "¿Para qué escribió?", back: "Intención del autor: informar, persuadir, explicar, criticar, etc.", mini: "Se detecta por tono + estructura + verbos." }
+            ],
+            practice: [
+              {
+                tags: ["Idea principal", "Propósito"],
+                level: "Intermedio",
+                type: "Texto argumentativo",
+                passage: `
+                  <p><b>Enunciado:</b> Opinión sobre transporte público.</p>
+                  <p>
+                    “Invertir en transporte público no solo reduce el tráfico; también mejora la calidad del aire y
+                    aumenta la productividad al disminuir tiempos de traslado. Aunque requiere inversión inicial,
+                    sus beneficios sociales y económicos justifican priorizarlo frente a soluciones centradas únicamente
+                    en ampliar carreteras.”
+                  </p>
+                `,
+                questions: [
+                  {
+                    prompt: "¿Cuál es el propósito del autor?",
+                    options: [
+                      "Narrar una experiencia personal en transporte.",
+                      "Explicar cómo se construyen carreteras.",
+                      "Convencer de priorizar el transporte público.",
+                      "Comparar marcas de autobuses."
+                    ],
+                    answer: "C",
+                    explain: "Hay postura clara y defensa: ‘justifican priorizarlo…’"
+                  },
+                  {
+                    prompt: "La idea principal es que:",
+                    options: [
+                      "El tráfico es un problema inevitable.",
+                      "El transporte público ofrece beneficios que justifican priorizar su inversión.",
+                      "Ampliar carreteras siempre resuelve el tráfico.",
+                      "La calidad del aire solo depende del transporte."
+                    ],
+                    answer: "B",
+                    explain: "Integra beneficios + conclusión del autor."
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+
+      inferencias: {
+        label: "Análisis, Interpretación e Inferencias",
+        icon: "fa-brain",
+        subtopics: {
+          inferencia_tipos: {
+            name: "Inferencia: inducción, deducción e implicación",
+            mini: "Inferir sin inventar: el arte de ser Sherlock, no adivino.",
+            sections: [
+              {
+                title: "Qué es una inferencia (PAA edition)",
+                icon: "fa-magnifying-glass-plus",
+                html: `
+                  <p>
+                    Inferir es concluir algo que <b>no está dicho literalmente</b>, pero está <b>apoyado</b> por el texto.
+                    Es una conclusión lógica, no una opinión.
+                  </p>
+                  <div class="callout">
+                    <b>Chequeo rápido:</b> Si alguien te pregunta “¿Dónde lo dice?”, deberías poder señalar la pista.
+                  </div>
+                `
+              },
+              {
+                title: "Tipos: inducción, deducción e implicación",
+                icon: "fa-sitemap",
+                html: `
+                  <table>
+                    <thead><tr><th>Tipo</th><th>Qué hace</th><th>Ejemplo</th></tr></thead>
+                    <tbody>
+                      <tr>
+                        <td><b>Inducción</b></td>
+                        <td>De casos particulares → conclusión general probable.</td>
+                        <td>“En varios estudios X ocurre… por tanto, suele ocurrir.”</td>
+                      </tr>
+                      <tr>
+                        <td><b>Deducción</b></td>
+                        <td>De una regla general → caso particular.</td>
+                        <td>“Si todos A son B, y C es A, entonces C es B.”</td>
+                      </tr>
+                      <tr>
+                        <td><b>Implicación</b></td>
+                        <td>Consecuencia lógica de lo dicho (lo que se sigue).</td>
+                        <td>“Si disminuye X, entonces es esperable que aumente Y.”</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                `
+              },
+              {
+                title: "Cómo evitar inferencias fantasmas",
+                icon: "fa-ghost",
+                html: `
+                  <ul>
+                    <li>No metas causas que el texto no menciona.</li>
+                    <li>No subas el nivel de certeza: “podría” ≠ “demuestra”.</li>
+                    <li>No generalices: “en este caso” ≠ “siempre”.</li>
+                    <li>Preferí opciones <b>conservadoras</b> pero bien sostenidas.</li>
+                  </ul>
+                  <div class="callout danger">
+                    <span class="tagline danger"><i class="fas fa-skull"></i> Señal roja</span>
+                    <p style="margin-top:8px">
+                      Si la opción agrega un concepto nuevo que el texto nunca toca, casi siempre es distractor.
+                    </p>
+                  </div>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Inferencia", hint: "Conclusión apoyada", back: "Conclusión lógica basada en pistas del texto.", mini: "No está literal, pero se deduce." },
+              { front: "Inducción", hint: "Particular → general", back: "Generalización probable a partir de varios casos.", mini: "No es 100% certeza; es probabilidad razonable." },
+              { front: "Deducción", hint: "General → particular", back: "Aplicación de una regla general a un caso.", mini: "Si la regla es válida, la conclusión es firme." }
+            ],
+            practice: [
+              {
+                tags: ["Inferencias", "Evidencia"],
+                level: "Intermedio",
+                type: "Texto científico divulgativo",
+                passage: `
+                  <p><b>Enunciado:</b> Fragmento sobre sueño y aprendizaje.</p>
+                  <p>
+                    “Estudiantes que durmieron al menos siete horas mostraron mejor rendimiento en tareas de memoria
+                    que aquellos con menos de cinco. Los investigadores sugieren que el sueño favorece la consolidación
+                    de información adquirida durante el día.”
+                  </p>
+                `,
+                questions: [
+                  {
+                    prompt: "¿Qué se puede inferir razonablemente del texto?",
+                    options: [
+                      "Dormir siempre garantiza calificaciones perfectas.",
+                      "El sueño podría contribuir a mejorar la memoria.",
+                      "Los estudiantes con menos de cinco horas no aprenden nada.",
+                      "La memoria depende únicamente de la alimentación."
+                    ],
+                    answer: "B",
+                    explain: "Es conservadora y coincide con ‘sugieren’ y con la comparación de rendimiento."
+                  }
+                ]
+              }
+            ]
+          },
+
+          evidencia: {
+            name: "Identificación de evidencias (para validar inferencias)",
+            mini: "No es ‘creo que…’, es ‘porque el texto dice…’.",
+            sections: [
+              {
+                title: "Qué te preguntan",
+                icon: "fa-thumbtack",
+                html: `
+                  <p>
+                    A veces la PAA te da una inferencia y te pregunta: <b>¿qué parte del texto la respalda?</b>.
+                    O al revés: te da un fragmento y te pide inferir qué sostiene.
+                  </p>
+                  <div class="callout">
+                    <b>Regla:</b> evidencia = frase/dato/ejemplo que, sin necesidad de adorno, sostiene la conclusión.
+                  </div>
+                `
+              },
+              {
+                title: "Tipos de evidencia dentro del texto",
+                icon: "fa-layer-group",
+                html: `
+                  <ul>
+                    <li><b>Dato</b> (números, porcentajes, fechas).</li>
+                    <li><b>Ejemplo</b> (caso específico).</li>
+                    <li><b>Autoridad</b> (cita de expertos/estudios).</li>
+                    <li><b>Comparación</b> (antes/después, A vs B).</li>
+                    <li><b>Causa-efecto</b> (razón → consecuencia).</li>
+                  </ul>
+                `
+              },
+              {
+                title: "Método ‘ancla’",
+                icon: "fa-anchor",
+                html: `
+                  <ol style="padding-left:18px;margin-top:10px">
+                    <li>Formulá la inferencia en una oración.</li>
+                    <li>Buscá en el texto una línea que sería “prueba” en un juicio.</li>
+                    <li>Si necesitás agregar 3 frases tuyas para que encaje, no era evidencia.</li>
+                  </ol>
+                  <div class="example-box">
+                    Evidencia fuerte = “compararon dos grupos y…” o “el texto afirma que…”
+                  </div>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Evidencia fuerte", hint: "Prueba directa", back: "Dato o afirmación explícita que sostiene una conclusión sin interpretación excesiva.", mini: "Casi siempre incluye números/comparación/causa-efecto." },
+              { front: "Evidencia débil", hint: "Sugiere, pero no prueba", back: "Frase ambigua o general que podría apoyar varias conclusiones.", mini: "PAA prefiere la evidencia más específica." }
+            ]
+          },
+
+          estructura_discurso: {
+            name: "Estructura del texto + tipos de discurso",
+            mini: "Narración, descripción, exposición, argumentación (y cómo se huelen).",
+            sections: [
+              {
+                title: "Tipos de discurso (lo básico que sí sale)",
+                icon: "fa-pen-nib",
+                html: `
+                  <table>
+                    <thead><tr><th>Tipo</th><th>Objetivo</th><th>Señales</th></tr></thead>
+                    <tbody>
+                      <tr><td><b>Narración</b></td><td>Contar hechos</td><td>Acciones, tiempo, personajes, sucesos.</td></tr>
+                      <tr><td><b>Descripción</b></td><td>Pintar con palabras</td><td>Adjetivos, detalles sensoriales, rasgos.</td></tr>
+                      <tr><td><b>Exposición</b></td><td>Informar/explicar</td><td>Definiciones, datos, orden lógico, causa-efecto.</td></tr>
+                      <tr><td><b>Argumentación</b></td><td>Convencer</td><td>Tesis, razones, evidencia, contraargumentos.</td></tr>
+                    </tbody>
+                  </table>
+                `
+              },
+              {
+                title: "Estructuras frecuentes en textos no literarios",
+                icon: "fa-diagram-predecessor",
+                html: `
+                  <ul>
+                    <li><b>Problema-solución</b>: plantea un problema → propone acciones.</li>
+                    <li><b>Causa-efecto</b>: explica por qué ocurre algo y qué provoca.</li>
+                    <li><b>Comparación/contraste</b>: A vs B con semejanzas/diferencias.</li>
+                    <li><b>Secuencia/proceso</b>: pasos en orden (primero, luego…).</li>
+                    <li><b>Enumeración</b>: lista de aspectos (por un lado… por otro…)</li>
+                  </ul>
+                  <div class="callout">
+                    <b>¿Por qué importa?</b> Porque muchas preguntas son de “estructura”: dónde está la tesis,
+                    qué función tiene un párrafo, qué hace un ejemplo.
+                  </div>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Exposición", hint: "Informar/explicar", back: "Presenta información objetiva, definiciones y relaciones lógicas.", mini: "Tono neutral, conectores lógicos." },
+              { front: "Argumentación", hint: "Convencer", back: "Defiende una postura con razones y evidencia.", mini: "Incluye tesis y, a veces, refutación." },
+              { front: "Problema-solución", hint: "Estructura", back: "Texto presenta un problema y propone respuestas o medidas.", mini: "Suele aparecer en temas sociales/ambientales." }
+            ]
+          }
+        }
+      },
+
+      cuantitativa: {
+        label: "Información cuantitativa y gráficos",
+        icon: "fa-chart-column",
+        subtopics: {
+          tablas_graficas: {
+            name: "Interpretar tablas y gráficas (sin pánico)",
+            mini: "Leer datos como detective: tendencias, comparaciones, proporciones.",
+            sections: [
+              {
+                title: "Qué mide esta categoría",
+                icon: "fa-chart-line",
+                html: `
+                  <p>
+                    Mide tu capacidad de interpretar, relacionar y usar información cuantitativa incluida en la lectura:
+                    <b>tablas</b>, <b>gráficas</b> e <b>ilustraciones</b>.
+                  </p>
+                  <div class="callout">
+                    <b>Esto no es mate pesada.</b> Es lectura con números: tendencia, comparación, proporción, excepción.
+                  </div>
+                `
+              },
+              {
+                title: "Checklist para datos (5 preguntas clave)",
+                icon: "fa-clipboard-question",
+                html: `
+                  <ul>
+                    <li><b>¿Qué mide?</b> (variable, unidades, población).</li>
+                    <li><b>¿En qué período?</b> (tiempo, antes/después).</li>
+                    <li><b>¿Cuál es la tendencia?</b> (sube, baja, se mantiene, fluctúa).</li>
+                    <li><b>¿Cuál es el mayor/menor?</b> (máximos, mínimos).</li>
+                    <li><b>¿Hay excepciones?</b> (un dato que rompe el patrón).</li>
+                  </ul>
+                `
+              },
+              {
+                title: "Ejemplo con tabla (y lo que te pueden preguntar)",
+                icon: "fa-table",
+                html: `
+                  <p><b>Tabla:</b> Participación en actividades (encuesta a estudiantes)</p>
+                  <table>
+                    <thead><tr><th>Actividad</th><th>% participa</th></tr></thead>
+                    <tbody>
+                      <tr><td>Lectura diaria</td><td>22%</td></tr>
+                      <tr><td>Deporte semanal</td><td>48%</td></tr>
+                      <tr><td>Redes sociales (2h+)</td><td>71%</td></tr>
+                      <tr><td>Club académico</td><td>15%</td></tr>
+                    </tbody>
+                  </table>
+                  <div class="example-box">
+                    Preguntas típicas:
+                    <ul>
+                      <li>¿Cuál actividad tiene mayor porcentaje?</li>
+                      <li>¿Qué diferencia hay entre A y B?</li>
+                      <li>¿Qué conclusión apoya el dato?</li>
+                    </ul>
+                  </div>
+                `
+              },
+              {
+                title: "Ejemplo con gráfica (mini barras)",
+                icon: "fa-chart-simple",
+                html: `
+                  <p><b>Gráfica:</b> Libros leídos por mes (grupo A)</p>
+                  <div class="chart" aria-label="Gráfica de barras">
+                    <div class="bar" style="height:30%"><b>3</b><span>Ene</span></div>
+                    <div class="bar" style="height:40%"><b>4</b><span>Feb</span></div>
+                    <div class="bar" style="height:55%"><b>6</b><span>Mar</span></div>
+                    <div class="bar" style="height:50%"><b>5</b><span>Abr</span></div>
+                    <div class="bar" style="height:65%"><b>7</b><span>May</span></div>
+                    <div class="bar" style="height:60%"><b>6</b><span>Jun</span></div>
+                  </div>
+                  <div class="callout">
+                    <b>Interpretación:</b> tendencia general al alza hasta mayo; leve descenso en junio.
+                  </div>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Tendencia", hint: "Patrón de cambio", back: "Comportamiento general: aumenta, disminuye, se mantiene o fluctúa.", mini: "No confundir tendencia con un punto aislado." },
+              { front: "Excepción", hint: "Dato raro", back: "Un valor que rompe el patrón general.", mini: "PAA ama preguntarte por el outlier." },
+              { front: "Comparación", hint: "A vs B", back: "Relación entre dos valores: diferencia, proporción, orden (mayor/menor).", mini: "Cuidado con confundir ‘más del doble’ vs ‘más que’." }
+            ],
+            practice: [
+              {
+                tags: ["Cuantitativa", "Tabla"],
+                level: "Intermedio",
+                type: "Texto con datos",
+                passage: `
+                  <p><b>Enunciado:</b> La lectura incluye una tabla sobre hábitos.</p>
+                  <p>Según la tabla anterior, la actividad con mayor porcentaje es:</p>
+                `,
+                questions: [
+                  {
+                    prompt: "¿Cuál actividad tiene el porcentaje más alto?",
+                    options: [
+                      "Lectura diaria",
+                      "Deporte semanal",
+                      "Redes sociales (2h+)",
+                      "Club académico"
+                    ],
+                    answer: "C",
+                    explain: "71% es el valor más alto."
+                  }
+                ]
+              }
+            ],
+            images: [
+              {
+                caption: "Cómo leer una gráfica: primero ejes, luego tendencia, luego excepciones.",
+                svg: `
+                  <svg viewBox="0 0 520 240" width="100%" height="180" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="12" y="12" width="496" height="216" rx="16" fill="rgba(2,6,23,0.45)" stroke="rgba(6,182,212,0.20)"/>
+                    <line x1="70" y1="190" x2="470" y2="190" stroke="rgba(226,232,240,0.25)" stroke-width="2"/>
+                    <line x1="70" y1="50" x2="70" y2="190" stroke="rgba(226,232,240,0.25)" stroke-width="2"/>
+                    <text x="72" y="42" fill="rgba(148,163,184,0.95)" font-size="12">Valor</text>
+                    <text x="456" y="210" fill="rgba(148,163,184,0.95)" font-size="12">Tiempo</text>
+
+                    <polyline points="90,170 150,150 210,135 270,110 330,120 390,85 450,95"
+                      fill="none" stroke="rgba(34,211,238,0.75)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="270" cy="110" r="6" fill="rgba(6,182,212,0.95)"/>
+                    <circle cx="390" cy="85" r="6" fill="rgba(6,182,212,0.95)"/>
+
+                    <rect x="86" y="62" width="190" height="58" rx="12" fill="rgba(6,182,212,0.08)" stroke="rgba(6,182,212,0.18)"/>
+                    <text x="100" y="86" fill="rgba(226,232,240,0.95)" font-weight="800" font-size="13">1) Ejes + unidades</text>
+                    <text x="100" y="108" fill="rgba(226,232,240,0.92)" font-size="12">2) Tendencia general</text>
+
+                    <rect x="296" y="130" width="190" height="58" rx="12" fill="rgba(59,130,246,0.08)" stroke="rgba(59,130,246,0.18)"/>
+                    <text x="310" y="154" fill="rgba(226,232,240,0.95)" font-weight="800" font-size="13">3) Excepciones</text>
+                    <text x="310" y="176" fill="rgba(226,232,240,0.92)" font-size="12">4) Conclusión textual</text>
+                  </svg>
+                `
+              }
+            ]
+          }
+        }
+      },
+
+      literario: {
+        label: "Análisis literario",
+        icon: "fa-feather-pointed",
+        subtopics: {
+          generos_elementos: {
+            name: "Géneros literarios + elementos narrativos/poéticos",
+            mini: "Narrativo, lírico, dramático; personajes, voz, tiempo, espacio, rima.",
+            sections: [
+              {
+                title: "Géneros literarios (identificación rápida)",
+                icon: "fa-book",
+                html: `
+                  <ul>
+                    <li><b>Narrativo</b>: cuenta una historia (cuento, novela, crónica). Elementos: narrador, personajes, conflicto.</li>
+                    <li><b>Lírico/poético</b>: expresa sentimientos/visión (poema). Elementos: voz poética, versos, estrofas, rima, ritmo, imágenes.</li>
+                    <li><b>Dramático</b>: pensado para escena (teatro). Elementos: diálogos, acotaciones, actos/escenas.</li>
+                  </ul>
+                  <div class="callout">
+                    <b>PAA tip:</b> si hay “yo” emocional + imágenes sensoriales + versos, suele ser lírico.
+                  </div>
+                `
+              },
+              {
+                title: "Elementos narrativos (lo que te preguntan)",
+                icon: "fa-people-group",
+                html: `
+                  <ul>
+                    <li><b>Narrador</b>: quién cuenta (1ra persona, 3ra, testigo, omnisciente).</li>
+                    <li><b>Personajes</b>: protagonista, antagonista, secundarios (y su evolución).</li>
+                    <li><b>Tiempo</b>: lineal, retrospectivo, saltos; ritmo (rápido/lento).</li>
+                    <li><b>Espacio/ambiente</b>: lugar + clima emocional (opresivo, íntimo, hostil).</li>
+                    <li><b>Conflicto</b>: motor de la historia (interno/externo).</li>
+                  </ul>
+                `
+              },
+              {
+                title: "Elementos poéticos (sí, aparecen)",
+                icon: "fa-music",
+                html: `
+                  <ul>
+                    <li><b>Voz poética</b>: quién “habla” en el poema (no siempre es el autor).</li>
+                    <li><b>Versos</b> y <b>estrofas</b>: estructura del poema.</li>
+                    <li><b>Rima</b>: consonante/asonante o verso libre.</li>
+                    <li><b>Imágenes</b> y figuras retóricas: metáfora, símil, sinestesia…</li>
+                  </ul>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Narrador omnisciente", hint: "Lo sabe todo", back: "Cuenta la historia con acceso a pensamientos/sentimientos de varios personajes.", mini: "Suele usar tercera persona." },
+              { front: "Voz poética", hint: "Quien habla en el poema", back: "La instancia que expresa emociones/ideas; no se asume que es el autor real.", mini: "Puede ser ‘yo’, ‘nosotros’, o una voz impersonal." },
+              { front: "Ambiente", hint: "Lugar + atmósfera", back: "Espacio físico y emocional que rodea la historia.", mini: "Puede ser clave para el tono." }
+            ],
+            practice: [
+              {
+                tags: ["Literario", "Narrador"],
+                level: "Intermedio",
+                type: "Texto narrativo",
+                passage: `
+                  <p><b>Enunciado:</b> Fragmento narrativo.</p>
+                  <p>
+                    “No quise mirar atrás, pero el ruido de sus pasos me seguía. Yo sabía que, si me detenía, todo terminaría
+                    en preguntas que no tenía ganas de responder.”
+                  </p>
+                `,
+                questions: [
+                  {
+                    prompt: "El narrador es:",
+                    options: ["Omnisciente en tercera persona", "Primera persona", "Testigo externo", "Narrador dramático"],
+                    answer: "B",
+                    explain: "Usa ‘yo’ y expresa pensamiento interno."
+                  }
+                ]
+              }
+            ]
+          },
+
+          figuras_retoricas: {
+            name: "Figuras retóricas (MEMORIZAR + identificar)",
+            mini: "Tu PDF hecho en una mega-guía: definiciones, cómo reconocer, ejemplos y flashcards.",
+            sections: [
+              {
+                title: "Importante: esto sí se memoriza",
+                icon: "fa-dumbbell",
+                html: `
+                  <p>
+                    En análisis literario, una parte real del puntaje se te puede ir por no reconocer figuras.
+                    Acá te dejo un set fuerte basado en tus apuntes del PDF :contentReference[oaicite:1]{index=1}.
+                  </p>
+                  <div class="callout">
+                    <b>Cómo identificarlas rápido:</b> preguntate
+                    <ul>
+                      <li>¿Hay comparación? (símil/metáfora)</li>
+                      <li>¿Hay exageración? (hipérbole)</li>
+                      <li>¿Cosas humanas en objetos? (personificación)</li>
+                      <li>¿Sonidos escritos? (onomatopeya)</li>
+                      <li>¿Contradicción con sentido? (paradoja/oxímoron)</li>
+                      <li>¿Cambio del orden? (hipérbaton)</li>
+                      <li>¿Repetición? (anáfora/aliteración)</li>
+                      <li>¿Mezcla de sentidos? (sinestesia)</li>
+                    </ul>
+                  </div>
+                `
+              },
+              {
+                title: "Figuras retóricas (lista completa + cómo reconocer)",
+                icon: "fa-wand-magic-sparkles",
+                html: `
+                  <h4>1) Hipérbole</h4>
+                  <p><b>Qué es:</b> exageración de la realidad (a veces poco probable). <br><b>Cómo se reconoce:</b> “mil”, “nunca”, “todo el mundo”, “me muero”.</p>
+                  <div class="example-box"><b>Ej:</b> “Eso todo el mundo lo sabe.” (exagera la cantidad de gente).</div>
+
+                  <h4>2) Personificación / Prosopopeya</h4>
+                  <p><b>Qué es:</b> atribuir cualidades/acciones humanas a objetos, animales o ideas.</p>
+                  <div class="example-box"><b>Ej:</b> “Las estrellas nos miraban mientras la ciudad dormía.”</div>
+
+                  <h4>3) Símil (comparación explícita)</h4>
+                  <p><b>Qué es:</b> comparación usando <b>como</b>, <b>cual</b>, <b>que</b>, “parece”, “se asemeja”.</p>
+                  <div class="example-box"><b>Ej:</b> “Tus ojos son <b>como</b> dos esmeraldas.”</div>
+
+                  <h4>4) Metáfora (comparación implícita)</h4>
+                  <p><b>Qué es:</b> compara sin “como”; traslada significado: A es B.</p>
+                  <div class="example-box"><b>Ej:</b> “Tus brazos de acero…” (no son acero literal; es fuerza).</div>
+
+                  <h4>5) Antítesis</h4>
+                  <p><b>Qué es:</b> oposición de ideas con palabras antónimas (contraste claro).</p>
+                  <div class="example-box"><b>Ej:</b> “Me esfuerzo por olvidarte, pero te recuerdo aún más.”</div>
+
+                  <h4>6) Onomatopeya</h4>
+                  <p><b>Qué es:</b> imitación de sonidos con palabras.</p>
+                  <div class="example-box"><b>Ej:</b> “¡Boom!”, “¡Crack!”, “kikirikí”.</div>
+
+                  <h4>7) Epíteto</h4>
+                  <p><b>Qué es:</b> adjetivo “innecesario” porque la cualidad ya se entiende; se usa para énfasis estético.</p>
+                  <div class="example-box"><b>Ej:</b> “La oscura noche”, “la blanca nieve”.</div>
+
+                  <h4>8) Sinécdoque</h4>
+                  <p><b>Qué es:</b> relación entre un todo y sus partes (parte por el todo o todo por la parte).</p>
+                  <div class="example-box"><b>Ej:</b> “El señor tiene cuatro bocas que alimentar.” (bocas = personas).</div>
+
+                  <h4>9) Pleonasmo (redundancia)</h4>
+                  <p><b>Qué es:</b> palabras innecesarias que repiten una idea ya implícita.</p>
+                  <div class="example-box"><b>Ej:</b> “Subir arriba”, “bajar abajo”, “lo vi con mis propios ojos”.</div>
+
+                  <h4>10) Paradoja</h4>
+                  <p><b>Qué es:</b> unión de dos ideas contradictorias que revelan verdad o sentido profundo.</p>
+                  <div class="example-box"><b>Ej:</b> “Para llegar rápido hay que ir despacio.”</div>
+
+                  <h4>11) Oxímoron</h4>
+                  <p><b>Qué es:</b> contradicción condensada en <b>dos palabras</b> (paradoja mini).</p>
+                  <div class="example-box"><b>Ej:</b> “Luz oscura”.</div>
+
+                  <h4>12) Aliteración</h4>
+                  <p><b>Qué es:</b> repetición de sonidos (generalmente al inicio) para efecto sonoro.</p>
+                  <div class="example-box"><b>Ej:</b> “En el silencio solo se escuchaba un susurro…” (repite “s”).</div>
+
+                  <h4>13) Anáfora</h4>
+                  <p><b>Qué es:</b> repetición de una palabra/idea al inicio de versos u oraciones.</p>
+                  <div class="example-box"><b>Ej:</b> “Temprano me levanto, temprano actúo, temprano empiezo…”</div>
+
+                  <h4>14) Sinestesia</h4>
+                  <p><b>Qué es:</b> mezcla de sensaciones/sentidos (oído + vista, gusto + vista…).</p>
+                  <div class="example-box"><b>Ej:</b> “Escuchaba música muy dulce.” (gusto aplicado al oído).</div>
+
+                  <h4>15) Metonimia</h4>
+                  <p><b>Qué es:</b> designar algo con otra cosa con la que tiene relación (contenido por continente, autor por obra, etc.).</p>
+                  <div class="example-box"><b>Ej:</b> “Se comió dos platos.” (platos = comida).</div>
+
+                  <h4>16) Ironía (verbal, situacional, trágica)</h4>
+                  <p><b>Qué es:</b> decir/mostrar lo contrario de lo esperado o de lo literal.</p>
+                  <ul>
+                    <li><b>Verbal:</b> decir lo contrario (“¡Qué buen tiempo!” bajo tormenta).</li>
+                    <li><b>Situacional:</b> ocurre lo opuesto a lo esperado.</li>
+                    <li><b>Trágica:</b> el público sabe algo que el personaje no.</li>
+                  </ul>
+
+                  <h4>17) Enumeración</h4>
+                  <p><b>Qué es:</b> acumulación/lista de palabras con una misma idea.</p>
+                  <div class="example-box"><b>Ej:</b> “El mar, las estrellas, la luna, todo se alineó…”</div>
+
+                  <h4>18) Retruécano</h4>
+                  <p><b>Qué es:</b> invertir una frase para cambiar sentido (juego de orden y significado).</p>
+                  <div class="example-box"><b>Ej:</b> “No hay camino para la paz, la paz es el camino.”</div>
+
+                  <h4>19) Hipérbaton</h4>
+                  <p><b>Qué es:</b> alterar el orden lógico de las palabras para enfatizar o dar musicalidad.</p>
+                  <div class="example-box"><b>Ej:</b> “A Dios gracias” → “Gracias a Dios”.</div>
+
+                  <h4>20) Imágenes sensoriales</h4>
+                  <p><b>Qué es:</b> palabras que hacen “sentir” al lector (vista, oído, tacto, olfato, gusto).</p>
+                  <div class="example-box">
+                    <b>Ejemplos:</b> “Olas golpeaban…” (auditivo/táctil), “mirada fría” (tacto/emoción),
+                    “sabor de fruta…” (gustativo), “ambulancia irrumpió” (auditivo).
+                  </div>
+                `
+              },
+              {
+                title: "Diferenciación rápida (para no confundir)",
+                icon: "fa-shuffle",
+                html: `
+                  <table>
+                    <thead><tr><th>Confusión</th><th>Cómo distinguir</th></tr></thead>
+                    <tbody>
+                      <tr><td><b>Metáfora vs Símil</b></td><td>Símil usa “como/cual”; metáfora no.</td></tr>
+                      <tr><td><b>Paradoja vs Oxímoron</b></td><td>Oxímoron = 2 palabras; paradoja = idea completa contradictoria.</td></tr>
+                      <tr><td><b>Sinécdoque vs Metonimia</b></td><td>Sinécdoque = parte/todo. Metonimia = relación asociativa (autor/obra, continente/contenido...).</td></tr>
+                      <tr><td><b>Anáfora vs Aliteración</b></td><td>Anáfora repite <i>palabras</i> al inicio; aliteración repite <i>sonidos</i>.</td></tr>
+                      <tr><td><b>Hipérbole vs Énfasis</b></td><td>Hipérbole exagera hasta lo improbable; énfasis solo resalta sin romper realidad.</td></tr>
+                    </tbody>
+                  </table>
+                `
+              }
+            ],
+            flashcards: [
+              { front: "Hipérbole", hint: "Exageración", back: "Exagera la realidad, incluso a lo improbable.", mini: "‘Te llamé mil veces’." },
+              { front: "Personificación", hint: "Humano en cosas", back: "Atribuir cualidades humanas a objetos/animales/ideas.", mini: "‘El viento susurraba’." },
+              { front: "Símil", hint: "Comparación con ‘como’", back: "Comparación explícita usando conectores.", mini: "‘Brilla como el sol’." },
+              { front: "Metáfora", hint: "A es B", back: "Comparación implícita: traslada significado.", mini: "‘Tus ojos, luceros’." },
+              { front: "Sinestesia", hint: "Mezcla sentidos", back: "Cruza sensaciones (oído + gusto, vista + tacto…).", mini: "‘Un sonido azul’." },
+              { front: "Hipérbaton", hint: "Orden alterado", back: "Cambia el orden lógico para énfasis/musicalidad.", mini: "‘Del salón, salí’." },
+              { front: "Ironía verbal", hint: "Decir lo contrario", back: "Expresión que significa lo opuesto a lo literal.", mini: "‘¡Qué puntual!’ cuando llega tarde." }
+            ],
+            practice: [
+              {
+                tags: ["Figuras", "Identificación"],
+                level: "Intermedio",
+                type: "Texto poético breve",
+                passage: `
+                  <p><b>Enunciado:</b> Fragmento poético.</p>
+                  <p>
+                    “La ciudad dormía y las farolas vigilaban; <br>
+                    mi corazón, un reloj sin minutos, <br>
+                    escuchaba el silencio dulce de la noche.”
+                  </p>
+                `,
+                questions: [
+                  {
+                    prompt: "En ‘las farolas vigilaban’ aparece:",
+                    options: ["Símil", "Personificación", "Onomatopeya", "Pleonasmo"],
+                    answer: "B",
+                    explain: "Vigilar es acción humana atribuida a un objeto (farolas)."
+                  },
+                  {
+                    prompt: "En ‘silencio dulce’ aparece:",
+                    options: ["Sinestesia", "Antítesis", "Enumeración", "Metonimia"],
+                    answer: "A",
+                    explain: "‘Dulce’ es del gusto aplicado a un concepto auditivo/abstracto."
+                  },
+                  {
+                    prompt: "‘Mi corazón, un reloj sin minutos’ es principalmente:",
+                    options: ["Metáfora", "Símil", "Epíteto", "Onomatopeya"],
+                    answer: "A",
+                    explain: "Comparación implícita (corazón = reloj)."
+                  }
+                ]
+              }
+            ],
+            images: [
+              {
+                caption: "Árbol de decisión para figuras retóricas (identificación rápida).",
+                svg: `
+                  <svg viewBox="0 0 520 240" width="100%" height="180" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="12" y="12" width="496" height="216" rx="16" fill="rgba(2,6,23,0.45)" stroke="rgba(6,182,212,0.20)"/>
+                    <rect x="190" y="24" width="140" height="34" rx="12" fill="rgba(6,182,212,0.14)" stroke="rgba(6,182,212,0.22)"/>
+                    <text x="260" y="46" text-anchor="middle" fill="rgba(226,232,240,0.95)" font-weight="900">¿Qué ves?</text>
+
+                    <rect x="34" y="80" width="150" height="40" rx="12" fill="rgba(59,130,246,0.10)" stroke="rgba(255,255,255,0.10)"/>
+                    <text x="109" y="105" text-anchor="middle" fill="rgba(226,232,240,0.95)" font-weight="800">Comparación</text>
+
+                    <rect x="196" y="80" width="128" height="40" rx="12" fill="rgba(59,130,246,0.10)" stroke="rgba(255,255,255,0.10)"/>
+                    <text x="260" y="105" text-anchor="middle" fill="rgba(226,232,240,0.95)" font-weight="800">Exageración</text>
+
+                    <rect x="346" y="80" width="140" height="40" rx="12" fill="rgba(59,130,246,0.10)" stroke="rgba(255,255,255,0.10)"/>
+                    <text x="416" y="105" text-anchor="middle" fill="rgba(226,232,240,0.95)" font-weight="800">Humano en cosa</text>
+
+                    <rect x="34" y="150" width="150" height="56" rx="12" fill="rgba(6,182,212,0.08)" stroke="rgba(6,182,212,0.18)"/>
+                    <text x="109" y="174" text-anchor="middle" fill="rgba(226,232,240,0.95)" font-weight="900">¿‘como’?</text>
+                    <text x="109" y="196" text-anchor="middle" fill="rgba(226,232,240,0.92)" font-size="12">Sí = Símil</text>
+                    <text x="109" y="212" text-anchor="middle" fill="rgba(226,232,240,0.92)" font-size="12">No = Metáfora</text>
+
+                    <rect x="196" y="150" width="128" height="56" rx="12" fill="rgba(6,182,212,0.08)" stroke="rgba(6,182,212,0.18)"/>
+                    <text x="260" y="182" text-anchor="middle" fill="rgba(226,232,240,0.95)" font-weight="900">Hipérbole</text>
+
+                    <rect x="346" y="150" width="140" height="56" rx="12" fill="rgba(6,182,212,0.08)" stroke="rgba(6,182,212,0.18)"/>
+                    <text x="416" y="182" text-anchor="middle" fill="rgba(226,232,240,0.95)" font-weight="900">Personificación</text>
+
+                    <line x1="260" y1="58" x2="109" y2="80" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                    <line x1="260" y1="58" x2="260" y2="80" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                    <line x1="260" y1="58" x2="416" y2="80" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+
+                    <line x1="109" y1="120" x2="109" y2="150" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                    <line x1="260" y1="120" x2="260" y2="150" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                    <line x1="416" y1="120" x2="416" y2="150" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+                  </svg>
+                `
+              }
+            ]
+          }
+        }
+      }
+    };
+
+    // ========= UI Build =========
+    function initSidebar() {
+      const sidebar = document.getElementById("sidebar");
+      const groups = [];
+
+      for (const catKey in lecturaData) {
+        const cat = lecturaData[catKey];
+        const group = document.createElement("div");
+        group.className = "category-group";
+        group.dataset.cat = catKey;
+
+        group.innerHTML = `
+          <div class="category-title">
+            <i class="fas ${cat.icon}"></i>
+            ${esc(cat.label)}
+          </div>
+        `;
+
+        for (const subKey in cat.subtopics) {
+          const sub = cat.subtopics[subKey];
+          const link = document.createElement("a");
+          link.className = "topic-link";
+          link.dataset.sub = `${catKey}.${subKey}`;
+          link.textContent = sub.name;
+          link.onclick = () => loadTopic(catKey, subKey, link);
+          group.appendChild(link);
+        }
+
+        groups.push(group);
+      }
+
+      // Append after search wrap
+      groups.forEach(g => sidebar.appendChild(g));
+    }
+
+    function loadTopic(catKey, subKey, element) {
+      document.querySelectorAll(".topic-link").forEach(l => l.classList.remove("active"));
+      element.classList.add("active");
+
+      document.getElementById("welcome").style.display = "none";
+      document.getElementById("topic").style.display = "block";
+
+      const sub = lecturaData[catKey].subtopics[subKey];
+
+      document.getElementById("tTitle").textContent = sub.name;
+      document.getElementById("tMini").textContent = sub.mini || "";
+
+      const sectionsHTML = (sub.sections || []).map(sec => `
+        <div class="section-block">
+          <h3><i class="fas ${sec.icon || "fa-circle-info"}"></i> ${sec.title || ""}</h3>
+          ${sec.html || ""}
+        </div>
+      `).join("");
+
+      const practiceHTML = `
+        <div class="section-block">
+          <h3><i class="fas fa-pen-to-square"></i> Práctica tipo PAA</h3>
+          ${makePractice(sub.practice)}
+        </div>
+      `;
+
+      const flashHTML = `
+        <div class="section-block">
+          <h3><i class="fas fa-layer-group"></i> Flashcards</h3>
+          <p class="muted">Click en cada tarjeta para voltearla.</p>
+          ${makeFlashcards(sub.flashcards)}
+        </div>
+      `;
+
+      const imgHTML = `
+        <div class="section-block">
+          <h3><i class="fas fa-images"></i> Imágenes de apoyo</h3>
+          ${makeImages(sub.images)}
+        </div>
+      `;
+
+      document.getElementById("tBody").innerHTML =
+        sectionsHTML + practiceHTML + flashHTML + imgHTML;
+
+      // scroll to top of content
+      document.querySelector(".content-area").scrollTop = 0;
+    }
+
+    // ========= Search =========
+    function applySearch(q) {
+      const query = (q || "").trim().toLowerCase();
+      const links = document.querySelectorAll(".topic-link");
+
+      links.forEach(l => {
+        const key = (l.textContent || "").toLowerCase();
+        const show = !query || key.includes(query);
+        l.style.display = show ? "block" : "none";
+      });
+
+      // Hide category if all its items hidden
+      document.querySelectorAll(".category-group").forEach(g => {
+        const visible = Array.from(g.querySelectorAll(".topic-link")).some(a => a.style.display !== "none");
+        g.style.display = visible ? "block" : "none";
+                if (query && visible) {
+          g.classList.remove("collapsed");
+          const toggle = g.querySelector(".category-title");
+          if (toggle) toggle.setAttribute("aria-expanded", "true");
+        }
+      });
+    }
+
+    // ========= Init =========
+    initSidebar();
+    document.getElementById("searchInput").addEventListener("input", (e) => applySearch(e.target.value));
+  </script>
+</body>
+</html>

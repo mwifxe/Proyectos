@@ -1,0 +1,2049 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Matemáticas Avanzadas | PAA Academy</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #06b6d4;
+      --primary-light: #22d3ee;
+      --bg-dark: #020617;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
+      --accent: #3b82f6;
+      --good: #34d399;
+      --warn: #fbbf24;
+      --bad: #fb7185;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: radial-gradient(circle at top right, #1e293b, #020617);
+      color: var(--text-main);
+      min-height: 100vh;
+      line-height: 1.7;
+    }
+
+    /* Navegación */
+    .nav-bar {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15, 23, 42, 0.9);
+      backdrop-filter: blur(12px);
+      padding: 15px 25px;
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      gap: 12px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu-toggle {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      border: 1px solid rgba(6,182,212,0.3);
+      background: rgba(6,182,212,0.12);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(6,182,212,0.24);
+    }
+
+    .back-btn {
+      color: var(--primary); text-decoration: none;
+      display: flex; align-items: center; gap: 8px; font-weight: 700;
+    }
+
+    .brand {
+      font-weight: 900; color: var(--primary);
+      letter-spacing: 1px;
+    }
+
+    /* Layout Principal */
+    .main-layout {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      height: calc(100vh - 72px);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      background: rgba(15, 23, 42, 0.5);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      overflow-y: auto;
+      padding: 18px;
+    }
+
+    .sidebar-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.65);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 90;
+    }
+
+    .sidebar::-webkit-scrollbar { width: 10px; }
+    .sidebar::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.25); border-radius: 999px; }
+    .sidebar::-webkit-scrollbar-track { background: rgba(2,6,23,0.1); }
+
+    .category-group { margin-bottom: 22px; }
+    .category-title {
+      color: var(--primary);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      margin-bottom: 10px;
+      font-weight: 900;
+      display: flex; align-items: center; gap: 10px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(6,182,212,0.08);
+      border: 1px solid rgba(6,182,212,0.12);
+    }
+
+    .topic-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      color: var(--text-dim);
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 0.92rem;
+      transition: 0.18s;
+      cursor: pointer;
+      margin-bottom: 6px;
+      border: 1px solid rgba(255,255,255,0.04);
+      background: rgba(2,6,23,0.15);
+    }
+
+    .topic-link:hover {
+      background: rgba(6, 182, 212, 0.10);
+      color: white;
+      border-color: rgba(6,182,212,0.22);
+      transform: translateX(6px);
+    }
+
+    .topic-link.active {
+      background: rgba(6,182,212,0.18);
+      border-color: rgba(34,211,238,0.4);
+      color: white;
+      font-weight: 800;
+      transform: translateX(6px);
+    }
+
+    .topic-bullet {
+      width: 9px; height: 9px; border-radius: 999px;
+      background: rgba(148,163,184,0.45);
+    }
+    .topic-link.active .topic-bullet { background: var(--primary); box-shadow: 0 0 18px rgba(6,182,212,0.6); }
+
+    /* Contenido */
+    .content-area {
+      padding: 36px 38px;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .content-area::-webkit-scrollbar { width: 12px; }
+    .content-area::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.25); border-radius: 999px; }
+    .content-area::-webkit-scrollbar-track { background: rgba(2,6,23,0.1); }
+
+    .topic-header {
+      margin-bottom: 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .topic-header h1 {
+      font-size: 2.35rem;
+      color: var(--primary);
+      line-height: 1.1;
+    }
+
+    .topic-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--text-dim);
+      font-size: 0.95rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(2,6,23,0.25);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .section-block {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 26px;
+      margin-bottom: 24px;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.20);
+    }
+
+    .section-block h2 {
+      color: var(--primary-light);
+      margin-bottom: 12px;
+      font-size: 1.45rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-block h3 {
+      color: #e2e8f0;
+      margin: 18px 0 8px;
+      font-size: 1.1rem;
+    }
+
+    .section-block p, .section-block li {
+      color: #dbeafe;
+    }
+
+    .section-block ul { padding-left: 20px; margin: 10px 0; }
+    .section-block li { margin: 6px 0; }
+
+    .note {
+      margin-top: 14px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: rgba(2,6,23,0.25);
+      border: 1px dashed rgba(255,255,255,0.14);
+      color: var(--text-dim);
+    }
+
+    .example-box {
+      background: rgba(0,0,0,0.25);
+      border-left: 5px solid var(--accent);
+      padding: 18px;
+      margin: 16px 0;
+      border-radius: 0 14px 14px 0;
+    }
+
+    .example-box strong { color: #e2e8f0; }
+    .example-box .ans { color: var(--good); font-weight: 800; }
+
+    .warn-box {
+      background: rgba(251,191,36,0.12);
+      border-left: 5px solid var(--warn);
+      padding: 18px;
+      margin: 16px 0;
+      border-radius: 0 14px 14px 0;
+    }
+
+    .tip-box {
+      background: rgba(52,211,153,0.10);
+      border-left: 5px solid var(--good);
+      padding: 18px;
+      margin: 16px 0;
+      border-radius: 0 14px 14px 0;
+    }
+
+    .math-formula {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      background: rgba(0,0,0,0.45);
+      padding: 3px 8px;
+      border-radius: 8px;
+      color: #34d399;
+      border: 1px solid rgba(52,211,153,0.25);
+      white-space: nowrap;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .img-card {
+      background: rgba(2,6,23,0.25);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .img-card .cap {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .svg-wrap {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(6,182,212,0.18);
+      background: rgba(15,23,42,0.55);
+    }
+
+    .flashcard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .flashcard {
+      background: rgba(2,6,23,0.25);
+      border: 1px solid rgba(6,182,212,0.18);
+      border-radius: 16px;
+      padding: 16px;
+      cursor: pointer;
+      transition: 0.18s;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .flashcard:hover { transform: translateY(-4px); border-color: rgba(34,211,238,0.35); }
+    .flashcard .q { font-weight: 900; color: var(--primary-light); margin-bottom: 6px; }
+    .flashcard .a { color: #dbeafe; display: none; }
+    .flashcard.reveal .a { display: block; }
+    .flashcard.reveal .q { opacity: 0.75; }
+
+    .kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.85rem;
+      padding: 2px 8px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(2,6,23,0.35);
+      color: #e2e8f0;
+    }
+
+    .practice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .practice {
+      background: rgba(2,6,23,0.25);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 16px;
+      padding: 16px;
+    }
+
+    .practice .title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 900;
+      color: #e2e8f0;
+      margin-bottom: 8px;
+    }
+
+    .practice details {
+      margin-top: 10px;
+      border-top: 1px dashed rgba(255,255,255,0.12);
+      padding-top: 10px;
+      color: #dbeafe;
+    }
+
+    details summary {
+      cursor: pointer;
+      color: var(--primary-light);
+      font-weight: 800;
+      list-style: none;
+    }
+    details summary::-webkit-details-marker { display: none; }
+
+    /* Móvil */
+    @media (max-width: 980px) {
+      .main-layout { grid-template-columns: 1fr; height: auto; }
+      .sidebar { display: none; }
+      .nav-bar { padding: 12px 16px; }
+      .menu-toggle { display: inline-flex; }
+      .brand { font-size: 0.9rem; }
+      .sidebar {
+        display: block;
+        position: fixed;
+        top: 64px;
+        left: 0;
+        width: min(320px, 84vw);
+        height: calc(100vh - 64px);
+        transform: translateX(-105%);
+        transition: transform 0.25s ease;
+        z-index: 95;
+        box-shadow: 0 24px 45px rgba(0,0,0,0.35);
+      }
+      body.sidebar-open .sidebar { transform: translateX(0); }
+      body.sidebar-open .sidebar-overlay {
+        opacity: 1;
+        pointer-events: auto;
+      }
+  </style>
+</head>
+
+<body>
+  <nav class="nav-bar">
+    <div class="nav-actions">
+      <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-controls="sidebar">
+        <i class="fas fa-bars"></i>
+      </button>
+      <a href="index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Inicio</a>
+    </div>
+    <div class="brand">PAA MATH EXPLORER 2.0</div>
+  </nav>
+
+  <div class="main-layout">
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <main class="content-area" id="content-area">
+      <div id="welcome-msg">
+        <h1 style="font-size: 2.8rem; line-height: 1.05;">Explora los Temas</h1>
+        <p style="font-size: 1.1rem; color: var(--text-dim); margin-top: 10px;">
+          Selecciona un tema en el menú de la izquierda para ver teoría sólida, ejemplos tipo PAA, imágenes/diagramas y práctica con respuestas.
+        </p>
+        <div class="note" style="margin-top: 18px;">
+          Tip rápido: en PAA no gana “el que sabe más”, gana el que <strong>evita errores tontos</strong>. Aquí vas a ver trucos, pasos y trampas típicas.
+          <br>Flashcards: clic sobre cada tarjeta para revelar.
+        </div>
+      </div>
+
+      <div id="topic-container" style="display: none;">
+        <div class="topic-header">
+          <h1 id="t-title"></h1>
+          <div class="topic-meta" id="t-meta"></div>
+        </div>
+        <div id="t-sections"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // =========================
+    // Helpers para HTML bonito
+    // =========================
+    function F(txt) { return `<span class="math-formula">${txt}</span>`; }
+
+    function svgTriangleRight() {
+      return `
+      <div class="svg-wrap">
+      <svg viewBox="0 0 520 280" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="g1" x1="0" x2="1">
+            <stop offset="0" stop-color="#06b6d4" stop-opacity="0.25"/>
+            <stop offset="1" stop-color="#3b82f6" stop-opacity="0.15"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="520" height="280" fill="rgba(2,6,23,0.0)"/>
+        <polygon points="90,230 90,70 420,230" fill="url(#g1)" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+        <polyline points="90,230 90,205 115,205 115,230" fill="none" stroke="rgba(251,191,36,0.9)" stroke-width="4"/>
+        <text x="250" y="250" fill="#e2e8f0" font-size="18" font-family="ui-monospace" text-anchor="middle">base (a)</text>
+        <text x="80" y="150" fill="#e2e8f0" font-size="18" font-family="ui-monospace" text-anchor="end">altura (b)</text>
+        <text x="300" y="125" fill="#e2e8f0" font-size="18" font-family="ui-monospace" text-anchor="middle">hipotenusa (c)</text>
+        <text x="120" y="105" fill="#94a3b8" font-size="14" font-family="ui-monospace">ángulo recto</text>
+      </svg>
+      </div>`;
+    }
+
+    function svgUnitCircle() {
+      return `
+      <div class="svg-wrap">
+      <svg viewBox="0 0 520 360" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="0" width="520" height="360" fill="rgba(2,6,23,0.0)"/>
+        <!-- axes -->
+        <line x1="60" y1="180" x2="460" y2="180" stroke="rgba(148,163,184,0.35)" stroke-width="2"/>
+        <line x1="260" y1="40" x2="260" y2="320" stroke="rgba(148,163,184,0.35)" stroke-width="2"/>
+        <!-- circle -->
+        <circle cx="260" cy="180" r="120" fill="rgba(6,182,212,0.12)" stroke="rgba(34,211,238,0.55)" stroke-width="3"/>
+        <!-- angle line -->
+        <line x1="260" y1="180" x2="372" y2="120" stroke="rgba(59,130,246,0.9)" stroke-width="4"/>
+        <circle cx="372" cy="120" r="6" fill="#34d399"/>
+        <text x="382" y="116" fill="#e2e8f0" font-size="14" font-family="ui-monospace">(cosθ, sinθ)</text>
+        <path d="M260 180 L300 180 A40 40 0 0 1 292 147 Z" fill="rgba(251,191,36,0.20)" stroke="rgba(251,191,36,0.75)" stroke-width="2"/>
+        <text x="305" y="160" fill="#fbbf24" font-size="14" font-family="ui-monospace">θ</text>
+        <text x="450" y="200" fill="#94a3b8" font-size="14" font-family="ui-monospace">x</text>
+        <text x="270" y="55" fill="#94a3b8" font-size="14" font-family="ui-monospace">y</text>
+      </svg>
+      </div>`;
+    }
+
+    function svgLinePlane() {
+      return `
+      <div class="svg-wrap">
+      <svg viewBox="0 0 520 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+        <rect width="520" height="320" fill="rgba(2,6,23,0.0)"/>
+        <line x1="60" y1="260" x2="460" y2="260" stroke="rgba(148,163,184,0.35)" stroke-width="2"/>
+        <line x1="260" y1="40" x2="260" y2="300" stroke="rgba(148,163,184,0.35)" stroke-width="2"/>
+        <line x1="120" y1="250" x2="420" y2="90" stroke="rgba(34,211,238,0.9)" stroke-width="4"/>
+        <circle cx="170" cy="220" r="6" fill="#34d399"/>
+        <circle cx="330" cy="135" r="6" fill="#34d399"/>
+        <text x="175" y="210" fill="#e2e8f0" font-size="14" font-family="ui-monospace">(x1,y1)</text>
+        <text x="335" y="125" fill="#e2e8f0" font-size="14" font-family="ui-monospace">(x2,y2)</text>
+        <text x="420" y="278" fill="#94a3b8" font-size="14" font-family="ui-monospace">x</text>
+        <text x="270" y="55" fill="#94a3b8" font-size="14" font-family="ui-monospace">y</text>
+      </svg>
+      </div>`;
+    }
+
+    function svgBarChart() {
+      return `
+      <div class="svg-wrap">
+      <svg viewBox="0 0 520 300" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+        <rect width="520" height="300" fill="rgba(2,6,23,0.0)"/>
+        <line x1="80" y1="250" x2="470" y2="250" stroke="rgba(148,163,184,0.35)" stroke-width="2"/>
+        <line x1="80" y1="50" x2="80" y2="250" stroke="rgba(148,163,184,0.35)" stroke-width="2"/>
+        <rect x="120" y="140" width="55" height="110" fill="rgba(6,182,212,0.35)" stroke="rgba(34,211,238,0.65)"/>
+        <rect x="205" y="90" width="55" height="160" fill="rgba(59,130,246,0.28)" stroke="rgba(59,130,246,0.65)"/>
+        <rect x="290" y="120" width="55" height="130" fill="rgba(52,211,153,0.25)" stroke="rgba(52,211,153,0.65)"/>
+        <rect x="375" y="70" width="55" height="180" fill="rgba(251,191,36,0.22)" stroke="rgba(251,191,36,0.65)"/>
+        <text x="145" y="270" fill="#94a3b8" font-size="14" font-family="ui-monospace">A</text>
+        <text x="230" y="270" fill="#94a3b8" font-size="14" font-family="ui-monospace">B</text>
+        <text x="315" y="270" fill="#94a3b8" font-size="14" font-family="ui-monospace">C</text>
+        <text x="400" y="270" fill="#94a3b8" font-size="14" font-family="ui-monospace">D</text>
+        <text x="95" y="60" fill="#94a3b8" font-size="14" font-family="ui-monospace">frecuencia</text>
+      </svg>
+      </div>`;
+    }
+
+    function flashcardsHTML(cards) {
+      return `
+        <div class="section-block">
+          <h2><i class="fas fa-layer-group"></i> Flashcards (clic para revelar) <span class="kbd">click</span></h2>
+          <div class="flashcard-grid">
+            ${cards.map(c => `
+              <div class="flashcard" onclick="this.classList.toggle('reveal')">
+                <div class="q">${c.q}</div>
+                <div class="a">${c.a}</div>
+              </div>
+            `).join('')}
+          </div>
+          <div class="note">Tip: si te equivocas mucho, no es “mala suerte”, es una señal divina de que te falta <strong>método</strong>. Estas tarjetas son tu antídoto.</div>
+        </div>
+      `;
+    }
+
+    function practiceHTML(items) {
+      return `
+        <div class="section-block">
+          <h2><i class="fas fa-dumbbell"></i> Práctica tipo PAA (con respuestas)</h2>
+          <div class="practice-grid">
+            ${items.map((it, idx) => `
+              <div class="practice">
+                <div class="title"><i class="fas fa-pen-to-square"></i> Ejercicio ${idx+1}</div>
+                <div>${it.q}</div>
+                <details>
+                  <summary>Ver respuesta / método</summary>
+                  <div style="margin-top:10px;">${it.a}</div>
+                </details>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // =======================================================
+    // CONTENIDO COMPLETO: Temas + Subtemas (PAA Matemáticas)
+    // =======================================================
+    const mathData = {
+      aritmetica: {
+        label: "Aritmética y Números",
+        icon: "fa-calculator",
+        subtopics: {
+
+          reales: {
+            name: "Propiedades de Números Reales (ℝ)",
+            meta: ["Fundamentos", "Propiedades", "Operaciones", "Errores típicos"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Teoría esencial</h2>
+                <p>
+                  En PAA, los <strong>números reales</strong> son el piso donde camina TODO: operaciones, álgebra, ecuaciones.
+                  Los conjuntos básicos:
+                </p>
+                <ul>
+                  <li><strong>ℕ</strong> naturales: 1,2,3,... (a veces incluye 0 según convención; en PAA normalmente se aclara).</li>
+                  <li><strong>ℤ</strong> enteros: ...,-2,-1,0,1,2,...</li>
+                  <li><strong>ℚ</strong> racionales: fracciones <span class="math-formula">p/q</span> con <span class="math-formula">q≠0</span>.</li>
+                  <li><strong>I</strong> irracionales: no se pueden escribir como fracción exacta (π, √2, √5...).</li>
+                  <li><strong>ℝ</strong> reales: racionales + irracionales.</li>
+                </ul>
+
+                <h3>Propiedades clave (las que más se usan)</h3>
+                <ul>
+                  <li><strong>Conmutativa:</strong> ${F("a+b=b+a")} y ${F("ab=ba")}.</li>
+                  <li><strong>Asociativa:</strong> ${F("(a+b)+c=a+(b+c)")} y ${F("(ab)c=a(bc)")}.</li>
+                  <li><strong>Distributiva:</strong> ${F("a(b+c)=ab+ac")} (la reina del álgebra).</li>
+                  <li><strong>Identidades:</strong> ${F("a+0=a")} y ${F("a·1=a")}.</li>
+                  <li><strong>Inversos:</strong> aditivo: ${F("a+(-a)=0")}; multiplicativo: ${F("a·(1/a)=1 (a≠0)")}.</li>
+                </ul>
+
+                <div class="warn-box">
+                  <strong>Trampa clásica:</strong> ${F("(-2)^2")} no es -4, es <strong>4</strong>.
+                  Y ${F("-2^2")} sí es <strong>-4</strong> porque el exponente afecta primero al 2.
+                </div>
+
+                <div class="example-box">
+                  <strong>Ejemplo tipo PAA:</strong> Evalúa ${F("(-3)(-5)+(-2)^3")} <br>
+                  <strong>Método:</strong> (-3)(-5)=15; (-2)^3=-8; total = 15 + (-8) = 7 <br>
+                  <span class="ans">Respuesta: 7</span>
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip de velocidad:</strong> Primero signos, luego potencias, luego multiplicación/división, y al final suma/resta. Orden de operaciones o te explota el puntaje.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "¿Qué es ℚ?", a: "Conjunto de racionales: números que se escriben como fracción p/q con q≠0." },
+                { q: "Inverso aditivo de -7", a: "7, porque -7 + 7 = 0." },
+                { q: "Inverso multiplicativo de 5", a: "1/5, porque 5·(1/5)=1." },
+                { q: "¿Cuál va primero: potencia o multiplicación?", a: "Potencia. Ej: -2^2 = -(2^2) = -4." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Si ${F("a=-2")} y ${F("b=3")}, calcula ${F("a^2 - 2ab + b^2")}.`,
+                  a: `Reconoce identidad: ${F("a^2-2ab+b^2=(a-b)^2")}. Entonces (a-b)=(-2-3)=-5; (a-b)^2=25. <div class="ans">Respuesta: 25</div>` },
+                { q: `Ordena de menor a mayor: ${F("-\\sqrt{9}")}, ${F("(-3)^2")}, ${F("-3^2")}.`,
+                  a: `${F("-\\sqrt{9}")}=-3. ${F("(-3)^2")}=9. ${F("-3^2")}=-9. Orden: -9, -3, 9.` },
+                { q: `Evalúa: ${F("4 - [2 - (3 - 5)]")}.`,
+                  a: `(3-5)=-2; 2-(-2)=4; 4-4=0. <div class="ans">Respuesta: 0</div>` }
+              ])}
+            `
+          },
+
+          fracciones: {
+            name: "Fracciones, Decimales y Operaciones",
+            meta: ["Sumas/restas", "Producto", "División", "Conversión", "Problemas"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Teoría (lo que sí cae)</h2>
+                <p>
+                  Las fracciones no son “difíciles”; solo son números con traje formal. En PAA te piden operar rápido y con cabeza fría.
+                </p>
+
+                <h3>Reglas base</h3>
+                <ul>
+                  <li><strong>Suma/resta:</strong> mismo denominador → sumas numeradores. Distinto denominador → busca mcm o común.</li>
+                  <li><strong>Multiplicación:</strong> ${F("a/b · c/d = (ac)/(bd)")} (simplifica cruzado si puedes).</li>
+                  <li><strong>División:</strong> ${F("a/b ÷ c/d = a/b · d/c")} (multiplica por el recíproco).</li>
+                  <li><strong>Decimal ↔ fracción:</strong> 0.25 = 25/100 = 1/4; 0.125 = 125/1000 = 1/8.</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> ${F("2/3 + 5/6")} <br>
+                  <strong>Método:</strong> mcm(3,6)=6 → 2/3=4/6 → 4/6 + 5/6 = 9/6 = 3/2 <br>
+                  <span class="ans">Respuesta: 3/2</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Error típico:</strong> ${F("1/2 + 1/3 ≠ 2/5")}  
+                  (no se suman denominadores; eso es fanfic matemático).
+                </div>
+
+                <h3>Fracciones mixtas</h3>
+                <p>
+                  ${F("2 1/4")} significa ${F("2 + 1/4 = 9/4")}. Convierte a impropia para operar.
+                </p>
+
+                <div class="tip-box">
+                  <strong>Tip PAA:</strong> antes de multiplicar fracciones, simplifica cruzado:
+                  ${F("(8/15)(9/16)")} → 8 con 16 (÷8) y 9 con 15 (÷3). En vez de números gigantes, te queda mini.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "¿Cómo sumar fracciones distinto denominador?", a: "Convierte a un denominador común (mcm) y suma numeradores." },
+                { q: "¿División de fracciones?", a: "Multiplica por el recíproco: a/b ÷ c/d = a/b · d/c." },
+                { q: "0.2 como fracción", a: "2/10 = 1/5." },
+                { q: "2 3/5 como impropia", a: "2 = 10/5; 10/5+3/5=13/5." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Calcula: ${F("3/4 - 2/3")}.`,
+                  a: `mcm(4,3)=12 → 3/4=9/12, 2/3=8/12 → 9/12-8/12=1/12. <div class="ans">Respuesta: 1/12</div>` },
+                { q: `Simplifica: ${F("(18/35)·(14/27)")}.`,
+                  a: `Simplifica cruzado: 18 con 27 (÷9 → 2 y 3); 14 con 35 (÷7 → 2 y 5). Queda (2/5)(2/3)=4/15. <div class="ans">Respuesta: 4/15</div>` },
+                { q: `Un tanque está a ${F("3/5")} lleno. Si se usa ${F("1/4")} del tanque completo, ¿qué fracción queda?`,
+                  a: `Queda 3/5 - 1/4 = (12/20 - 5/20)=7/20. <div class="ans">Respuesta: 7/20</div>` }
+              ])}
+            `
+          },
+
+          razon: {
+            name: "Razón, Proporción y Porcentaje",
+            meta: ["Regla de tres", "Descuentos", "Aumentos", "Interés simple"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Teoría clara</h2>
+                <p>
+                  Razón = comparación. Proporción = igualdad de razones. Porcentaje = fracción con denominador 100 (o sea, una forma socialmente aceptada de escribir fracciones).
+                </p>
+
+                <h3>Razón y proporción</h3>
+                <ul>
+                  <li><strong>Razón:</strong> ${F("a:b")} o ${F("a/b")}.</li>
+                  <li><strong>Proporción:</strong> ${F("a/b = c/d")} → producto cruzado ${F("ad=bc")}.</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Si ${F("x/12 = 5/8")}, encuentra x. <br>
+                  <strong>Producto cruzado:</strong> 8x = 60 → x = 7.5 <br>
+                  <span class="ans">Respuesta: 7.5</span>
+                </div>
+
+                <h3>Porcentajes</h3>
+                <ul>
+                  <li><strong>Parte = Total × porcentaje:</strong> ${F("P = T·(p/100)")}.</li>
+                  <li><strong>Nuevo total con aumento:</strong> ${F("T_n = T(1 + p)")} con p en decimal.</li>
+                  <li><strong>Nuevo total con descuento:</strong> ${F("T_n = T(1 - p)")}.</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Descuento:</strong> Precio $60 con 25% off. <br>
+                  ${F("60×0.25=15")} descuento → 60-15=45 <br>
+                  <span class="ans">Respuesta: $45</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> Subir 20% y bajar 20% NO regresa al original.
+                  Ej: 100 → 120 → 96. Te quedas abajo.
+                </div>
+
+                <h3>Interés simple (lo básico)</h3>
+                <p>
+                  ${F("I = P·r·t")} donde P = principal, r = tasa (decimal), t = tiempo. Monto final: ${F("M = P + I")}.
+                </p>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Proporción a/b=c/d →", a: "Producto cruzado: ad = bc." },
+                { q: "25% en decimal", a: "0.25" },
+                { q: "Aumento 15%: multiplicas por", a: "1.15" },
+                { q: "Descuento 30%: multiplicas por", a: "0.70" }
+              ])}
+
+              ${practiceHTML([
+                { q: `Una camisa cuesta $80. Sube 10% y luego baja 10%. ¿Precio final?`,
+                  a: `80×1.10=88. Luego 88×0.90=79.2. <div class="ans">Respuesta: $79.20</div>` },
+                { q: `Si 3 cuadernos cuestan $7.50, ¿cuánto cuestan 8? (proporcionalidad directa)`,
+                  a: `Precio unitario: 7.50/3=2.50. Para 8: 8×2.50=20. <div class="ans">Respuesta: $20</div>` },
+                { q: `Interés simple: P=$500, r=6% anual, t=2 años. ¿Monto final?`,
+                  a: `I=500×0.06×2=60. M=500+60=560. <div class="ans">Respuesta: $560</div>` }
+              ])}
+            `
+          },
+
+          exponentes_radicales: {
+            name: "Exponentes, Potencias y Radicales",
+            meta: ["Leyes de exponentes", "Raíces", "Racionalización", "Simplificación"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Leyes de exponentes (no negociables)</h2>
+                <ul>
+                  <li>${F("a^m · a^n = a^{m+n}")}</li>
+                  <li>${F("a^m / a^n = a^{m-n} (a≠0)")}</li>
+                  <li>${F("(a^m)^n = a^{mn}")}</li>
+                  <li>${F("(ab)^n = a^n b^n")}</li>
+                  <li>${F("a^{-n} = 1/a^n")}</li>
+                  <li>${F("a^{1/n} = \\sqrt[n]{a}")}</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Simplifica ${F("2^3·2^5")} <br>
+                  ${F("2^{3+5}=2^8=256")} <br>
+                  <span class="ans">Respuesta: 256</span>
+                </div>
+
+                <h3>Radicales y simplificación</h3>
+                <p>
+                  ${F("\\sqrt{ab}=\\sqrt{a}\\sqrt{b}")} (si a,b ≥ 0).  
+                  Para simplificar: saca factores perfectos.
+                </p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> ${F("\\sqrt{72}")} <br>
+                  72=36·2 → √72=√36·√2=6√2 <br>
+                  <span class="ans">Respuesta: 6√2</span>
+                </div>
+
+                <h3>Racionalización (cuando te la piden)</h3>
+                <ul>
+                  <li>Si tienes ${F("1/\\sqrt{a}")}, multiplica arriba y abajo por √a.</li>
+                  <li>Si es binomio: ${F("1/(a+\\sqrt{b})")}, usa el conjugado ${F("a-\\sqrt{b}")}.</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Racionaliza ${F("5/\\sqrt{3}")} <br>
+                  ${F("5/\\sqrt{3} · \\sqrt{3}/\\sqrt{3} = 5\\sqrt{3}/3")} <br>
+                  <span class="ans">Respuesta: 5√3/3</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> ${F("\\sqrt{a+b} ≠ \\sqrt{a}+\\sqrt{b}")}.  
+                  Ej: √(1+4)=√5 ≠ 1+2=3.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "a^0 =", a: "1 (si a≠0)." },
+                { q: "a^{-n} =", a: "1/a^n." },
+                { q: "√72 simplificado", a: "6√2." },
+                { q: "Conjugado de (a+√b)", a: "(a-√b)." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Simplifica: ${F("(x^3y^2)(x^2y^5)")}.`,
+                  a: `Suma exponentes: x^{3+2}y^{2+5}=x^5y^7. <div class="ans">Respuesta: x^5y^7</div>` },
+                { q: `Simplifica: ${F("9a^2b / (3ab^3)")}.`,
+                  a: `9/3=3, a^2/a=a, b/b^3=1/b^2 → 3a/b^2. <div class="ans">Respuesta: 3a/b^2</div>` },
+                { q: `Racionaliza: ${F("1/(2+\\sqrt{5})")}.`,
+                  a: `Multiplica por (2-√5): (2-√5)/(4-5)=(2-√5)/(-1)=√5-2. <div class="ans">Respuesta: √5 - 2</div>` }
+              ])}
+            `
+          },
+
+          teoria_numeros: {
+            name: "Teoría de Números (Divisibilidad, MCD, mcm)",
+            meta: ["Primos", "Factorización", "MCD/mcm", "Criterios de divisibilidad"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Teoría de números: el “arma silenciosa”</h2>
+                <p>Te salva tiempo en fracciones, simplificación, problemas de múltiplos y ciclos.</p>
+
+                <h3>Números primos (memoriza hasta 50)</h3>
+                <p>2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47...</p>
+
+                <h3>Factorización prima</h3>
+                <p>Ejemplo: 180 = 18×10 = (2×3^2)×(2×5) = 2^2×3^2×5</p>
+
+                <h3>MCD y mcm</h3>
+                <ul>
+                  <li><strong>MCD:</strong> toma los exponentes <em>mínimos</em> comunes.</li>
+                  <li><strong>mcm:</strong> toma los exponentes <em>máximos</em> de cada primo.</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> MCD y mcm de 12 y 18 <br>
+                  12=2^2·3, 18=2·3^2 <br>
+                  MCD=2^1·3^1=6; mcm=2^2·3^2=36 <br>
+                  <span class="ans">Respuesta: MCD=6, mcm=36</span>
+                </div>
+
+                <h3>Criterios de divisibilidad (los que sí te sirven)</h3>
+                <ul>
+                  <li>Por 2: termina en 0,2,4,6,8</li>
+                  <li>Por 3: suma de dígitos múltiplo de 3</li>
+                  <li>Por 4: últimos 2 dígitos múltiplo de 4</li>
+                  <li>Por 5: termina en 0 o 5</li>
+                  <li>Por 9: suma de dígitos múltiplo de 9</li>
+                  <li>Por 10: termina en 0</li>
+                </ul>
+
+                <div class="tip-box">
+                  <strong>Tip PAA:</strong> problemas de “cada cierto tiempo” casi siempre son mcm (ciclos).
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "MCD usa exponentes...", a: "mínimos comunes." },
+                { q: "mcm usa exponentes...", a: "máximos de cada primo." },
+                { q: "Divisible por 3 si...", a: "la suma de dígitos es múltiplo de 3." },
+                { q: "12= ?", a: "2^2·3." }
+              ])}
+
+              ${practiceHTML([
+                { q: `¿mcm(8, 12)?`,
+                  a: `8=2^3, 12=2^2·3 → mcm=2^3·3=24. <div class="ans">Respuesta: 24</div>` },
+                { q: `Simplifica la fracción ${F("84/126")}.`,
+                  a: `MCD(84,126)=42 → 84/42=2, 126/42=3 → 2/3. <div class="ans">Respuesta: 2/3</div>` },
+                { q: `¿El número 7,236 es divisible por 3?`,
+                  a: `7+2+3+6=18, y 18 es múltiplo de 3 → sí. <div class="ans">Respuesta: Sí</div>` }
+              ])}
+            `
+          },
+
+          valores_absolutos: {
+            name: "Valor Absoluto e Intervalos",
+            meta: ["|x|", "distancia", "desigualdades", "recta numérica"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Valor absoluto = distancia (sin drama)</h2>
+                <p>
+                  ${F("|x|")} es la distancia de x al 0. Por eso nunca es negativo.
+                </p>
+
+                <h3>Definición por casos</h3>
+                <ul>
+                  <li>Si x ≥ 0 → |x| = x</li>
+                  <li>Si x < 0 → |x| = -x</li>
+                </ul>
+
+                <h3>Desigualdades típicas</h3>
+                <ul>
+                  <li>${F("|x|<a")} → ${F("-a < x < a")}</li>
+                  <li>${F("|x|>a")} → ${F("x<-a")} o ${F("x>a")}</li>
+                  <li>${F("|x-b|<a")} → ${F("b-a < x < b+a")}</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Resuelve ${F("|x-3|≤5")} <br>
+                  -5 ≤ x-3 ≤ 5 → suma 3: -2 ≤ x ≤ 8 <br>
+                  <span class="ans">Respuesta: x ∈ [-2, 8]</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> ${F("|x|=-2")} no tiene solución (distancia no puede ser negativa).
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> piensa “|x-b|” como distancia de x a b. Si es menor que a → estás “cerca” de b.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "|x| representa...", a: "La distancia de x a 0." },
+                { q: "|x|<a equivale a...", a: "-a < x < a." },
+                { q: "|x|>a equivale a...", a: "x<-a o x>a." },
+                { q: "|x| puede ser negativo?", a: "No." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Resuelve: ${F("|2x-4|=6")}.`,
+                  a: `2x-4=6 o 2x-4=-6 → x=5 o x=-1. <div class="ans">Respuesta: x=5, x=-1</div>` },
+                { q: `Resuelve: ${F("|x+1|<3")}.`,
+                  a: `-3 < x+1 < 3 → -4 < x < 2. <div class="ans">Respuesta: (-4,2)</div>` },
+                { q: `¿Tiene solución ${F("|x-7|=-1")}?`,
+                  a: `No. Valor absoluto no puede ser negativo. <div class="ans">Respuesta: No</div>` }
+              ])}
+            `
+          }
+        }
+      },
+
+      algebra: {
+        label: "Álgebra",
+        icon: "fa-square-root-variable",
+        subtopics: {
+
+          expresiones: {
+            name: "Expresiones Algebraicas y Factorización",
+            meta: ["Términos", "Factor común", "Productos notables", "Racionalización"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Teoría (factorizar es “desarmar”)</h2>
+                <p>
+                  Factorizar = reescribir una expresión como producto. Sirve para simplificar, resolver ecuaciones, cancelar factores y evitar errores.
+                </p>
+
+                <h3>Reglas básicas</h3>
+                <ul>
+                  <li><strong>Términos semejantes:</strong> misma variable y mismo exponente (3x y -5x).</li>
+                  <li><strong>Factor común:</strong> ${F("ax+ay=a(x+y)")}</li>
+                  <li><strong>Diferencia de cuadrados:</strong> ${F("a^2-b^2=(a+b)(a-b)")}</li>
+                  <li><strong>Trinomio cuadrado perfecto:</strong> ${F("a^2±2ab+b^2=(a±b)^2")}</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo PAA:</strong> Simplifica ${F("(x^2-9)/(x-3)")}. <br>
+                  Factoriza: x^2-9=(x-3)(x+3). Cancela (x-3). <br>
+                  <span class="ans">Respuesta: x+3 (con x≠3)</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>OJO:</strong> si cancelas, anota la restricción: aquí x≠3. En PAA te pueden poner opciones trampa.
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip pro:</strong> si ves “cuadrado menos cuadrado”, piensa <strong>dos paréntesis</strong> de una.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "a^2 - b^2 =", a: "(a+b)(a-b)" },
+                { q: "ax+ay =", a: "a(x+y)" },
+                { q: "a^2+2ab+b^2 =", a: "(a+b)^2" },
+                { q: "¿Qué es factorizar?", a: "Reescribir como producto para simplificar o resolver." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Factoriza: ${F("6x^2-15x")}.`,
+                  a: `Factor común 3x: 6x^2-15x = 3x(2x-5). <div class="ans">Respuesta: 3x(2x-5)</div>` },
+                { q: `Factoriza: ${F("x^2+7x+12")}.`,
+                  a: `Busca dos números que multipliquen 12 y sumen 7: 3 y 4 → (x+3)(x+4). <div class="ans">Respuesta: (x+3)(x+4)</div>` },
+                { q: `Simplifica: ${F("(x^2-4)/(x+2)")}.`,
+                  a: `x^2-4=(x-2)(x+2). Cancela x+2 → x-2 (x≠-2). <div class="ans">Respuesta: x-2</div>` }
+              ])}
+            `
+          },
+
+          ecuaciones: {
+            name: "Ecuaciones (Lineales y Cuadráticas)",
+            meta: ["Despeje", "Ecuaciones con fracciones", "Cuadrática", "Factorización vs fórmula"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Ecuaciones lineales (1 variable)</h2>
+                <p>
+                  Objetivo: dejar la variable sola. Regla de oro: lo que haces a un lado lo haces al otro.
+                </p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Resuelve ${F("3x-7=11")} <br>
+                  3x=18 → x=6 <br>
+                  <span class="ans">Respuesta: 6</span>
+                </div>
+
+                <h3>Ecuaciones con fracciones</h3>
+                <p>Multiplica por el mcm de denominadores (para borrar fracciones sin llorar).</p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> ${F("x/3 + 1/2 = 5/6")} <br>
+                  mcm(3,2,6)=6 → 6(x/3)+6(1/2)=6(5/6) → 2x+3=5 → x=1 <br>
+                  <span class="ans">Respuesta: 1</span>
+                </div>
+
+                <h2><i class="fas fa-book"></i> Ecuaciones cuadráticas</h2>
+                <ul>
+                  <li><strong>Forma estándar:</strong> ${F("ax^2+bx+c=0")}</li>
+                  <li><strong>Si factoriza fácil:</strong> usa productos.</li>
+                  <li><strong>Si no:</strong> fórmula general.</li>
+                </ul>
+
+                <p><strong>Fórmula general:</strong> ${F("x = (-b ± √(b^2-4ac))/(2a)")}</p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> ${F("x^2-5x+6=0")} <br>
+                  Factoriza: (x-2)(x-3)=0 → x=2 o x=3 <br>
+                  <span class="ans">Respuesta: 2 y 3</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> En problemas, no siempre te piden “x”. A veces piden “suma de soluciones”, “producto”, o “mayor solución”.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Si (x-a)(x-b)=0 entonces...", a: "x=a o x=b." },
+                { q: "mcm para fracciones en ecuaciones sirve para...", a: "Eliminar denominadores multiplicando toda la ecuación." },
+                { q: "Discriminante", a: "Δ=b^2-4ac. Define tipo de raíces." },
+                { q: "Δ<0 significa...", a: "No hay raíces reales (en ℝ)." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Resuelve: ${F("5(2x-1)=3x+11")}.`,
+                  a: `10x-5=3x+11 → 7x=16 → x=16/7. <div class="ans">Respuesta: 16/7</div>` },
+                { q: `Resuelve: ${F("x^2-9=0")}.`,
+                  a: `x^2=9 → x=±3. <div class="ans">Respuesta: -3 y 3</div>` },
+                { q: `Resuelve: ${F("2x^2+3x-2=0")}.`,
+                  a: `Factoriza: (2x-1)(x+2)=0 → x=1/2 o x=-2. <div class="ans">Respuesta: 1/2 y -2</div>` }
+              ])}
+            `
+          },
+
+          desigualdades: {
+            name: "Inecuaciones (Desigualdades) y Intervalos",
+            meta: ["Lineales", "Multiplicar por negativo", "Notación de intervalos"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Reglas esenciales</h2>
+                <ul>
+                  <li>Si sumas/restas el mismo número a ambos lados, no cambia el signo.</li>
+                  <li><strong>Si multiplicas o divides por un número negativo, el signo se invierte.</strong></li>
+                  <li>Respuesta suele expresarse en intervalos.</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> ${F("-2x + 5 > 11")} <br>
+                  -2x > 6 → divide por -2 (cambia el signo): x < -3 <br>
+                  <span class="ans">Respuesta: x < -3</span>
+                </div>
+
+                <h3>Intervalos</h3>
+                <ul>
+                  <li>${F("x < 2")} → (-∞, 2)</li>
+                  <li>${F("x ≤ 2")} → (-∞, 2]</li>
+                  <li>${F("-1 < x ≤ 4")} → (-1, 4]</li>
+                </ul>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> Muchos olvidan invertir el signo al dividir por negativo. Eso te mata.
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> cuando termines, prueba un valor rápido para ver si cumple (sanidad mental).
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "¿Cuándo se invierte el signo?", a: "Al multiplicar/dividir por un número negativo." },
+                { q: "x≤3 en intervalos", a: "(-∞, 3]" },
+                { q: "-2 < x < 5 en intervalos", a: "(-2, 5)" },
+                { q: "Cómo verificar rápido una desigualdad", a: "Sustituye un valor del intervalo y comprueba." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Resuelve: ${F("3x-4 ≤ 11")}.`,
+                  a: `3x ≤ 15 → x ≤ 5. <div class="ans">Respuesta: x≤5</div>` },
+                { q: `Resuelve: ${F("7 - x > 2")}.`,
+                  a: `-x > -5 → x < 5. <div class="ans">Respuesta: x<5</div>` },
+                { q: `Resuelve: ${F("-4(x+1) ≥ 8")}.`,
+                  a: `-4x-4 ≥ 8 → -4x ≥ 12 → divide por -4 (invierte): x ≤ -3. <div class="ans">Respuesta: x≤-3</div>` }
+              ])}
+            `
+          },
+
+          funciones: {
+            name: "Funciones y Gráficas (Dominio, Rango, Transformaciones)",
+            meta: ["Dominio", "Rango", "Lineal", "Cuadrática", "Transformaciones"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Conceptos clave</h2>
+                <p>
+                  Una función asigna a cada x un único y. En PAA te preguntan mucho: dominio, rango, lectura de gráfica, pendiente, interceptos.
+                </p>
+
+                <h3>Dominio y rango</h3>
+                <ul>
+                  <li><strong>Dominio:</strong> valores posibles de x.</li>
+                  <li><strong>Rango:</strong> valores posibles de y.</li>
+                  <li>Si hay raíz: lo de adentro ≥ 0. Si hay denominador: ≠ 0.</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Dominio de ${F("f(x)=1/(x-2)")} <br>
+                  Denominador ≠0 → x≠2 <br>
+                  <span class="ans">Respuesta: ℝ \\ {2}</span>
+                </div>
+
+                <h3>Función lineal</h3>
+                <p>Pendiente-intersección: ${F("y=mx+b")}. m = inclinación, b = corte con eje y.</p>
+
+                <div class="img-card">
+                  ${svgLinePlane()}
+                  <div class="cap">Plano cartesiano: una recta definida por dos puntos (x1,y1) y (x2,y2).</div>
+                </div>
+
+                <p>
+                  Pendiente entre dos puntos: ${F("m=(y2-y1)/(x2-x1)")}.
+                </p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Puntos (1,2) y (5,10) <br>
+                  m=(10-2)/(5-1)=8/4=2. <br>
+                  Ecuación con punto-pendiente: ${F("y-2=2(x-1)")} → y=2x <br>
+                  <span class="ans">Respuesta: y=2x</span>
+                </div>
+
+                <h3>Transformaciones (para leer gráficas rápido)</h3>
+                <ul>
+                  <li>${F("f(x)+k")} sube k unidades.</li>
+                  <li>${F("f(x-k)")} se mueve k a la derecha.</li>
+                  <li>${F("-f(x)")} refleja en el eje x.</li>
+                  <li>${F("f(-x)")} refleja en el eje y.</li>
+                </ul>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> Si ves f(x-3), piensa “la gráfica camina 3 a la derecha”. Sí, al revés de lo que tu intuición grita.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Pendiente m =", a: "(y2-y1)/(x2-x1)" },
+                { q: "Forma y=mx+b: b es...", a: "Intersección con eje y." },
+                { q: "Dominio de 1/(x-a)", a: "x≠a." },
+                { q: "f(x-k) mueve la gráfica...", a: "k unidades a la derecha." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Halla la pendiente de la recta que pasa por (2,-1) y (6,7).`,
+                  a: `m=(7-(-1))/(6-2)=8/4=2. <div class="ans">Respuesta: 2</div>` },
+                { q: `Dominio de ${F("g(x)=\\sqrt{x-4}")}.`,
+                  a: `x-4≥0 → x≥4. <div class="ans">Respuesta: [4,∞)</div>` },
+                { q: `Si ${F("f(x)=x^2")}, ¿qué es ${F("f(x)+3")} ?`,
+                  a: `La parábola se traslada 3 unidades hacia arriba. <div class="ans">Respuesta: sube 3</div>` }
+              ])}
+            `
+          },
+
+          sistemas: {
+            name: "Sistemas de Ecuaciones (2×2)",
+            meta: ["Sustitución", "Eliminación", "Interpretación gráfica"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> ¿Qué es un sistema?</h2>
+                <p>
+                  Dos ecuaciones, dos incógnitas. Solución = el punto (x,y) que satisface ambas (intersección de rectas).
+                </p>
+
+                <h3>Método de eliminación (rápido)</h3>
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> 
+                  <div>${F("2x+y=9")}</div>
+                  <div>${F("x-y=1")}</div>
+                  Suma: 3x=10 → x=10/3. Luego x-y=1 → y= x-1 = 7/3 <br>
+                  <span class="ans">Respuesta: (10/3, 7/3)</span>
+                </div>
+
+                <h3>Método de sustitución</h3>
+                <p>Despejas una variable en una ecuación y la metes en la otra.</p>
+
+                <div class="warn-box">
+                  <strong>Casos especiales:</strong>
+                  <ul>
+                    <li>Infinitas soluciones: mismas rectas (ecuaciones equivalentes).</li>
+                    <li>Sin solución: rectas paralelas.</li>
+                  </ul>
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip PAA:</strong> si ves coeficientes que “se cancelan” fácil, usa eliminación. Si una ecuación ya tiene variable despejada, usa sustitución.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Solución de un sistema 2x2 es...", a: "El par (x,y) que satisface ambas ecuaciones." },
+                { q: "Rectas paralelas →", a: "No hay solución." },
+                { q: "Mismas rectas →", a: "Infinitas soluciones." },
+                { q: "Eliminación consiste en...", a: "Sumar/restar ecuaciones para eliminar una variable." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Resuelve: ${F("x+y=12")} y ${F("x-y=4")}.`,
+                  a: `Suma: 2x=16 → x=8. Luego y=4. <div class="ans">Respuesta: (8,4)</div>` },
+                { q: `Resuelve: ${F("3x-2y=4")} y ${F("6x-4y=8")}.`,
+                  a: `La segunda es 2× la primera → infinitas soluciones. <div class="ans">Respuesta: infinitas</div>` },
+                { q: `Resuelve: ${F("2x+3y=6")} y ${F("4x+6y=10")}.`,
+                  a: `Multiplicar la primera por 2 da 4x+6y=12, pero la segunda dice 10 → contradicción → sin solución. <div class="ans">Respuesta: ninguna</div>` }
+              ])}
+            `
+          }
+        }
+      },
+
+      geometria: {
+        label: "Geometría",
+        icon: "fa-shapes",
+        subtopics: {
+
+          angulos: {
+            name: "Ángulos, Rectas y Polígonos (Fundamentos)",
+            meta: ["Ángulos", "Paralelas", "Suma interior", "Suma exterior"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Ángulos y paralelas</h2>
+                <ul>
+                  <li>Ángulos suplementarios suman 180°.</li>
+                  <li>Ángulos complementarios suman 90°.</li>
+                  <li>Con paralelas: alternos internos son iguales; correspondientes son iguales.</li>
+                </ul>
+
+                <h3>Polígonos</h3>
+                <p>
+                  Suma de ángulos interiores de un n-gono:
+                  ${F("(n-2)·180°")}
+                </p>
+                <p>
+                  Cada ángulo interior de un polígono regular:
+                  ${F("((n-2)·180°)/n")}
+                </p>
+                <p>
+                  Suma de ángulos exteriores (siempre): ${F("360°")}
+                </p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Suma interior de un hexágono (n=6) <br>
+                  (6-2)·180=720° <br>
+                  <span class="ans">Respuesta: 720°</span>
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> si es regular y te dan un ángulo interior, puedes despejar n con la fórmula.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Suplementarios suman", a: "180°" },
+                { q: "Complementarios suman", a: "90°" },
+                { q: "Suma interior n-gono", a: "(n-2)·180°" },
+                { q: "Suma exteriores (siempre)", a: "360°" }
+              ])}
+
+              ${practiceHTML([
+                { q: `¿Cuánto mide cada ángulo interior de un pentágono regular?`,
+                  a: `((5-2)·180)/5 = 540/5=108°. <div class="ans">Respuesta: 108°</div>` },
+                { q: `Suma de ángulos interiores de un decágono (n=10).`,
+                  a: `(10-2)·180=8·180=1440°. <div class="ans">Respuesta: 1440°</div>` },
+                { q: `Si un ángulo es 35°, su complementario es...`,
+                  a: `90-35=55°. <div class="ans">Respuesta: 55°</div>` }
+              ])}
+            `
+          },
+
+          triangulos: {
+            name: "Triángulos: Congruencia, Semejanza y Áreas",
+            meta: ["Suma 180", "Semejanza", "Razones", "Área", "Triángulos especiales"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Triángulos: reglas que mandan</h2>
+                <ul>
+                  <li>Suma de ángulos interiores: ${F("180°")}</li>
+                  <li>Área: ${F("A=(b·h)/2")}</li>
+                  <li>Triángulos semejantes: lados proporcionales, ángulos iguales.</li>
+                </ul>
+
+                <h3>Triángulos especiales (memoriza)</h3>
+                <ul>
+                  <li>45°-45°-90°: lados ${F("1,1,\\sqrt{2}")} (hipotenusa = lado·√2)</li>
+                  <li>30°-60°-90°: lados ${F("1,\\sqrt{3},2")} (hipotenusa = 2·(lado corto))</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> En un triángulo 30-60-90, si el lado corto mide 5, la hipotenusa es 10 y el lado largo es 5√3. <br>
+                  <span class="ans">Respuesta: 10 y 5√3</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> semejanza no significa “mismo tamaño”. Significa “misma forma”.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Área de triángulo", a: "A=(b·h)/2" },
+                { q: "45-45-90 lados", a: "1,1,√2" },
+                { q: "30-60-90 lados", a: "1,√3,2" },
+                { q: "Suma ángulos triángulo", a: "180°" }
+              ])}
+
+              ${practiceHTML([
+                { q: `Un triángulo tiene ángulos 50° y 60°. ¿El tercero?`,
+                  a: `180-110=70°. <div class="ans">Respuesta: 70°</div>` },
+                { q: `Si dos triángulos semejantes tienen razón de lados 3:5, ¿razón de áreas?`,
+                  a: `Razón de áreas = (3/5)^2 = 9/25. <div class="ans">Respuesta: 9/25</div>` },
+                { q: `En un 45-45-90, si un cateto mide 7, hipotenusa = ?`,
+                  a: `7√2. <div class="ans">Respuesta: 7√2</div>` }
+              ])}
+            `
+          },
+
+          pitagoras: {
+            name: "Teorema de Pitágoras y Distancia",
+            meta: ["a^2+b^2=c^2", "Tríos", "Distancia en plano"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Pitágoras (cuando hay ángulo recto)</h2>
+                <p>Si el triángulo es rectángulo: ${F("a^2+b^2=c^2")} (c hipotenusa).</p>
+
+                <div class="img-card">
+                  ${svgTriangleRight()}
+                  <div class="cap">Triángulo rectángulo: catetos a y b, hipotenusa c.</div>
+                </div>
+
+                <h3>Tríos pitagóricos (memoriza algunos)</h3>
+                <p>(3,4,5), (5,12,13), (8,15,17), (7,24,25)</p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Si a=9 y b=12, c=? <br>
+                  c²=81+144=225 → c=15 <br>
+                  <span class="ans">Respuesta: 15</span>
+                </div>
+
+                <h3>Distancia en el plano</h3>
+                <p>
+                  Entre (x1,y1) y (x2,y2): ${F("d=\\sqrt{(x2-x1)^2+(y2-y1)^2}")}.
+                  Es Pitágoras disfrazado.
+                </p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Distancia entre (1,2) y (4,6): <br>
+                  √((3)^2+(4)^2)=5 <br>
+                  <span class="ans">Respuesta: 5</span>
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> Si ves diferencias 3 y 4, ya sabes que la distancia es 5. Sin calculadora, sin sufrimiento.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Pitágoras", a: "a^2+b^2=c^2" },
+                { q: "Trío clásico", a: "3-4-5" },
+                { q: "Distancia en plano", a: "√((x2-x1)^2+(y2-y1)^2)" },
+                { q: "Hipotenusa siempre es...", a: "El lado más largo, opuesto al ángulo recto." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Un rectángulo tiene lados 6 y 8. ¿Diagonal?`,
+                  a: `√(6^2+8^2)=√(36+64)=√100=10. <div class="ans">Respuesta: 10</div>` },
+                { q: `Encuentra el lado faltante si c=13 y a=5.`,
+                  a: `b^2=13^2-5^2=169-25=144 → b=12. <div class="ans">Respuesta: 12</div>` },
+                { q: `Distancia entre (-2,1) y (4,1).`,
+                  a: `Δx=6, Δy=0 → d=6. <div class="ans">Respuesta: 6</div>` }
+              ])}
+            `
+          },
+
+          circulos: {
+            name: "Círculos: Perímetro, Área, Arcos y Sectores",
+            meta: ["2πr", "πr²", "Arcos", "Sectores", "Ángulos centrales"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Fórmulas clave</h2>
+                <ul>
+                  <li>Perímetro (circunferencia): ${F("C=2\\pi r")}</li>
+                  <li>Área: ${F("A=\\pi r^2")}</li>
+                  <li>Diámetro: ${F("d=2r")}</li>
+                </ul>
+
+                <h3>Arco y sector (cuando te dan grados)</h3>
+                <ul>
+                  <li>Longitud de arco: ${F("(\\theta/360)·2\\pi r")}</li>
+                  <li>Área de sector: ${F("(\\theta/360)·\\pi r^2")}</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> r=6, θ=90° <br>
+                  Arco = (90/360)·2π·6 = (1/4)·12π=3π <br>
+                  Sector = (1/4)·π·36=9π <br>
+                  <span class="ans">Respuesta: arco=3π, sector=9π</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> a veces te dan diámetro y tú usas r sin dividir entre 2. RIP.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Área círculo", a: "πr²" },
+                { q: "Circunferencia", a: "2πr" },
+                { q: "Arco con θ grados", a: "(θ/360)·2πr" },
+                { q: "Sector con θ grados", a: "(θ/360)·πr²" }
+              ])}
+
+              ${practiceHTML([
+                { q: `Un círculo tiene diámetro 10. ¿Área?`,
+                  a: `r=5 → A=π·25=25π. <div class="ans">Respuesta: 25π</div>` },
+                { q: `r=8, θ=45°. Longitud de arco.`,
+                  a: `(45/360)·2π·8=(1/8)·16π=2π. <div class="ans">Respuesta: 2π</div>` },
+                { q: `Circunferencia si r=3.`,
+                  a: `2π·3=6π. <div class="ans">Respuesta: 6π</div>` }
+              ])}
+            `
+          },
+
+          coordenadas: {
+            name: "Geometría Analítica: Rectas, Pendiente y Ecuaciones",
+            meta: ["m", "y=mx+b", "punto-pendiente", "intersecciones"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Rectas en el plano</h2>
+                <p>Pendiente: ${F("m=(y2-y1)/(x2-x1)")}</p>
+                <p>Forma pendiente-intersección: ${F("y=mx+b")}</p>
+                <p>Forma punto-pendiente: ${F("y-y1=m(x-x1)")}</p>
+
+                <div class="img-card">
+                  ${svgLinePlane()}
+                  <div class="cap">Una recta se define con 2 puntos. m es “sube/baja” sobre “avanza”.</div>
+                </div>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Ecuación con pendiente 3 y pasa por (2,-1). <br>
+                  y-(-1)=3(x-2) → y+1=3x-6 → y=3x-7 <br>
+                  <span class="ans">Respuesta: y=3x-7</span>
+                </div>
+
+                <h3>Rectas paralelas y perpendiculares</h3>
+                <ul>
+                  <li>Paralelas: misma pendiente.</li>
+                  <li>Perpendiculares: ${F("m1·m2=-1")} (si ambas pendientes existen).</li>
+                </ul>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> Si la pendiente es fracción a/b, la perpendicular es -b/a.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Paralelas tienen...", a: "La misma pendiente." },
+                { q: "Perpendiculares cumplen...", a: "m1·m2 = -1" },
+                { q: "Forma punto-pendiente", a: "y-y1=m(x-x1)" },
+                { q: "Intersección con y", a: "b en y=mx+b" }
+              ])}
+
+              ${practiceHTML([
+                { q: `Pendiente de la recta que pasa por (0,4) y (2,0).`,
+                  a: `m=(0-4)/(2-0)=-4/2=-2. <div class="ans">Respuesta: -2</div>` },
+                { q: `Ecuación de la recta con m=-2 y b=5.`,
+                  a: `y=-2x+5. <div class="ans">Respuesta: y=-2x+5</div>` },
+                { q: `Pendiente de la perpendicular de m=3/4.`,
+                  a: `m_perp = -4/3. <div class="ans">Respuesta: -4/3</div>` }
+              ])}
+            `
+          },
+
+          solidos: {
+            name: "Sólidos 3D: Volumen y Área Superficial",
+            meta: ["Prisma", "Cilindro", "Cono", "Esfera", "Unidades"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Volúmenes básicos (PAA-friendly)</h2>
+                <ul>
+                  <li><strong>Prisma rectangular:</strong> ${F("V=l·w·h")}</li>
+                  <li><strong>Cilindro:</strong> ${F("V=\\pi r^2 h")}</li>
+                  <li><strong>Cono:</strong> ${F("V=(1/3)\\pi r^2 h")}</li>
+                  <li><strong>Esfera:</strong> ${F("V=(4/3)\\pi r^3")}</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Cilindro r=3, h=10 → V=π·9·10=90π <br>
+                  <span class="ans">Respuesta: 90π</span>
+                </div>
+
+                <h3>Área superficial (lo más común)</h3>
+                <ul>
+                  <li><strong>Prisma rectangular:</strong> 2(lw+lh+wh)</li>
+                  <li><strong>Cilindro:</strong> ${F("A=2\\pi r^2 + 2\\pi rh")}</li>
+                  <li><strong>Esfera:</strong> ${F("A=4\\pi r^2")}</li>
+                </ul>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> Volumen usa unidades cúbicas (cm³), área usa cuadradas (cm²). En PAA esto importa.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Volumen cilindro", a: "πr²h" },
+                { q: "Volumen cono", a: "(1/3)πr²h" },
+                { q: "Área esfera", a: "4πr²" },
+                { q: "Volumen esfera", a: "(4/3)πr³" }
+              ])}
+
+              ${practiceHTML([
+                { q: `Prisma 4×3×2. Volumen.`,
+                  a: `V=24. <div class="ans">Respuesta: 24</div>` },
+                { q: `Esfera r=2. Área superficial.`,
+                  a: `A=4π·4=16π. <div class="ans">Respuesta: 16π</div>` },
+                { q: `Cono r=3, h=12. Volumen.`,
+                  a: `V=(1/3)π·9·12=36π. <div class="ans">Respuesta: 36π</div>` }
+              ])}
+            `
+          }
+        }
+      },
+
+      trigonometria: {
+        label: "Trigonometría",
+        icon: "fa-wave-square",
+        subtopics: {
+
+          razones: {
+            name: "Razones Trigonométricas (SOH-CAH-TOA)",
+            meta: ["sin", "cos", "tan", "triángulo rectángulo"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> SOH-CAH-TOA (memoria muscular)</h2>
+                <p>En un triángulo rectángulo respecto a un ángulo θ:</p>
+                <ul>
+                  <li>${F("sin\\theta = (opuesto)/(hipotenusa)")}</li>
+                  <li>${F("cos\\theta = (adyacente)/(hipotenusa)")}</li>
+                  <li>${F("tan\\theta = (opuesto)/(adyacente)")}</li>
+                </ul>
+
+                <div class="img-card">
+                  ${svgTriangleRight()}
+                  <div class="cap">Visual: el “opuesto” y “adyacente” dependen del ángulo que eliges.</div>
+                </div>
+
+                <h3>Ángulos notables</h3>
+                <ul>
+                  <li>30°: sin=1/2, cos=√3/2, tan=1/√3</li>
+                  <li>45°: sin=√2/2, cos=√2/2, tan=1</li>
+                  <li>60°: sin=√3/2, cos=1/2, tan=√3</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Si sinθ=3/5 en un triángulo rectángulo, ¿cosθ? <br>
+                  Si opuesto=3 e hipotenusa=5 → adyacente=4 (por 3-4-5) → cos=4/5 <br>
+                  <span class="ans">Respuesta: 4/5</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> Si no es triángulo rectángulo, SOH-CAH-TOA directo no aplica (a menos que construyas uno).
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "sinθ =", a: "opuesto/hipotenusa" },
+                { q: "cosθ =", a: "adyacente/hipotenusa" },
+                { q: "tanθ =", a: "opuesto/adyacente" },
+                { q: "tan45° =", a: "1" }
+              ])}
+
+              ${practiceHTML([
+                { q: `En un triángulo rectángulo, opuesto=6, hipotenusa=10. sinθ=?`,
+                  a: `sinθ=6/10=3/5. <div class="ans">Respuesta: 3/5</div>` },
+                { q: `Si cosθ=12/13, halla sinθ.`,
+                  a: `adyacente=12, hipotenusa=13 → opuesto=5 (5-12-13). sin=5/13. <div class="ans">Respuesta: 5/13</div>` },
+                { q: `Calcula tan60°.`,
+                  a: `tan60°=√3. <div class="ans">Respuesta: √3</div>` }
+              ])}
+            `
+          },
+
+          circulo_unitario: {
+            name: "Círculo Unitario (sin, cos y cuadrantes)",
+            meta: ["(cosθ, sinθ)", "signos", "rad", "ángulos estándar"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Círculo unitario: el mapa</h2>
+                <p>
+                  En el círculo de radio 1: el punto correspondiente al ángulo θ es
+                  ${F("(cos\\theta,\\; sin\\theta)")}.
+                </p>
+
+                <div class="img-card">
+                  ${svgUnitCircle()}
+                  <div class="cap">En unit circle: x=cosθ, y=sinθ. Signos cambian por cuadrante.</div>
+                </div>
+
+                <h3>Signos por cuadrante</h3>
+                <ul>
+                  <li>I: sin+, cos+, tan+</li>
+                  <li>II: sin+, cos-, tan-</li>
+                  <li>III: sin-, cos-, tan+</li>
+                  <li>IV: sin-, cos+, tan-</li>
+                </ul>
+
+                <h3>Radianes (lo básico que cae)</h3>
+                <p>
+                  180° = π rad. Entonces 90°=π/2, 60°=π/3, 45°=π/4, 30°=π/6.
+                </p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> θ=210° está en cuadrante III. <br>
+                  Ángulo de referencia: 30°. En QIII, sin y cos son negativos. <br>
+                  sin210° = -1/2, cos210° = -√3/2 <br>
+                  <span class="ans">Respuesta: sin=-1/2, cos=-√3/2</span>
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> Primero encuentra el ángulo de referencia. Luego asigna signos por cuadrante. Así no fallas.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "En unit circle el punto es", a: "(cosθ, sinθ)" },
+                { q: "180° en radianes", a: "π" },
+                { q: "Cuadrante II: signos", a: "sin+, cos-, tan-" },
+                { q: "90° en radianes", a: "π/2" }
+              ])}
+
+              ${practiceHTML([
+                { q: `Convierte 150° a radianes.`,
+                  a: `150° = (150/180)π = (5/6)π. <div class="ans">Respuesta: 5π/6</div>` },
+                { q: `Signo de tan en cuadrante IV`,
+                  a: `sin-, cos+ → tan = sin/cos → negativa. <div class="ans">Respuesta: negativo</div>` },
+                { q: `cos(300°)`,
+                  a: `300° = 360-60, QIV cos positivo → cos300=cos60=1/2. <div class="ans">Respuesta: 1/2</div>` }
+              ])}
+            `
+          },
+
+          identidades: {
+            name: "Identidades Trigonométricas Básicas",
+            meta: ["sin²+cos²=1", "tan=sin/cos", "1+tan²=sec²"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Identidades que sí aparecen</h2>
+                <ul>
+                  <li>${F("sin^2\\theta + cos^2\\theta = 1")}</li>
+                  <li>${F("tan\\theta = sin\\theta / cos\\theta")}</li>
+                  <li>${F("1 + tan^2\\theta = sec^2\\theta")}</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Si cosθ=3/5 (θ agudo), halla sinθ. <br>
+                  sin²=1-cos²=1-9/25=16/25 → sin=4/5 <br>
+                  <span class="ans">Respuesta: 4/5</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> si θ no es agudo, sin podría ser negativo. Revisa cuadrante.
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> PAA no suele hacer trig pesada, pero sí te pide usar identidades para completar valores.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Identidad pitagórica", a: "sin²θ + cos²θ = 1" },
+                { q: "tanθ =", a: "sinθ / cosθ" },
+                { q: "Si cos=0.6, entonces sin=", a: "√(1-0.36)=0.8 (si θ agudo)" },
+                { q: "1+tan²θ =", a: "sec²θ" }
+              ])}
+
+              ${practiceHTML([
+                { q: `Si sinθ=5/13 (θ agudo), cosθ=?`,
+                  a: `cos²=1-25/169=144/169 → cos=12/13. <div class="ans">Respuesta: 12/13</div>` },
+                { q: `Si sinθ=√3/2 y cosθ=1/2, tanθ=?`,
+                  a: `tan= (√3/2)/(1/2)=√3. <div class="ans">Respuesta: √3</div>` },
+                { q: `Si tanθ=3/4 (θ agudo), sec²θ=?`,
+                  a: `1+tan²=1+9/16=25/16. <div class="ans">Respuesta: 25/16</div>` }
+              ])}
+            `
+          },
+
+          aplicaciones: {
+            name: "Aplicaciones: Altura, Distancia y Ángulos de Elevación",
+            meta: ["Modelado", "Triángulos", "Problemas verbales"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Problemas típicos PAA</h2>
+                <p>
+                  Se traducen a un triángulo rectángulo. Pasos:
+                  (1) Dibuja, (2) etiqueta opuesto/adyacente/hipotenusa, (3) elige sin/cos/tan, (4) despeja.
+                </p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Un edificio se observa con ángulo de elevación 30° desde 40 m de distancia. ¿Altura? <br>
+                  tan30 = h/40 → h = 40·tan30 = 40·(1/√3) = 40/√3 = (40√3)/3 <br>
+                  <span class="ans">Respuesta: (40√3)/3 ≈ 23.1 m</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> a veces te dan distancia “a lo largo del suelo” (adyacente), no la hipotenusa.
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> si el ángulo es 45°, tan=1 → opuesto = adyacente (rápido y elegante).
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Ángulo de elevación usa...", a: "Triángulo rectángulo con línea horizontal como referencia." },
+                { q: "Si θ=45°, tanθ=", a: "1" },
+                { q: "Altura con distancia horizontal d y ángulo θ", a: "h = d·tanθ" },
+                { q: "Distancia horizontal con altura h", a: "d = h/tanθ" }
+              ])}
+
+              ${practiceHTML([
+                { q: `Desde 20 m, ángulo 45°. Altura del objeto?`,
+                  a: `h=20·tan45=20. <div class="ans">Respuesta: 20 m</div>` },
+                { q: `Una escalera de 10 m (hipotenusa) hace 60° con el suelo. ¿Altura alcanzada?`,
+                  a: `sin60 = h/10 → h=10·(√3/2)=5√3. <div class="ans">Respuesta: 5√3</div>` },
+                { q: `Si h=12 y θ=30°, distancia horizontal d=?`,
+                  a: `tan30=12/d → d=12/(1/√3)=12√3. <div class="ans">Respuesta: 12√3</div>` }
+              ])}
+            `
+          }
+        }
+      },
+
+      estadistica: {
+        label: "Datos y Probabilidad",
+        icon: "fa-chart-bar",
+        subtopics: {
+
+          central: {
+            name: "Medidas de Tendencia Central (Media, Mediana, Moda)",
+            meta: ["Media", "Mediana", "Moda", "Interpretación"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Definiciones (sin humo)</h2>
+                <ul>
+                  <li><strong>Media:</strong> suma de datos / cantidad.</li>
+                  <li><strong>Mediana:</strong> valor central al ordenar.</li>
+                  <li><strong>Moda:</strong> valor que más se repite.</li>
+                </ul>
+
+                <div class="img-card">
+                  ${svgBarChart()}
+                  <div class="cap">Una gráfica de barras: útil para moda y comparación de frecuencias.</div>
+                </div>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Datos: 2, 3, 3, 7, 10 <br>
+                  Media=(25)/5=5 <br>
+                  Mediana=3 <br>
+                  Moda=3 <br>
+                  <span class="ans">Respuesta: media=5, mediana=3, moda=3</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> La media se “jala” por valores extremos (outliers). Mediana resiste más.
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> si te preguntan “mejor representa el centro” con outliers, suele ser la mediana.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Media", a: "Suma / cantidad." },
+                { q: "Mediana", a: "Valor central (ordenando)." },
+                { q: "Moda", a: "El que más se repite." },
+                { q: "Outlier afecta más a...", a: "La media." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Datos: 5, 5, 6, 9. Media?`,
+                  a: `(5+5+6+9)/4=25/4=6.25. <div class="ans">Respuesta: 6.25</div>` },
+                { q: `Datos: 1, 2, 3, 100. Mediana?`,
+                  a: `Promedio de los dos del centro: (2+3)/2=2.5. <div class="ans">Respuesta: 2.5</div>` },
+                { q: `Moda en: 4,4,4,2,2,9`,
+                  a: `4. <div class="ans">Respuesta: 4</div>` }
+              ])}
+            `
+          },
+
+          dispersion: {
+            name: "Dispersión (Rango y Variabilidad)",
+            meta: ["Rango", "Interpretación", "Consistencia"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Rango (lo que más cae)</h2>
+                <p>
+                  <strong>Rango</strong> = máximo - mínimo. Mide qué tan “regados” están los datos.
+                </p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Datos: 4, 7, 10, 12 <br>
+                  Rango = 12 - 4 = 8 <br>
+                  <span class="ans">Respuesta: 8</span>
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> Si te preguntan cuál grupo es “más consistente”, elige el que tenga menor rango (si todo lo demás es similar).
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Rango", a: "máximo - mínimo" },
+                { q: "Menor rango significa", a: "Mayor consistencia / menos variabilidad." },
+                { q: "Rango puede ser negativo?", a: "No, porque max≥min." },
+                { q: "Rango si todos los datos son iguales", a: "0" }
+              ])}
+
+              ${practiceHTML([
+                { q: `Datos: 3, 3, 3. Rango?`,
+                  a: `3-3=0. <div class="ans">Respuesta: 0</div>` },
+                { q: `Grupo A: [2,4,6], Grupo B:[3,4,5]. ¿Más consistente?`,
+                  a: `Rango A=4, rango B=2 → B. <div class="ans">Respuesta: B</div>` },
+                { q: `Datos: 11, 2, 9, 5. Rango?`,
+                  a: `11-2=9. <div class="ans">Respuesta: 9</div>` }
+              ])}
+            `
+          },
+
+          probabilidad: {
+            name: "Probabilidad (Eventos simples y compuestos)",
+            meta: ["P=F/T", "Independencia", "Complemento", "Reglas básicas"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Probabilidad básica</h2>
+                <p>
+                  ${F("P(evento)=casos\\ favorables/casos\\ totales")}
+                </p>
+
+                <h3>Complemento</h3>
+                <p>${F("P(A^c)=1-P(A)")}</p>
+
+                <h3>Eventos independientes</h3>
+                <p>${F("P(A\\ y\\ B)=P(A)·P(B)")} si no se afectan.</p>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> Dado: prob de par = 3/6=1/2 <br>
+                  <span class="ans">Respuesta: 1/2</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> “sin reemplazo” NO es independencia. Cambia el total.
+                </div>
+
+                <div class="tip-box">
+                  <strong>Tip:</strong> si te piden “al menos uno”, usa complemento: 1 - P(ninguno).
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "Probabilidad simple", a: "favorables / totales" },
+                { q: "Complemento", a: "1 - P(A)" },
+                { q: "Independientes", a: "P(A y B)=P(A)·P(B)" },
+                { q: "Sin reemplazo", a: "No es independiente." }
+              ])}
+
+              ${practiceHTML([
+                { q: `Moneda justa: P(cara)=?`,
+                  a: `1/2. <div class="ans">Respuesta: 1/2</div>` },
+                { q: `Dos monedas: P(dos caras)=?`,
+                  a: `(1/2)(1/2)=1/4. <div class="ans">Respuesta: 1/4</div>` },
+                { q: `Bolsa: 3 rojas, 2 azules. Sin reemplazo: P(roja luego azul)?`,
+                  a: `P(roja)=3/5. Luego quedan 2 azules de 4 total: 2/4=1/2. Producto: 3/10. <div class="ans">Respuesta: 3/10</div>` }
+              ])}
+            `
+          },
+
+          conteo: {
+            name: "Conteo: Permutaciones y Combinaciones",
+            meta: ["n!", "Orden importa", "Orden no importa", "Problemas"],
+            content: `
+              <div class="section-block">
+                <h2><i class="fas fa-book"></i> Conteo (sin sufrir)</h2>
+                <p>
+                  Dos preguntas te ordenan el universo:
+                  <strong>¿importa el orden?</strong> y <strong>¿se repite?</strong>
+                </p>
+
+                <h3>Factorial</h3>
+                <p>${F("n! = n(n-1)(n-2)...1")}</p>
+
+                <h3>Permutaciones (orden importa)</h3>
+                <ul>
+                  <li>${F("P(n,r)=n!/(n-r)!")}</li>
+                </ul>
+
+                <h3>Combinaciones (orden NO importa)</h3>
+                <ul>
+                  <li>${F("C(n,r)=n!/[r!(n-r)!]")}</li>
+                </ul>
+
+                <div class="example-box">
+                  <strong>Ejemplo:</strong> ¿Cuántas formas de elegir 2 personas de 5? <br>
+                  C(5,2)=5!/(2!3!)=10 <br>
+                  <span class="ans">Respuesta: 10</span>
+                </div>
+
+                <div class="warn-box">
+                  <strong>Trampa:</strong> “ABC” y “CBA” son diferentes en permutación, pero iguales en combinación.
+                </div>
+              </div>
+
+              ${flashcardsHTML([
+                { q: "n!", a: "n(n-1)...1" },
+                { q: "Permutación: orden...", a: "sí importa" },
+                { q: "Combinación: orden...", a: "no importa" },
+                { q: "C(n,r)=", a: "n!/[r!(n-r)!]" }
+              ])}
+
+              ${practiceHTML([
+                { q: `¿Cuántas formas de ordenar 4 libros?`,
+                  a: `4!=24. <div class="ans">Respuesta: 24</div>` },
+                { q: `¿Cuántas selecciones de 3 estudiantes de un grupo de 7?`,
+                  a: `C(7,3)=35. <div class="ans">Respuesta: 35</div>` },
+                { q: `Permutaciones de 6 tomados de 2 (P(6,2))`,
+                  a: `6!/(4!)=6·5=30. <div class="ans">Respuesta: 30</div>` }
+              ])}
+            `
+          }
+        }
+      }
+    };
+
+    // ==========================================
+    // Sidebar + cargar contenido
+    // ==========================================
+    function initSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.innerHTML = "";
+      for (const catKey in mathData) {
+        const cat = mathData[catKey];
+        const group = document.createElement('div');
+        group.className = 'category-group';
+        group.innerHTML = `<div class="category-title"><i class="fas ${cat.icon}"></i> ${cat.label}</div>`;
+
+        for (const subKey in cat.subtopics) {
+          const sub = cat.subtopics[subKey];
+          const link = document.createElement('a');
+          link.className = 'topic-link';
+          link.innerHTML = `<span class="topic-bullet"></span><span>${sub.name}</span>`;
+          link.onclick = () => {
+            loadTopic(catKey, subKey, link);
+            closeSidebar();
+          };
+          group.appendChild(link);
+        }
+        sidebar.appendChild(group);
+      }
+    }
+
+    function loadTopic(catKey, subKey, element) {
+      // UI
+      document.querySelectorAll('.topic-link').forEach(l => l.classList.remove('active'));
+      element.classList.add('active');
+      document.getElementById('welcome-msg').style.display = 'none';
+      document.getElementById('topic-container').style.display = 'block';
+
+      // Datos
+      const cat = mathData[catKey];
+      const data = cat.subtopics[subKey];
+
+      document.getElementById('t-title').innerText = data.name;
+
+      const meta = (data.meta || []).map(m => `<span class="pill"><i class="fas fa-tag"></i> ${m}</span>`).join("");
+      document.getElementById('t-meta').innerHTML = `
+        <span class="pill"><i class="fas ${cat.icon}"></i> ${cat.label}</span>
+        ${meta}
+      `;
+
+      // Render
+      document.getElementById('t-sections').innerHTML = data.content;
+
+      // Scroll top del contenido
+      document.getElementById('content-area').scrollTop = 0;
+    }
+
+    function toggleSidebar() {
+      document.body.classList.toggle('sidebar-open');
+    }
+
+    function closeSidebar() {
+      document.body.classList.remove('sidebar-open');
+    }
+
+    initSidebar();
+
+    const menuToggle = document.querySelector('.menu-toggle');
+    const overlay = document.getElementById('sidebar-overlay');
+
+    if (menuToggle) {
+      menuToggle.addEventListener('click', toggleSidebar);
+    }
+
+    if (overlay) {
+      overlay.addEventListener('click', closeSidebar);
+    }
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 980) {
+        closeSidebar();
+      }
+    });
+
+  </script>
+</body>
+</html>
