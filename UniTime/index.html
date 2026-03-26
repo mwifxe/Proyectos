@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario Universitario</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="/catlog.png">
+
+
+    
+    <style>
+    
+        :root {
+            --cream: #FAF8F5;
+            --warm-white: #FFFFFF;
+            --beige: #EDE8DF;
+            --light-brown: #D4C4B0;
+            --medium-brown: #A89080;
+            --text-brown: #6B5D52;
+            --text-dark: #3D3530;
+            
+            --desarrollo: #9CAF88;
+            --matematica: #D4A59A;
+            --teologia: #E8D5A8;
+            --filosofia: #B5C9D8;
+            --redaccion: #E5C9C9;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.5;
+            padding-bottom: 3rem;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+        
+        body.modal-open {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--light-brown) 0%, var(--medium-brown) 100%);
+            padding: 2rem 1.25rem;
+            color: var(--warm-white);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+        
+        .subtitle {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .legend {
+            background: var(--beige);
+            padding: 1rem 1.25rem;
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+        
+        .legend::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        
+        .container {
+            padding: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .periodo {
+            margin-bottom: 2rem;
+        }
+        
+        .periodo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--light-brown);
+        }
+        
+        .periodo-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--medium-brown);
+            line-height: 1;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .periodo-info h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.125rem;
+        }
+        
+        .periodo-info p {
+            font-size: 0.8rem;
+            color: var(--text-brown);
+        }
+        
+        .semana {
+            background: var(--warm-white);
+            border-radius: 12px;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+        }
+        
+        .semana.parcial {
+            background: linear-gradient(135deg, var(--soft-terracota) 0%, #E5B8AE 100%);
+        }
+        
+        .semana.vacaciones {
+            background: linear-gradient(135deg, var(--soft-yellow) 0%, #F0E0BC 100%);
+        }
+        
+        .semana-header {
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--beige);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .semana-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            flex: 1;
+        }
+        
+        .fecha-badge {
+            background: var(--beige);
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: var(--text-brown);
+            margin-right: 0.5rem;
+        }
+        
+        .semana.parcial .fecha-badge,
+        .semana.vacaciones .fecha-badge {
+            background: rgba(255,255,255,0.7);
+        }
+        
+        .btn-add-actividad {
+            width: 26px;
+            height: 26px;
+            border-radius: 6px;
+            background: var(--medium-brown);
+            color: var(--warm-white);
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            padding: 0;
+        }
+        
+        .btn-add-actividad:active {
+            transform: scale(0.92);
+            background: var(--text-brown);
+        }
+        
+        .actividades {
+            padding: 0.5rem;
+        }
+        
+        .actividades:empty + .sin-actividades {
+            display: block;
+        }
+        
+        .actividades:not(:empty) + .sin-actividades {
+            display: none;
+        }
+        
+        .actividad {
+            background: var(--warm-white);
+            border-radius: 8px;
+            padding: 0.875rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid var(--desarrollo);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+        
+        .actividad:last-child {
+            margin-bottom: 0;
+        }
+        
+        .actividad:active {
+            transform: scale(0.98);
+        }
+        
+        .actividad.matematica { border-left-color: var(--matematica); }
+        .actividad.teologia { border-left-color: var(--teologia); }
+        .actividad.filosofia { border-left-color: var(--filosofia); }
+        .actividad.redaccion { border-left-color: var(--redaccion); }
+        
+        .actividad-header {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.5rem;
+            align-items: flex-start;
+        }
+        
+        .actividad-left {
+            flex: 1;
+        }
+        
+        .actividad-actions {
+            display: flex;
+            gap: 0.25rem;
+            flex-shrink: 0;
+        }
+        
+        .btn-edit-actividad,
+        .btn-delete-mini {
+            background: var(--beige);
+            color: var(--text-dark);
+            border: none;
+            padding: 0.35rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .btn-edit-actividad:active {
+            background: var(--light-brown);
+            transform: scale(0.95);
+        }
+        
+        .btn-delete-mini {
+            background: #E8B8B8;
+            color: #8B4545;
+        }
+        
+        .btn-delete-mini:active {
+            background: #E07A7A;
+            transform: scale(0.95);
+        }
+        
+        .materia-nombre {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .actividad-titulo {
+            font-size: 0.8rem;
+            color: var(--text-brown);
+            margin-bottom: 0.5rem;
+        }
+        
+        .actividad-meta {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .fecha-actividad {
+            background: var(--beige);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        
+        .porcentaje {
+            background: var(--medium-brown);
+            color: var(--warm-white);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .sin-actividades {
+            padding: 1rem;
+            text-align: center;
+            color: var(--text-brown);
+            font-size: 0.85rem;
+            font-style: italic;
+            opacity: 0.7;
+        }
+        
+        .nota-especial {
+            background: var(--soft-blue);
+            padding: 0.75rem;
+            margin: 0.5rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            border-left: 3px solid var(--filosofia);
+        }
+        
+        .parciales-grid {
+            padding: 0.75rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+        }
+        
+        .parcial-item {
+            background: rgba(255,255,255,0.8);
+            padding: 0.75rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+        
+        /* MODALES */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .modal {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--warm-white);
+            border-radius: 20px 20px 0 0;
+            max-height: 85vh;
+            z-index: 1001;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            visibility: hidden;
+        }
+        
+        .modal.active {
+            transform: translateY(0);
+            visibility: visible;
+        }
+        
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--beige);
+            border-radius: 2px;
+            margin: 1rem auto 0.5rem;
+        }
+        
+        .modal-header {
+            padding: 0 1.25rem 1rem;
+            border-bottom: 1px solid var(--beige);
+        }
+        
+        .modal-materia {
+            font-weight: 600;
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+        
+        .modal-titulo {
+            font-size: 0.875rem;
+            color: var(--text-brown);
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-info {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .modal-content {
+            padding: 1.25rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .section-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--beige);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            transition: border-color 0.2s;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--medium-brown);
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 0.875rem;
+            border: 2px solid var(--beige);
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--medium-brown);
+        }
+        
+        .buttons {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--beige);
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        button {
+            flex: 1;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .btn-save {
+            background: var(--medium-brown);
+            color: var(--warm-white);
+        }
+        
+        .btn-save:active {
+            transform: scale(0.98);
+            background: var(--text-brown);
+        }
+        
+        .btn-close {
+            background: var(--beige);
+            color: var(--text-dark);
+        }
+        
+        .btn-close:active {
+            transform: scale(0.98);
+            background: var(--light-brown);
+        }
+        
+        .has-notes {
+            position: relative;
+        }
+        
+        .has-notes::after {
+            content: '';
+            position: absolute;
+            top: 0.875rem;
+            right: 0.875rem;
+            width: 8px;
+            height: 8px;
+            background: var(--medium-brown);
+            border-radius: 50%;
+            box-shadow: 0 0 0 2px var(--warm-white);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                padding: 2rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .modal {
+                left: 50%;
+                right: auto;
+                transform: translate(-50%, 100%);
+                width: 500px;
+                border-radius: 20px;
+                bottom: 50%;
+                margin-bottom: -300px;
+            }
+            
+            .modal.active {
+                transform: translate(-50%, 0);
+            }
+        }
+
+        
+    </style>
+</head>
+<body>
+
+    
+
+    <div class="header">
+        <h1>Calendario Universitario</h1>
+        <p class="subtitle">Primer Ciclo 2026</p>
+    </div>
+    
+    <div class="legend">
+        <div class="legend-item">
+            <div class="legend-dot" style="background: var(--desarrollo);"></div>
+            <span>Desarrollo Personal</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: var(--matematica);"></div>
+            <span>Matemática I</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: var(--teologia);"></div>
+            <span>Teología</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: var(--filosofia);"></div>
+            <span>Filosofía</span>
+        </div>
+        <div class="legend-item">
+            <div class="legend-dot" style="background: var(--redaccion);"></div>
+            <span>Redacción</span>
+        </div>
+    </div>
+    
+    <div class="container" id="container"></div>
+    
+    <!-- MODAL DE NOTAS -->
+    <div class="modal-overlay" id="modalNotasOverlay"></div>
+    <div class="modal" id="modalNotas">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <div class="modal-materia" id="modalNotasMateria"></div>
+            <div class="modal-titulo" id="modalNotasTitulo"></div>
+            <div class="modal-info" id="modalNotasInfo"></div>
+        </div>
+        <div class="modal-content">
+            <div class="section-title">Notas y recordatorios</div>
+            <textarea id="notasTextarea" placeholder="Escribe tus notas aquí..."></textarea>
+        </div>
+        <div class="buttons">
+            <button class="btn-save" id="btnSaveNotas">Guardar</button>
+            <button class="btn-close" id="btnCloseNotas">Cerrar</button>
+        </div>
+    </div>
+    
+    <!-- MODAL DE CREAR/EDITAR ACTIVIDAD -->
+    <div class="modal-overlay" id="modalActividadOverlay"></div>
+    <div class="modal" id="modalActividad">
+        <div class="modal-handle"></div>
+        <div class="modal-header">
+            <div class="modal-materia" id="modalActividadTitulo">Nueva Actividad</div>
+        </div>
+        <div class="modal-content">
+            <form id="formActividad">
+                <div class="form-group">
+                    <label for="inputMateria">Materia</label>
+                    <select id="inputMateria" required>
+                        <option value="">Selecciona una materia</option>
+                        <option value="Desarrollo Personal">Desarrollo Personal</option>
+                        <option value="Matemática I">Matemática I</option>
+                        <option value="Teología">Teología</option>
+                        <option value="Filosofía">Filosofía</option>
+                        <option value="Técnicas de Redacción">Técnicas de Redacción</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputNombre">Nombre de la actividad</label>
+                    <input type="text" id="inputNombre" placeholder="Ej: Ensayo sobre ética" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputFecha">Fecha de entrega</label>
+                    <input type="text" id="inputFecha" placeholder="Ej: 15/03/26">
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputPorcentaje">Porcentaje (opcional)</label>
+                    <input type="text" id="inputPorcentaje" placeholder="Ej: 20%">
+                </div>
+                
+                <div class="form-group">
+                    <label for="inputDescripcion">Descripción (opcional)</label>
+                    <textarea id="inputDescripcion" placeholder="Agrega detalles sobre la actividad..."></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="buttons">
+            <button class="btn-save" id="btnSaveActividad">Guardar Actividad</button>
+            <button class="btn-close" id="btnCloseActividad">Cancelar</button>
+        </div>
+    </div>
+    
+    <script>
+        // Datos del calendario (plantilla inicial)
+        const calendarioPlantilla = {
+            periodos: [
+                {
+                    numero: 'I',
+                    nombre: 'Período I',
+                    info: '7 semanas · 19 ene – 7 mar',
+                    semanas: [
+                        { id: 'p1s1', titulo: 'Semana 1', fecha: '19 – 24 ene', actividades: [] },
+                        { id: 'p1s2', titulo: 'Semana 2', fecha: '26 – 31 ene', actividades: [] },
+                        { 
+                            id: 'p1s3', 
+                            titulo: 'Semana 3', 
+                            fecha: '2 – 7 feb', 
+                            actividades: [
+                                { materia: 'Desarrollo Personal', titulo: 'Actividad 1 – El Bien', fecha: '03/02/26', porcentaje: '20%', clase: '' },
+                                { materia: 'Matemática I', titulo: 'Laboratorio Corto 1', fecha: '05/02/26', porcentaje: '20%', clase: 'matematica' }
+                            ]
+                        },
+                        { 
+                            id: 'p1s4', 
+                            titulo: 'Semana 4', 
+                            fecha: '9 – 14 feb', 
+                            actividades: [
+                                { materia: 'Desarrollo Personal', titulo: 'Actividad 2 – Sentido de la vida', fecha: '10/02/26', porcentaje: '20%', clase: '' },
+                                { materia: 'Desarrollo Personal', titulo: 'Actividad 3 – Foro Dignidad Humana', fecha: '10 al 24/02', porcentaje: '10%', clase: '' },
+                                { materia: 'Filosofía', titulo: 'Examen – Introducción a la Filosofía', fecha: 'Jueves 12/02/26', porcentaje: '', clase: 'filosofia' }
+                            ]
+                        },
+                        { 
+                            id: 'p1s5', 
+                            titulo: 'Semana 5', 
+                            fecha: '16 – 21 feb', 
+                            actividades: [
+                                { materia: 'Matemática I', titulo: 'Laboratorio Corto 2', fecha: '20/02/26', porcentaje: '20%', clase: 'matematica' }
+                            ]
+                        },
+                        { 
+                            id: 'p1s6', 
+                            titulo: 'Semana 6', 
+                            fecha: '23 – 28 feb', 
+                            actividades: [
+                                { materia: 'Matemática I', titulo: 'Guía de ejercicios', fecha: '27/02/26', porcentaje: '10%', clase: 'matematica' }
+                            ],
+                            notaEspecial: 'Foro Dignidad Humana sigue habilitado hasta el 24/02'
+                        },
+                        { 
+                            id: 'p1s7', 
+                            titulo: 'Semana 7 — PARCIALES', 
+                            fecha: '2 – 7 mar', 
+                            parcial: true,
+                            parciales: ['Desarrollo Personal', 'Matemática I', 'Teología', 'Filosofía', 'Técnicas de Redacción']
+                        }
+                    ]
+                },
+                {
+                    numero: 'II',
+                    nombre: 'Período II',
+                    info: '6 semanas · 9 mar – 25 abr',
+                    semanas: [
+                        { id: 'p2s1', titulo: 'Semana 1', fecha: '9 – 14 mar', actividades: [] },
+                        { 
+                            id: 'p2s2', 
+                            titulo: 'Semana 2', 
+                            fecha: '16 – 21 mar', 
+                            actividades: [
+                                { materia: 'Desarrollo Personal', titulo: 'Actividad 1 – Ética y Moral', fecha: '17/03/26', porcentaje: '20%', clase: '' },
+                                { materia: 'Matemática I', titulo: 'Laboratorio Corto 3', fecha: '20/03/26', porcentaje: '20%', clase: 'matematica' }
+                            ]
+                        },
+                        { 
+                            id: 'p2s3', 
+                            titulo: 'Semana 3', 
+                            fecha: '23 – 28 mar', 
+                            actividades: [
+                                { materia: 'Desarrollo Personal', titulo: 'Actividad 2 – Foro El Efecto Padre', fecha: '24/03/26', porcentaje: '10%', clase: '' }
+                            ]
+                        },
+                        { id: 'p2sv', titulo: 'Vacaciones de Semana Santa', fecha: '30 mar – 5 abr', vacaciones: true },
+                        { 
+                            id: 'p2s4', 
+                            titulo: 'Semana 4', 
+                            fecha: '6 – 11 abr', 
+                            actividades: [
+                                { materia: 'Desarrollo Personal', titulo: 'Actividad 3 – Educar los sentimientos', fecha: '07/04/26', porcentaje: '20%', clase: '' }
+                            ]
+                        },
+                        { 
+                            id: 'p2s5', 
+                            titulo: 'Semana 5', 
+                            fecha: '13 – 18 abr', 
+                            actividades: [
+                                { materia: 'Matemática I', titulo: 'Laboratorio Corto 4', fecha: '16/04/26', porcentaje: '20%', clase: 'matematica' },
+                                { materia: 'Matemática I', titulo: 'Guía de ejercicios', fecha: '17/04/26', porcentaje: '10%', clase: 'matematica' }
+                            ]
+                        },
+                        { 
+                            id: 'p2s6', 
+                            titulo: 'Semana 6 — PARCIALES', 
+                            fecha: '20 – 25 abr', 
+                            parcial: true,
+                            parciales: ['Desarrollo Personal', 'Matemática I', 'Teología', 'Filosofía', 'Técnicas de Redacción']
+                        }
+                    ]
+                },
+                {
+                    numero: 'III',
+                    nombre: 'Período III',
+                    info: '6 semanas · 27 abr – 6 jun',
+                    semanas: [
+                        { id: 'p3s1', titulo: 'Semana 1', fecha: '27 abr – 2 may', actividades: [] },
+                        { 
+                            id: 'p3s2', 
+                            titulo: 'Semana 2', 
+                            fecha: '4 – 9 may', 
+                            actividades: [
+                                { materia: 'Matemática I', titulo: 'Laboratorio Corto 5', fecha: '08/05/26', porcentaje: '20%', clase: 'matematica' }
+                            ]
+                        },
+                        { 
+                            id: 'p3s3', 
+                            titulo: 'Semana 3', 
+                            fecha: '11 – 16 may', 
+                            actividades: [
+                                { materia: 'Desarrollo Personal', titulo: 'Actividad 1 – Retos de la familia actual', fecha: '12/05/26', porcentaje: '20%', clase: '' }
+                            ]
+                        },
+                        { 
+                            id: 'p3s4', 
+                            titulo: 'Semana 4', 
+                            fecha: '18 – 23 may', 
+                            actividades: [
+                                { materia: 'Desarrollo Personal', titulo: 'Actividad 2 – La Sociedad', fecha: '19/05/26', porcentaje: '15%', clase: '' }
+                            ]
+                        },
+                        { 
+                            id: 'p3s5', 
+                            titulo: 'Semana 5', 
+                            fecha: '25 – 30 may', 
+                            actividades: [
+                                { materia: 'Desarrollo Personal', titulo: 'Actividad 3 – Entrenamiento ético', fecha: '26/05/26', porcentaje: '15%', clase: '' },
+                                { materia: 'Matemática I', titulo: 'Laboratorio Corto 6', fecha: '28/05/26', porcentaje: '20%', clase: 'matematica' },
+                                { materia: 'Matemática I', titulo: 'Guía de ejercicios', fecha: '29/05/26', porcentaje: '10%', clase: 'matematica' }
+                            ]
+                        },
+                        { 
+                            id: 'p3s6', 
+                            titulo: 'Semana 6 — PARCIALES FINALES', 
+                            fecha: '1 – 6 jun', 
+                            parcial: true,
+                            parciales: ['Desarrollo Personal', 'Matemática I', 'Teología', 'Filosofía', 'Técnicas de Redacción']
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // Estado global
+        let currentActivityId = null;
+        let currentSemanaId = null;
+        let editingActivityIndex = null;
+
+        // Inicializar actividades desde plantilla si es primera vez
+        function inicializarActividades() {
+            const inicializado = localStorage.getItem('calendario_inicializado');
+            
+            if (!inicializado) {
+                // Primera vez - migrar actividades de plantilla a localStorage
+                calendarioPlantilla.periodos.forEach(periodo => {
+                    periodo.semanas.forEach(semana => {
+                        if (semana.actividades && semana.actividades.length > 0) {
+                            saveActividades(semana.id, semana.actividades);
+                        }
+                    });
+                });
+                localStorage.setItem('calendario_inicializado', 'true');
+            }
+        }
+
+        // Funciones de localStorage
+        function loadActividades(semanaId) {
+            const actividades = localStorage.getItem(`actividades_${semanaId}`);
+            return actividades ? JSON.parse(actividades) : [];
+        }
+
+        function saveActividades(semanaId, actividades) {
+            localStorage.setItem(`actividades_${semanaId}`, JSON.stringify(actividades));
+        }
+
+        function loadNotas(activityId) {
+            return localStorage.getItem(`nota_${activityId}`) || '';
+        }
+
+        function saveNotas(activityId, content) {
+            if (content.trim()) {
+                localStorage.setItem(`nota_${activityId}`, content);
+            } else {
+                localStorage.removeItem(`nota_${activityId}`);
+            }
+        }
+
+        // Función para obtener clase de materia
+        function getClaseMateria(materia) {
+            const clases = {
+                'Desarrollo Personal': '',
+                'Matemática I': 'matematica',
+                'Teología': 'teologia',
+                'Filosofía': 'filosofia',
+                'Técnicas de Redacción': 'redaccion'
+            };
+            return clases[materia] || '';
+        }
+
+        // Renderizar actividad
+        function renderActividad(actividad, index, semanaId) {
+            const activityId = `${semanaId}_a${index}`;
+            const clase = actividad.clase || getClaseMateria(actividad.materia);
+            const hasNotes = loadNotas(activityId).trim().length > 0;
+            
+            let html = `
+                <div class="actividad ${clase} ${hasNotes ? 'has-notes' : ''}" data-id="${activityId}" data-materia="${actividad.materia}" data-titulo="${actividad.titulo}" data-fecha="${actividad.fecha || ''}" data-porcentaje="${actividad.porcentaje || ''}" data-descripcion="${actividad.descripcion || ''}">
+                    <div class="actividad-header">
+                        <div class="actividad-left">
+                            <div class="materia-nombre">${actividad.materia}</div>
+                            <div class="actividad-titulo">${actividad.titulo}</div>
+                            <div class="actividad-meta">
+            `;
+            
+            if (actividad.fecha) {
+                html += `<div class="fecha-actividad">${actividad.fecha}</div>`;
+            }
+            
+            if (actividad.porcentaje) {
+                html += `<div class="porcentaje">${actividad.porcentaje}</div>`;
+            }
+            
+            html += `
+                            </div>
+                        </div>
+                        <div class="actividad-actions">
+                            <button class="btn-edit-actividad" data-semana="${semanaId}" data-index="${index}">Editar</button>
+                            <button class="btn-delete-mini" data-semana="${semanaId}" data-index="${index}">✕</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            return html;
+        }
+
+        // Renderizar calendario
+        function renderCalendario() {
+            const container = document.getElementById('container');
+            let html = '';
+
+            calendarioPlantilla.periodos.forEach(periodo => {
+                html += `
+                    <div class="periodo">
+                        <div class="periodo-header">
+                            <div class="periodo-number">${periodo.numero}</div>
+                            <div class="periodo-info">
+                                <h2>${periodo.nombre}</h2>
+                                <p>${periodo.info}</p>
+                            </div>
+                        </div>
+                `;
+
+                periodo.semanas.forEach(semana => {
+                    const clases = [];
+                    if (semana.parcial) clases.push('parcial');
+                    if (semana.vacaciones) clases.push('vacaciones');
+
+                    html += `
+                        <div class="semana ${clases.join(' ')}" data-semana-id="${semana.id}">
+                            <div class="semana-header">
+                                <div class="semana-title">${semana.titulo}</div>
+                                <div class="fecha-badge">${semana.fecha}</div>
+                                ${!semana.parcial && !semana.vacaciones ? '<button class="btn-add-actividad">+</button>' : ''}
+                            </div>
+                    `;
+
+                    if (semana.parcial) {
+                        html += '<div class="parciales-grid">';
+                        semana.parciales.forEach(parcial => {
+                            html += `<div class="parcial-item">${parcial}</div>`;
+                        });
+                        html += '</div>';
+                    } else if (semana.vacaciones) {
+                        html += '<div class="sin-actividades">Esta semana no cuenta en el período académico</div>';
+                    } else {
+                        html += '<div class="actividades">';
+                        
+                        // Todas las actividades (ahora todas desde localStorage)
+                        const actividades = loadActividades(semana.id);
+                        actividades.forEach((actividad, index) => {
+                            html += renderActividad(actividad, index, semana.id);
+                        });
+                        
+                        html += '</div>';
+                        html += '<div class="sin-actividades">Sin actividades evaluadas</div>';
+                        
+                        if (semana.notaEspecial) {
+                            html += `<div class="nota-especial">${semana.notaEspecial}</div>`;
+                        }
+                    }
+
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            });
+
+            container.innerHTML = html;
+            attachEventListeners();
+        }
+
+        // Adjuntar event listeners
+        function attachEventListeners() {
+            // Click en actividades para ver notas
+            document.querySelectorAll('.actividad').forEach(actividad => {
+                actividad.addEventListener('click', (e) => {
+                    if (!e.target.classList.contains('btn-edit-actividad') && 
+                        !e.target.classList.contains('btn-delete-mini')) {
+                        openModalNotas(actividad);
+                    }
+                });
+            });
+
+            // Botones de agregar actividad
+            document.querySelectorAll('.btn-add-actividad').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const semanaId = btn.closest('.semana').dataset.semanaId;
+                    openModalActividad(semanaId);
+                });
+            });
+
+            // Botones de editar actividad
+            document.querySelectorAll('.btn-edit-actividad').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const semanaId = btn.dataset.semana;
+                    const index = parseInt(btn.dataset.index);
+                    editActividad(semanaId, index);
+                });
+            });
+
+            // Botones de eliminar actividad
+            document.querySelectorAll('.btn-delete-mini').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const semanaId = btn.dataset.semana;
+                    const index = parseInt(btn.dataset.index);
+                    deleteActividad(semanaId, index);
+                });
+            });
+        }
+
+        // Modal de notas
+        function openModalNotas(actividad) {
+            currentActivityId = actividad.dataset.id;
+            
+            document.getElementById('modalNotasMateria').textContent = actividad.dataset.materia;
+            document.getElementById('modalNotasTitulo').textContent = actividad.dataset.titulo;
+            
+            const modalInfo = document.getElementById('modalNotasInfo');
+            modalInfo.innerHTML = '';
+            if (actividad.dataset.fecha) {
+                modalInfo.innerHTML += `<div class="fecha-actividad">${actividad.dataset.fecha}</div>`;
+            }
+            if (actividad.dataset.porcentaje) {
+                modalInfo.innerHTML += `<div class="porcentaje">${actividad.dataset.porcentaje}</div>`;
+            }
+            
+            document.getElementById('notasTextarea').value = loadNotas(currentActivityId);
+            
+            document.body.classList.add('modal-open');
+            document.getElementById('modalNotasOverlay').classList.add('active');
+            setTimeout(() => {
+                document.getElementById('modalNotas').classList.add('active');
+            }, 10);
+        }
+
+        function closeModalNotas() {
+            document.getElementById('modalNotas').classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('modalNotasOverlay').classList.remove('active');
+                document.body.classList.remove('modal-open');
+            }, 300);
+        }
+
+        // Modal de actividad (crear/editar)
+        function openModalActividad(semanaId, index = null) {
+            currentSemanaId = semanaId;
+            editingActivityIndex = index;
+            
+            if (index !== null) {
+                // Modo edición
+                const actividades = loadActividades(semanaId);
+                const actividad = actividades[index];
+                
+                document.getElementById('modalActividadTitulo').textContent = 'Editar Actividad';
+                document.getElementById('inputMateria').value = actividad.materia;
+                document.getElementById('inputNombre').value = actividad.titulo;
+                document.getElementById('inputFecha').value = actividad.fecha || '';
+                document.getElementById('inputPorcentaje').value = actividad.porcentaje || '';
+                document.getElementById('inputDescripcion').value = actividad.descripcion || '';
+            } else {
+                // Modo crear
+                document.getElementById('modalActividadTitulo').textContent = 'Nueva Actividad';
+                document.getElementById('formActividad').reset();
+            }
+            
+            document.body.classList.add('modal-open');
+            document.getElementById('modalActividadOverlay').classList.add('active');
+            setTimeout(() => {
+                document.getElementById('modalActividad').classList.add('active');
+            }, 10);
+        }
+
+        function closeModalActividad() {
+            document.getElementById('modalActividad').classList.remove('active');
+            setTimeout(() => {
+                document.getElementById('modalActividadOverlay').classList.remove('active');
+                document.body.classList.remove('modal-open');
+            }, 300);
+        }
+
+        // Editar actividad
+        function editActividad(semanaId, index) {
+            openModalActividad(semanaId, index);
+        }
+
+        // Guardar actividad
+        function saveActividad() {
+            const materia = document.getElementById('inputMateria').value;
+            const nombre = document.getElementById('inputNombre').value;
+            const fecha = document.getElementById('inputFecha').value;
+            const porcentaje = document.getElementById('inputPorcentaje').value;
+            const descripcion = document.getElementById('inputDescripcion').value;
+
+            if (!materia || !nombre) {
+                alert('Por favor completa la materia y el nombre de la actividad');
+                return;
+            }
+
+            const actividadData = {
+                materia,
+                titulo: nombre,
+                fecha,
+                porcentaje,
+                descripcion,
+                clase: getClaseMateria(materia)
+            };
+
+            const actividades = loadActividades(currentSemanaId);
+            
+            if (editingActivityIndex !== null) {
+                // Editando actividad existente
+                actividades[editingActivityIndex] = actividadData;
+            } else {
+                // Nueva actividad
+                actividades.push(actividadData);
+            }
+            
+            saveActividades(currentSemanaId, actividades);
+
+            closeModalActividad();
+            renderCalendario();
+        }
+
+        // Eliminar actividad
+        function deleteActividad(semanaId, index) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta actividad?')) {
+                const actividades = loadActividades(semanaId);
+                actividades.splice(index, 1);
+                saveActividades(semanaId, actividades);
+                renderCalendario();
+            }
+        }
+
+        // Event listeners de los modales
+        document.getElementById('btnSaveNotas').addEventListener('click', (e) => {
+            e.stopPropagation();
+            saveNotas(currentActivityId, document.getElementById('notasTextarea').value);
+            
+            // Actualizar indicador visual
+            const actividad = document.querySelector(`[data-id="${currentActivityId}"]`);
+            if (actividad) {
+                const hasContent = loadNotas(currentActivityId).trim().length > 0;
+                if (hasContent) {
+                    actividad.classList.add('has-notes');
+                } else {
+                    actividad.classList.remove('has-notes');
+                }
+            }
+            
+            closeModalNotas();
+        });
+
+        document.getElementById('btnCloseNotas').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeModalNotas();
+        });
+
+        document.getElementById('modalNotasOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'modalNotasOverlay') {
+                closeModalNotas();
+            }
+        });
+
+        document.getElementById('btnSaveActividad').addEventListener('click', (e) => {
+            e.stopPropagation();
+            saveActividad();
+        });
+
+        document.getElementById('btnCloseActividad').addEventListener('click', (e) => {
+            e.stopPropagation();
+            closeModalActividad();
+        });
+
+        document.getElementById('modalActividadOverlay').addEventListener('click', (e) => {
+            if (e.target.id === 'modalActividadOverlay') {
+                closeModalActividad();
+            }
+        });
+
+        // Prevenir cierre al hacer click dentro de los modales
+        document.getElementById('modalNotas').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        document.getElementById('modalActividad').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Inicializar
+        inicializarActividades();
+        renderCalendario();
+    </script>
+</body>
+</html>
